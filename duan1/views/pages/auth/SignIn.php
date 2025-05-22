@@ -2,6 +2,8 @@
     .form-section {
         padding: 60px 0;
         background-color: #f3f4f6;
+        position: relative;
+        min-height: 100vh; /* Bỏ điều chỉnh chiều cao để kiểm tra */
     }
 
     .form-container {
@@ -11,6 +13,8 @@
         padding: 40px 30px;
         border-radius: 8px;
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        position: relative;
+        z-index: 1;
     }
 
     .form-title {
@@ -59,6 +63,8 @@
         text-align: center;
         margin-top: 15px;
         font-size: 14px;
+        position: relative;
+        z-index: 2;
     }
 
     .form-footer a {
@@ -71,13 +77,10 @@
     }
 </style>
 
-
-
-
 <section class="form-section">
     <div class="form-container">
         <h2 class="form-title">Login to Your Account</h2>
-        <form action="process_login.php" method="POST">
+        <form action="?act=login" method="POST">
             <div class="form-group">
                 <label>Email address</label>
                 <input type="email" name="email" required />
@@ -89,7 +92,7 @@
             <button type="submit" class="form-btn">Login</button>
             <p class="form-footer">
                 Don’t have an account?
-                <a href="signup.php">Sign up</a>
+                <a href="?act=register">Sign up</a>
             </p>
         </form>
     </div>
