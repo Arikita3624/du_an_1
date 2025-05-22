@@ -8,12 +8,6 @@ class ProductModel {
         $this->db = new Database();
     }
 
-    public function getProductCount() {
-        $sql = "SELECT COUNT(*) as count FROM products";
-        $result = $this->db->queryOne($sql);
-        return $result['count'];
-    }
-
     public function getAllProducts() {
         $sql = "SELECT p.*, c.name as category_name 
                 FROM products p 
@@ -66,5 +60,45 @@ class ProductModel {
     public function deleteProduct($id) {
         $sql = "DELETE FROM products WHERE id = :id";
         return $this->db->execute($sql, ['id' => $id]);
+    }
+
+    public function getProductCount($keyword = null, $categoryId = null) {
+        $sql = "SELECT COUNT(*) as count FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE 1=1";
+        $params = [];
+
+        if ($keyword) {
+            $sql .= " AND (p.name LIKE :keyword OR p.description LIKE :keyword)";
+            $params[':keyword'] = '%' . $keyword . '%';
+        }
+
+        if ($categoryId) {
+            $sql .= " AND p.category_id = :category_id";
+            $params[':category_id'] = $categoryId;
+        }
+
+        $result = $this->db->queryOne($sql, $params);
+        return $result['count'];
+    }
+
+    public function getProductsWithPagination($limit, $offset, $keyword = null, $categoryId = null) {
+        $sql = "SELECT p.*, c.name as category_name 
+                FROM products p 
+                LEFT JOIN categories c ON p.category_id = c.id 
+                WHERE 1=1";
+        $params = [];
+
+        if ($keyword) {
+            $sql .= " AND (p.name LIKE :keyword OR p.description LIKE :keyword)";
+            $params[':keyword'] = '%' . $keyword . '%';
+        }
+
+        if ($categoryId) {
+            $sql .= " AND p.category_id = :category_id";
+            $params[':category_id'] = $categoryId;
+        }
+
+        $sql .= " ORDER BY p.id DESC LIMIT " . (int)$limit . " OFFSET " . (int)$offset;
+
+        return $this->db->query($sql, $params);
     }
 }

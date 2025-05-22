@@ -1,9 +1,10 @@
 -- Tạo cơ sở dữ liệu nếu chưa tồn tại
-CREATE DATABASE IF NOT EXISTS base_du_an_1;
+DROP DATABASE IF EXISTS base_du_an_1;
+CREATE DATABASE base_du_an_1;
 USE base_du_an_1;
 
 -- Tạo bảng users
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
@@ -19,7 +20,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Tạo bảng categories
-CREATE TABLE IF NOT EXISTS categories (
+CREATE TABLE categories (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
@@ -29,7 +30,7 @@ CREATE TABLE IF NOT EXISTS categories (
 );
 
 -- Tạo bảng products
-CREATE TABLE IF NOT EXISTS products (
+CREATE TABLE products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT,
@@ -45,10 +46,46 @@ CREATE TABLE IF NOT EXISTS products (
     FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
+-- Tạo bảng comments
+CREATE TABLE comments (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    user_id INT NOT NULL,
+    content TEXT NOT NULL,
+    rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
+    status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES products(id),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Tạo bảng carts
+CREATE TABLE carts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+-- Tạo bảng cart_items
+CREATE TABLE cart_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cart_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (cart_id) REFERENCES carts(id),
+    FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
 -- Tạo bảng orders
-CREATE TABLE IF NOT EXISTS orders (
+CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
+    cart_id INT,
     full_name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
     phone VARCHAR(20) NOT NULL,
@@ -60,11 +97,12 @@ CREATE TABLE IF NOT EXISTS orders (
     note TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (cart_id) REFERENCES carts(id)
 );
 
 -- Tạo bảng order_items
-CREATE TABLE IF NOT EXISTS order_items (
+CREATE TABLE order_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     order_id INT,
     product_id INT,
@@ -113,138 +151,4 @@ INSERT INTO products (name, description, price, category_id, stock) VALUES
 -- Phụ kiện
 ('Thắt lưng da nam', 'Thắt lưng da nam, chất liệu da thật', 350000, 5, 30),
 ('Túi xách nữ', 'Túi xách nữ, thiết kế thời trang', 850000, 5, 25),
-('Ví da nam', 'Ví da nam, nhiều ngăn tiện dụng', 450000, 5, 35);
-
--- Cập nhật cấu trúc bảng nếu đã tồn tại
-SET @dbname = 'base_du_an_1';
-
--- Kiểm tra và thêm cột cho bảng users
-SELECT IF(
-    NOT EXISTS(
-        SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
-        WHERE TABLE_SCHEMA = @dbname 
-        AND TABLE_NAME = 'users' 
-        AND COLUMN_NAME = 'status'
-    ),
-    'ALTER TABLE users ADD COLUMN status ENUM("active", "inactive") DEFAULT "active" AFTER role',
-    'SELECT "Column status already exists in users table"'
-) INTO @sql;
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
-SELECT IF(
-    NOT EXISTS(
-        SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
-        WHERE TABLE_SCHEMA = @dbname 
-        AND TABLE_NAME = 'users' 
-        AND COLUMN_NAME = 'last_login'
-    ),
-    'ALTER TABLE users ADD COLUMN last_login TIMESTAMP NULL AFTER status',
-    'SELECT "Column last_login already exists in users table"'
-) INTO @sql;
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
--- Kiểm tra và thêm cột cho bảng categories
-SELECT IF(
-    NOT EXISTS(
-        SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
-        WHERE TABLE_SCHEMA = @dbname 
-        AND TABLE_NAME = 'categories' 
-        AND COLUMN_NAME = 'status'
-    ),
-    'ALTER TABLE categories ADD COLUMN status ENUM("active", "inactive") DEFAULT "active" AFTER description',
-    'SELECT "Column status already exists in categories table"'
-) INTO @sql;
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
--- Kiểm tra và thêm cột cho bảng products
-SELECT IF(
-    NOT EXISTS(
-        SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
-        WHERE TABLE_SCHEMA = @dbname 
-        AND TABLE_NAME = 'products' 
-        AND COLUMN_NAME = 'discount_price'
-    ),
-    'ALTER TABLE products ADD COLUMN discount_price DECIMAL(10,2) DEFAULT NULL AFTER price',
-    'SELECT "Column discount_price already exists in products table"'
-) INTO @sql;
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
-SELECT IF(
-    NOT EXISTS(
-        SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
-        WHERE TABLE_SCHEMA = @dbname 
-        AND TABLE_NAME = 'products' 
-        AND COLUMN_NAME = 'views'
-    ),
-    'ALTER TABLE products ADD COLUMN views INT DEFAULT 0 AFTER stock',
-    'SELECT "Column views already exists in products table"'
-) INTO @sql;
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
-SELECT IF(
-    NOT EXISTS(
-        SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
-        WHERE TABLE_SCHEMA = @dbname 
-        AND TABLE_NAME = 'products' 
-        AND COLUMN_NAME = 'status'
-    ),
-    'ALTER TABLE products ADD COLUMN status ENUM("active", "inactive") DEFAULT "active" AFTER views',
-    'SELECT "Column status already exists in products table"'
-) INTO @sql;
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
--- Kiểm tra và thêm cột cho bảng orders
-SELECT IF(
-    NOT EXISTS(
-        SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
-        WHERE TABLE_SCHEMA = @dbname 
-        AND TABLE_NAME = 'orders' 
-        AND COLUMN_NAME = 'payment_method'
-    ),
-    'ALTER TABLE orders ADD COLUMN payment_method ENUM("cod", "banking", "momo", "zalopay") DEFAULT "cod" AFTER payment_status',
-    'SELECT "Column payment_method already exists in orders table"'
-) INTO @sql;
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
-SELECT IF(
-    NOT EXISTS(
-        SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
-        WHERE TABLE_SCHEMA = @dbname 
-        AND TABLE_NAME = 'orders' 
-        AND COLUMN_NAME = 'note'
-    ),
-    'ALTER TABLE orders ADD COLUMN note TEXT AFTER payment_method',
-    'SELECT "Column note already exists in orders table"'
-) INTO @sql;
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-
--- Kiểm tra và thêm cột cho bảng order_items
-SELECT IF(
-    NOT EXISTS(
-        SELECT * FROM INFORMATION_SCHEMA.COLUMNS 
-        WHERE TABLE_SCHEMA = @dbname 
-        AND TABLE_NAME = 'order_items' 
-        AND COLUMN_NAME = 'discount_price'
-    ),
-    'ALTER TABLE order_items ADD COLUMN discount_price DECIMAL(10,2) DEFAULT NULL AFTER price',
-    'SELECT "Column discount_price already exists in order_items table"'
-) INTO @sql;
-PREPARE stmt FROM @sql;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt; 
+('Ví da nam', 'Ví da nam, nhiều ngăn tiện dụng', 450000, 5, 35); 
