@@ -91,8 +91,8 @@
                 <input type="password" name="password" required />
             </div>
             <div class="form-checkbox display-flex justify-content-between">
-                <input type="checkbox" id="remember-me" name="remember-me"/>
-                <label for="remember-me">Remember me</label>
+                <input type="checkbox" id="remember_me" name="remember_me"/>
+                <label for="remember_me">Remember me</label>
             </div>
             <button type="submit" class="form-btn">Login</button>
             <p class="form-footer">

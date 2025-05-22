@@ -44,7 +44,8 @@ class SignUpModel
     }
 }
 
-class SignInModel {
+class SignInModel
+{
     public function login($email, $password = null, $byEmailOnly = false)
     {
         $conn = connectDB();
@@ -57,7 +58,7 @@ class SignInModel {
             return $user;
         }
 
-        if ($user && password_verify($password, $user['password'])) {
+        if ($user && $password !== null && password_verify($password, $user['password'])) {
             return $user;
         }
 

@@ -73,7 +73,7 @@ require_once './commons/env.php';
 require_once './commons/function.php';
 require_once './controllers/HomeController.php';
 require_once './controllers/AboutsController.php';
-require_once './controllers/ProductController.php';
+require_once './controllers/ProductControllerClient.php';
 require_once './controllers/CartsController.php';
 require_once './controllers/CheckoutController.php';
 require_once './controllers/AuthController.php';
@@ -96,13 +96,15 @@ if (isset($_SESSION['message']) && isset($_SESSION['message_type'])) {
     </script>';
     unset($_SESSION['message'], $_SESSION['message_type']);
 }
-
+if ($act === '/' && (isset($_GET['search']) || isset($_GET['category_id']))) {
+    $act = 'product-list';
+}
 // Gọi controller xử lý
 try {
     match ($act) {
         '/' => (new HomeController())->index(),
         'about' => (new AboutsController())->index(),
-        'product-list' => (new ProductController())->index(),
+        'product-list' => (new ProductControllerClient())->list(),
         'product-detail' => (new ProductDetailController())->index(),
         'carts' => (new CartsController())->index(),
         'checkout' => (new CheckoutController())->index(),

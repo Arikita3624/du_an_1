@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['admin_id'] = $user['id'];
             $_SESSION['admin_username'] = $user['username'];
             $_SESSION['admin_name'] = $user['full_name'];
-            
+
             header('Location: index.php');
             exit;
         } else {
@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <i class="fas fa-user"></i>
                                     </span>
                                 </div>
-                                <input type="text" class="form-control" id="username" name="username" 
+                                <input type="text" class="form-control" id="username" name="username"
                                        value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>"
                                        placeholder="Nhập tên đăng nhập" required>
                             </div>
@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                         <i class="fas fa-lock"></i>
                                     </span>
                                 </div>
-                                <input type="password" class="form-control" id="password" name="password" 
+                                <input type="password" class="form-control" id="password" name="password"
                                        placeholder="Nhập mật khẩu" required>
                             </div>
                         </div>
@@ -142,4 +142,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-</html> 
+</html>
