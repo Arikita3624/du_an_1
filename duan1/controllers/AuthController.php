@@ -93,25 +93,23 @@ class SignInController
             $user = $authModel->login($email, $password);
 
             if ($user) {
-                $_SESSION['user'] = $user; // Lưu thông tin người dùng
-
+                $_SESSION['user'] = $user;
                 $_SESSION['message'] = 'Đăng nhập thành công!';
                 $_SESSION['message_type'] = 'success';
-
-                header('Location: index.php'); // Hoặc trang chủ
+                header('Location: ?act=/'); // Chuyển hướng đến trang chính
+                ob_end_flush();
                 exit();
             } else {
                 $_SESSION['message'] = 'Email hoặc mật khẩu không đúng.';
                 $_SESSION['message_type'] = 'error';
                 header('Location: ?act=login');
+                ob_end_flush();
                 exit();
             }
-
-            ob_end_flush();
-            exit();
         }
 
         require_once __DIR__ . '/../views/pages/auth/SignIn.php';
         ob_end_flush();
     }
 }
+?>

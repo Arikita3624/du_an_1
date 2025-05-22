@@ -9,8 +9,17 @@
     .header__top__links a {
         margin-left: 10px;
     }
-</style>
 
+    .header {
+        position: relative; /* Quay lại position: relative để kiểm tra */
+        z-index: 900;
+    }
+
+    /* Bỏ padding-top cho body để kiểm tra */
+    body {
+        padding-top: 0;
+    }
+</style>
 
 <header class="header">
     <div class="header__top">
@@ -46,7 +55,6 @@
         </div>
     </div>
 
-    <!-- Phần giữa header giữ nguyên -->
     <div class="container">
         <div class="row">
             <div class="col-lg-3 col-md-3">
