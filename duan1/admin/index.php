@@ -21,7 +21,8 @@ $content = '';
 if (file_exists($controllerFile)) {
     require_once $controllerFile;
     $controllerClass = ucfirst($controller) . "Controller";
-    $controllerInstance = new $controllerClass();
+    $db = new Database();
+    $controllerInstance = new $controllerClass($db);
     
     if (method_exists($controllerInstance, $action)) {
         // Bắt đầu output buffering
@@ -78,6 +79,16 @@ if (file_exists($controllerFile)) {
                 <li class="<?php echo $controller == 'user' ? 'active' : ''; ?>">
                     <a href="index.php?controller=user">
                         <i class="fas fa-users"></i> Quản lý người dùng
+                    </a>
+                </li>
+                <li class="<?php echo $controller == 'comment' ? 'active' : ''; ?>">
+                    <a href="index.php?controller=comment">
+                        <i class="fas fa-comments"></i> Quản lý bình luận
+                    </a>
+                </li>
+                <li class="<?php echo $controller == 'cart' ? 'active' : ''; ?>">
+                    <a href="index.php?controller=cart">
+                        <i class="fas fa-shopping-cart"></i> Quản lý giỏ hàng
                     </a>
                 </li>
             </ul>

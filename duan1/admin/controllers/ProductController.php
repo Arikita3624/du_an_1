@@ -12,7 +12,23 @@ class ProductController {
     }
 
     public function index() {
-        $products = $this->productModel->getAllProducts();
+        $limit = 10; // Số sản phẩm trên mỗi trang
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $offset = ($page - 1) * $limit;
+
+        $keyword = $_GET['keyword'] ?? null;
+        $categoryId = $_GET['category_id'] ?? null;
+
+        // Lấy tổng số sản phẩm (có filter)
+        $totalProducts = $this->productModel->getProductCount($keyword, $categoryId);
+        $totalPages = ceil($totalProducts / $limit);
+
+        // Lấy danh sách sản phẩm cho trang hiện tại (có filter)
+        $products = $this->productModel->getProductsWithPagination($limit, $offset, $keyword, $categoryId);
+        
+        // Lấy danh sách danh mục cho bộ lọc
+        $categories = $this->categoryModel->getAllCategories();
+
         require_once __DIR__ . '/../views/product/index.php';
     }
 
