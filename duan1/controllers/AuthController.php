@@ -80,6 +80,7 @@ class SignInController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = trim($_POST['email'] ?? '');
             $password = trim($_POST['password'] ?? '');
+            $rememberme = isset($_POST['remember-me']) ? $_POST['remember-me'] : false;
 
             if (empty($email) || empty($password)) {
                 $_SESSION['message'] = 'Vui lòng nhập email và mật khẩu.';
@@ -92,11 +93,17 @@ class SignInController
             $authModel = new SignInModel();
             $user = $authModel->login($email, $password);
 
-            if ($user) {
+            if ($user && empty($user['success'])) {
                 $_SESSION['user'] = $user;
+                // Xử lý ghi nhớ đăng nhập
+                if ($rememberme) {
+                    setcookie('remember_user', $user['email'], time() + 7 * 24 * 3600, "/");
+                } else {
+                    setcookie('remember_user', '', time() - 3600, "/");
+                }
                 $_SESSION['message'] = 'Đăng nhập thành công!';
                 $_SESSION['message_type'] = 'success';
-                header('Location: ?act=/'); // Chuyển hướng đến trang chính
+                header('Location: ?act=/');
                 ob_end_flush();
                 exit();
             } else {
@@ -112,4 +119,3 @@ class SignInController
         ob_end_flush();
     }
 }
-?>

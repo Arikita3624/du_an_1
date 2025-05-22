@@ -8,16 +8,36 @@
 
     .header__top__links a {
         margin-left: 10px;
+        color: #111;
+        text-decoration: none;
+    }
+
+    .header__top__links a:hover {
+        text-decoration: underline;
+    }
+
+    .header__top__links .logout-link {
+        color: #ffffff;
+        /* Thay đổi màu chữ của nút "Đăng xuất" thành trắng */
     }
 
     .header {
-        position: relative; /* Quay lại position: relative để kiểm tra */
+        position: relative;
         z-index: 900;
     }
 
-    /* Bỏ padding-top cho body để kiểm tra */
     body {
         padding-top: 0;
+    }
+
+    .user-greeting {
+        color: #ffffff;
+    }
+
+    .logout-link {
+        color: #ffffff;
+        text-decoration: none;
+        margin-left: 10px;
     }
 </style>
 
@@ -33,13 +53,14 @@
                 <div class="col-lg-6 col-md-5">
                     <div class="header__top__right">
                         <div class="header__top__links">
-                            <?php if (isset($_SESSION['user'])): ?>
-                                <span class="user-greeting">Xin chào, <?= htmlspecialchars($_SESSION['user']['username']) ?>!</span>
-                                <a href="?act=logout">Đăng xuất</a>
+                            <?php if (isset($_SESSION['user']) && is_array($_SESSION['user']) && !empty($_SESSION['user']['username'])): ?>
+                                <span class="user-greeting">Xin chào, <?= htmlspecialchars($_SESSION['user']['username'], ENT_QUOTES, 'UTF-8') ?>!</span>
+                                <a href="?act=logout" class="logout-link">Đăng xuất</a>
                             <?php else: ?>
-                                <a href="?act=login">Sign in</a>
+                                <?php unset($_SESSION['user']); // Xóa session không hợp lệ
+                                ?>
+                                <a href="?act=login" class="logout-link">Sign in</a>
                             <?php endif; ?>
-                            <a href="#">FAQs</a>
                         </div>
                         <div class="header__top__hover">
                             <span>Usd <i class="arrow_carrot-down"></i></span>
@@ -59,7 +80,7 @@
         <div class="row">
             <div class="col-lg-3 col-md-3">
                 <div class="header__logo">
-                    <a href="?act=/"><img src="assets/img/logo.png" alt=""></a>
+                    <a href="?act=/"><img src="assets/img/logo.png" alt="Logo"></a>
                 </div>
             </div>
             <div class="col-lg-6 col-md-6">
@@ -69,7 +90,7 @@
                         <li><a href="?act=product-list">Shop</a></li>
                         <li><a href="#">Pages</a>
                             <ul class="dropdown">
-                                <li><a href="about.html">About Us</a></li>
+                                <li><a href="?act=about">About Us</a></li>
                                 <li><a href="?act=product-detail">Shop Details</a></li>
                                 <li><a href="?act=carts">Shopping Cart</a></li>
                                 <li><a href="?act=checkout">Check Out</a></li>
@@ -83,9 +104,9 @@
             </div>
             <div class="col-lg-3 col-md-3">
                 <div class="header__nav__option">
-                    <a href="#" class="search-switch"><img src="assets/img/icon/search.png" alt=""></a>
-                    <a href="#"><img src="assets/img/icon/heart.png" alt=""></a>
-                    <a href="#"><img src="assets/img/icon/cart.png" alt=""> <span>0</span></a>
+                    <a href="#" class="search-switch"><img src="assets/img/icon/search.png" alt="Search"></a>
+                    <a href="#"><img src="assets/img/icon/heart.png" alt="Wishlist"></a>
+                    <a href="#"><img src="assets/img/icon/cart.png" alt="Cart"> <span>0</span></a>
                     <div class="price">$0.00</div>
                 </div>
             </div>

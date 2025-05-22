@@ -45,13 +45,17 @@ class SignUpModel
 }
 
 class SignInModel {
-    public function login($email, $password)
+    public function login($email, $password = null, $byEmailOnly = false)
     {
         $conn = connectDB();
         $sql = "SELECT * FROM users WHERE email = :email";
         $stmt = $conn->prepare($sql);
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($byEmailOnly && $user) {
+            return $user;
+        }
 
         if ($user && password_verify($password, $user['password'])) {
             return $user;
@@ -60,4 +64,3 @@ class SignInModel {
         return ['success' => false, 'message' => 'Email hoặc mật khẩu không đúng'];
     }
 }
-?>

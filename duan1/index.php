@@ -1,14 +1,14 @@
 <style>
     .message {
         padding: 10px;
-        margin: 0;
+        margin: 10px 0; /* Thêm margin để tránh chồng lấn */
         max-width: 600px;
         border-radius: 4px;
         text-align: center;
         font-size: 14px;
         transition: opacity 0.5s ease;
         position: fixed;
-        top: 10px;
+        top: 60px; /* Tăng top để tránh che header */
         left: 50%;
         transform: translateX(-50%);
         z-index: 1000;
@@ -35,45 +35,32 @@
 </style>
 
 <?php
-ob_start(); // Bắt đầu bộ đệm đầu ra
+// Bắt đầu bộ đệm đầu ra
+ob_start();
+session_start();
 
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+// Kiểm tra cookie để đăng nhập tự động
+if (!isset($_SESSION['user']) && isset($_COOKIE['remember_user'])) {
+    require_once __DIR__ . '/models/Auth.php'; // Sử dụng đúng file Auth.php
+    $authModel = new SignInModel();
+    $user = $authModel->login($_COOKIE['remember_user'], null, true);
+    if ($user && is_array($user) && !isset($user['success']) && !empty($user['username'])) {
+        $_SESSION['user'] = $user;
+    } else {
+        // Xóa cookie nếu không hợp lệ
+        setcookie('remember_user', '', time() - 3600, "/");
+        unset($_SESSION['user']); // Đảm bảo xóa session nếu có
+    }
 }
 
-// Hiển thị thông báo từ session nếu có
-if (isset($_SESSION['message']) && isset($_SESSION['message_type'])) {
-    echo '<div class="message ' . htmlspecialchars($_SESSION['message_type']) . '" id="globalMessage">';
-    echo htmlspecialchars($_SESSION['message']);
-    echo '</div>';
-    unset($_SESSION['message']);
-    unset($_SESSION['message_type']);
-}
-
-// Require file Common
-require_once './commons/env.php'; // Khai báo biến môi trường
-require_once './commons/function.php'; // Hàm hỗ trợ
-
-// Require toàn bộ file Controllers
-require_once './controllers/HomeController.php';
-require_once './controllers/AboutsController.php';
-require_once './controllers/ProductController.php';
-require_once './controllers/CartsController.php';
-require_once './controllers/CheckoutController.php';
-require_once './controllers/AuthController.php';
-
-// Route
+// Xử lý logout trước khi load layout
 $act = $_GET['act'] ?? '/';
-
-// Debug: Kiểm tra giá trị của $act
-echo "<!-- Debug: act = $act -->";
-
-require_once __DIR__ . '/views/layouts/layouttop.php';
-
-// Thêm xử lý đăng xuất
 if ($act === 'logout') {
+    // Xóa cookie remember_user
+    setcookie('remember_user', '', time() - 3600, "/");
+    // Xóa session
     session_destroy();
-    session_start(); // Khởi tạo lại session để tránh lỗi
+    session_start(); // Khởi lại session mới
     $_SESSION['message'] = 'Đã đăng xuất thành công!';
     $_SESSION['message_type'] = 'success';
     header('Location: ?act=login');
@@ -81,29 +68,54 @@ if ($act === 'logout') {
     exit();
 }
 
-// Để bảo đảm tính chất chỉ gọi 1 hàm Controller để xử lý request thì mình sử dụng match
+// Require các file cần thiết
+require_once './commons/env.php';
+require_once './commons/function.php';
+require_once './controllers/HomeController.php';
+require_once './controllers/AboutsController.php';
+require_once './controllers/ProductController.php';
+require_once './controllers/CartsController.php';
+require_once './controllers/CheckoutController.php';
+require_once './controllers/AuthController.php';
+
+// Hiển thị layout top
+require_once __DIR__ . '/views/layouts/layouttop.php';
+
+// Hiển thị message
+if (isset($_SESSION['message']) && isset($_SESSION['message_type'])) {
+    echo '<div class="message ' . htmlspecialchars($_SESSION['message_type'], ENT_QUOTES, 'UTF-8') . '" id="globalMessage">';
+    echo htmlspecialchars($_SESSION['message'], ENT_QUOTES, 'UTF-8');
+    echo '</div>';
+    echo '<script>
+        setTimeout(() => {
+            const message = document.getElementById("globalMessage");
+            if (message) {
+                message.classList.add("hidden");
+            }
+        }, 3000);
+    </script>';
+    unset($_SESSION['message'], $_SESSION['message_type']);
+}
+
+// Gọi controller xử lý
 try {
     match ($act) {
-        // Trang chủ
-        '/'                 => (new HomeController())->index(),
-        'about'             => (new AboutsController())->index(),
-        'product-list'      => (new ProductController())->index(),
-        'product-detail'    => (new ProductDetailController())->index(),
-        'carts'             => (new CartsController())->index(),
-        'checkout'          => (new CheckoutController())->index(),
-        'login'             => (new SignInController())->index(),
-        'register'          => (new SignUpController())->index(),
-        default             => throw new Exception("Route không hợp lệ: $act"),
+        '/' => (new HomeController())->index(),
+        'about' => (new AboutsController())->index(),
+        'product-list' => (new ProductController())->index(),
+        'product-detail' => (new ProductDetailController())->index(),
+        'carts' => (new CartsController())->index(),
+        'checkout' => (new CheckoutController())->index(),
+        'login' => (new SignInController())->index(),
+        'register' => (new SignUpController())->index(),
+        default => throw new Exception("Route không hợp lệ: $act"),
     };
 } catch (Exception $e) {
-    echo "Lỗi định tuyến: " . $e->getMessage();
+    echo "Lỗi định tuyến: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8');
     ob_end_flush();
     exit();
 }
 
 require_once __DIR__ . '/views/layouts/layoutbottom.php';
-
-ob_end_flush(); // Xả bộ đệm đầu ra
-
-// test
+ob_end_flush();
 ?>
