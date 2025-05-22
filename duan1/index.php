@@ -104,4 +104,6 @@ try {
 require_once __DIR__ . '/views/layouts/layoutbottom.php';
 
 ob_end_flush(); // Xả bộ đệm đầu ra
+
+// test
 ?>
