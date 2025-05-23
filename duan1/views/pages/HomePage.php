@@ -137,7 +137,8 @@
                 ?>
                         <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
                             <div class="product__item">
-                                <div class="product__item__pic set-bg" data-setbg="assets/img/product/<?= htmlspecialchars($product['image']) ?>">
+                                <div class="product__item__pic">
+                                    <img src="admin/<?= htmlspecialchars($product['image']) ?>" alt="<?= htmlspecialchars($product['name']) ?>" style="width:100%;height:100%;object-fit:cover;">
                                 </div>
                                 <div class="product__item__text">
                                     <h6><?= htmlspecialchars($product['name']) ?></h6>

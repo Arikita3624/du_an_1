@@ -31,7 +31,7 @@
                     $limit = 12;
                     $offset = ($page - 1) * $limit;
 
-                    $filteredProducts = array_filter($products, function($product) use ($search, $category_id) {
+                    $filteredProducts = array_filter($products, function ($product) use ($search, $category_id) {
                         $match = true;
                         if ($search) {
                             $match = stripos($product['name'], $search) !== false;
@@ -50,7 +50,9 @@
                             <div class="col-lg-4 col-md-6 col-sm-6">
                                 <div class="product__item">
                                     <div class="product__item__pic" style="height:220px; display:flex; align-items:center; justify-content:center;">
-                                        <img src="<?= htmlspecialchars($product['image'] ?? 'default.jpg') ?>" alt="<?= htmlspecialchars($product['name']) ?>" style="max-height:100%; max-width:100%; object-fit:contain;">
+                                        <img src="<?= !empty($product['image']) ? 'admin/' . htmlspecialchars($product['image']) : 'assets/img/no-image.jpg' ?>"
+                                            alt="<?= htmlspecialchars($product['name']) ?>"
+                                            style="max-height:100%; max-width:100%; object-fit:contain;">
                                     </div>
                                     <div class="product__item__text">
                                         <h6><?= htmlspecialchars($product['name']) ?></h6>

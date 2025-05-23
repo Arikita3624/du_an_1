@@ -48,6 +48,10 @@
     searchInput.addEventListener('input', fetchProducts);
     categorySelect.addEventListener('change', fetchProducts);
 });
+
+document.querySelectorAll('.set-bg').forEach(function(element) {
+    element.style.backgroundImage = 'url(' + element.getAttribute('data-setbg') + ')';
+});
 </script>
 
 </html>
