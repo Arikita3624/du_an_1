@@ -67,6 +67,59 @@ if ($act === 'logout') {
     ob_end_flush();
     exit();
 }
+if ($act === 'add-to-cart' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $product_id = intval($_POST['product_id']);
+    $quantity = max(1, intval($_POST['quantity']));
+
+    require_once __DIR__ . '/models/Client.php';
+    $productModel = new Product();
+    $product = $productModel->getById($product_id);
+
+    if ($product) {
+        if (!isset($_SESSION['cart'])) $_SESSION['cart'] = [];
+        if (isset($_SESSION['cart'][$product_id])) {
+            $_SESSION['cart'][$product_id]['quantity'] += $quantity;
+        } else {
+            $_SESSION['cart'][$product_id] = [
+                'id' => $product['id'],
+                'name' => $product['name'],
+                'image' => $product['image'],
+                'price' => $product['price'],
+                'quantity' => $quantity
+            ];
+        }
+        $_SESSION['message'] = 'Đã thêm vào giỏ hàng!';
+        $_SESSION['message_type'] = 'success';
+    } else {
+        $_SESSION['message'] = 'Sản phẩm không tồn tại!';
+        $_SESSION['message_type'] = 'error';
+    }
+    header('Location: ?act=carts');
+    exit;
+}
+
+if ($act === 'update-cart' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $product_id = intval($_POST['product_id']);
+    $quantity = max(1, intval($_POST['quantity']));
+    if (isset($_SESSION['cart'][$product_id])) {
+        $_SESSION['cart'][$product_id]['quantity'] = $quantity;
+        $_SESSION['message'] = 'Cập nhật số lượng thành công!';
+        $_SESSION['message_type'] = 'success';
+    }
+    header('Location: ?act=carts');
+    exit;
+}
+
+if ($act === 'remove-cart' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $product_id = intval($_POST['product_id']);
+    if (isset($_SESSION['cart'][$product_id])) {
+        unset($_SESSION['cart'][$product_id]);
+        $_SESSION['message'] = 'Đã xóa sản phẩm khỏi giỏ hàng!';
+        $_SESSION['message_type'] = 'success';
+    }
+    header('Location: ?act=carts');
+    exit;
+}
 
 // Require các file cần thiết
 require_once './commons/env.php';

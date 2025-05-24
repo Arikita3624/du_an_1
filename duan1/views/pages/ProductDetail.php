@@ -19,8 +19,8 @@
                             <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">
                                 <div class="product__thumb__pic">
                                     <img src="<?= !empty($product['image']) ? 'admin/' . htmlspecialchars($product['image']) : 'assets/img/no-image.jpg' ?>"
-                                         alt="<?= htmlspecialchars($product['name']) ?>"
-                                         style="width:100px;height:100px;object-fit:cover;">
+                                        alt="<?= htmlspecialchars($product['name']) ?>"
+                                        style="width:100px;height:100px;object-fit:cover;">
                                 </div>
                             </a>
                         </li>
@@ -32,8 +32,8 @@
                         <div class="tab-pane active" id="tabs-1" role="tabpanel">
                             <div class="product__details__pic__item">
                                 <img src="<?= !empty($product['image']) ? 'admin/' . htmlspecialchars($product['image']) : 'assets/img/no-image.jpg' ?>"
-                                     alt="<?= htmlspecialchars($product['name']) ?>"
-                                     style="width:100%;max-height:400px;object-fit:cover;">
+                                    alt="<?= htmlspecialchars($product['name']) ?>"
+                                    style="width:100%;max-height:400px;object-fit:cover;">
                             </div>
                         </div>
                     </div>
@@ -47,14 +47,16 @@
                         </div>
                         <h3><?= number_format($product['price'], 0, ',', '.') ?>₫</h3>
                         <p><?= nl2br(htmlspecialchars($product['description'])) ?></p>
-                        <div class="product__details__cart__option">
+                        <!-- filepath: c:\xampp\htdocs\Nhom4\duan1\views\pages\ProductDetail.php -->
+                        <form method="post" action="?act=add-to-cart" class="product__details__cart__option" style="display: flex; flex-direction: column; gap: 20px;">
                             <div class="quantity">
                                 <div class="pro-qty">
-                                    <input type="text" value="1">
+                                    <input type="number" name="quantity" value="1" min="1" style="width: 60px; text-align: center;">
                                 </div>
                             </div>
-                        </div>
-                        <a href="#" class="primary-btn">Thêm vào giỏ hàng</a>
+                            <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id']) ?>">
+                            <button type="submit" class="primary-btn">Thêm vào giỏ hàng</button>
+                        </form>
                         <div class="product__details__btns__option">
                             <a href="#"><i class="fa fa-heart"></i> Yêu thích</a>
                             <a href="#"><i class="fa fa-exchange"></i> So sánh</a>
@@ -115,8 +117,8 @@
                             <div class="product__item__pic">
                                 <a href="?act=product-detail&id=<?= $item['id'] ?>">
                                     <img src="<?= !empty($item['image']) ? 'admin/' . htmlspecialchars($item['image']) : 'assets/img/no-image.jpg' ?>"
-                                         alt="<?= htmlspecialchars($item['name']) ?>"
-                                         style="width:100%;height:200px;object-fit:cover;">
+                                        alt="<?= htmlspecialchars($item['name']) ?>"
+                                        style="width:100%;height:200px;object-fit:cover;">
                                 </a>
                             </div>
                             <div class="product__item__text">
@@ -127,7 +129,9 @@
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
-                <div class="col-12"><p>Không có sản phẩm tương tự.</p></div>
+                <div class="col-12">
+                    <p>Không có sản phẩm tương tự.</p>
+                </div>
             <?php endif; ?>
         </div>
     </div>

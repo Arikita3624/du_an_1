@@ -33,86 +33,39 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="product__cart__item">
-                                        <div class="product__cart__item__pic">
-                                            <img src="assets/img/shopping-cart/cart-1.jpg" alt="">
-                                        </div>
-                                        <div class="product__cart__item__text">
-                                            <h6>T-shirt Contrast Pocket</h6>
-                                            <h5>$98.49</h5>
-                                        </div>
-                                    </td>
-                                    <td class="quantity__item">
-                                        <div class="quantity">
-                                            <div class="pro-qty-2">
-                                                <input type="text" value="1">
+                                <?php
+                                $cart = $_SESSION['cart'] ?? [];
+                                $total = 0;
+                                foreach ($cart as $item):
+                                    $item_total = $item['price'] * $item['quantity'];
+                                    $total += $item_total;
+                                ?>
+                                    <tr>
+                                        <td class="product__cart__item">
+                                            <div class="product__cart__item__pic">
+                                                <img src="<?= !empty($item['image']) ? 'admin/' . htmlspecialchars($item['image']) : 'assets/img/no-image.jpg' ?>" alt="" style="width:70px;">
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td class="cart__price">$ 30.00</td>
-                                    <td class="cart__close"><i class="fa fa-close"></i></td>
-                                </tr>
-                                <tr>
-                                    <td class="product__cart__item">
-                                        <div class="product__cart__item__pic">
-                                            <img src="assets/img/shopping-cart/cart-2.jpg" alt="">
-                                        </div>
-                                        <div class="product__cart__item__text">
-                                            <h6>Diagonal Textured Cap</h6>
-                                            <h5>$98.49</h5>
-                                        </div>
-                                    </td>
-                                    <td class="quantity__item">
-                                        <div class="quantity">
-                                            <div class="pro-qty-2">
-                                                <input type="text" value="1">
+                                            <div class="product__cart__item__text">
+                                                <h6><?= htmlspecialchars($item['name']) ?></h6>
+                                                <h5><?= number_format($item['price'], 0, ',', '.') ?>₫</h5>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td class="cart__price">$ 32.50</td>
-                                    <td class="cart__close"><i class="fa fa-close"></i></td>
-                                </tr>
-                                <tr>
-                                    <td class="product__cart__item">
-                                        <div class="product__cart__item__pic">
-                                            <img src="assets/img/shopping-cart/cart-3.jpg" alt="">
-                                        </div>
-                                        <div class="product__cart__item__text">
-                                            <h6>Basic Flowing Scarf</h6>
-                                            <h5>$98.49</h5>
-                                        </div>
-                                    </td>
-                                    <td class="quantity__item">
-                                        <div class="quantity">
-                                            <div class="pro-qty-2">
-                                                <input type="text" value="1">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="cart__price">$ 47.00</td>
-                                    <td class="cart__close"><i class="fa fa-close"></i></td>
-                                </tr>
-                                <tr>
-                                    <td class="product__cart__item">
-                                        <div class="product__cart__item__pic">
-                                            <img src="assets/img/shopping-cart/cart-4.jpg" alt="">
-                                        </div>
-                                        <div class="product__cart__item__text">
-                                            <h6>Basic Flowing Scarf</h6>
-                                            <h5>$98.49</h5>
-                                        </div>
-                                    </td>
-                                    <td class="quantity__item">
-                                        <div class="quantity">
-                                            <div class="pro-qty-2">
-                                                <input type="text" value="1">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="cart__price">$ 30.00</td>
-                                    <td class="cart__close"><i class="fa fa-close"></i></td>
-                                </tr>
+                                        </td>
+                                        <td class="quantity__item">
+                                            <form method="post" action="?act=update-cart" style="display:inline-flex;">
+                                                <input type="hidden" name="product_id" value="<?= $item['id'] ?>">
+                                                <input type="number" name="quantity" value="<?= $item['quantity'] ?>" min="1" style="width:50px;text-align:center;">
+                                                <button type="submit" style="margin-left:5px;">Cập nhật</button>
+                                            </form>
+                                        </td>
+                                        <td class="cart__price"><?= number_format($item_total, 0, ',', '.') ?>₫</td>
+                                        <td class="cart__close">
+                                            <form method="post" action="?act=remove-cart" style="display:inline;">
+                                                <input type="hidden" name="product_id" value="<?= $item['id'] ?>">
+                                                <button type="submit" style="background:none;border:none;color:red;font-size:18px;"><i class="fa fa-close"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>
@@ -138,12 +91,10 @@
                         </form>
                     </div>
                     <div class="cart__total">
-                        <h6>Cart total</h6>
                         <ul>
-                            <li>Subtotal <span>$ 169.50</span></li>
-                            <li>Total <span>$ 169.50</span></li>
+                            <li>Subtotal <span><?= number_format($total, 0, ',', '.') ?>₫</span></li>
+                            <li>Total <span><?= number_format($total, 0, ',', '.') ?>₫</span></li>
                         </ul>
-                        <a href="#" class="primary-btn">Proceed to checkout</a>
                     </div>
                 </div>
             </div>
