@@ -1,10 +1,12 @@
 <?php
 
 require_once __DIR__ . '/../commons/env.php';
-require_once __DIR__ .'/../commons/function.php';
+require_once __DIR__ . '/../commons/function.php';
 
-class HomePageModels {
-    public function getAllProducts() {
+class HomePageModels
+{
+    public function getAllProducts()
+    {
         $conn = connectDB();
         $products = $conn->query('SELECT * FROM products')->fetchAll(PDO::FETCH_ASSOC);
         foreach ($products as &$product) {
@@ -17,14 +19,18 @@ class HomePageModels {
         return $products;
     }
 }
-class Category {
-    public function getAll() {
+class Category
+{
+    public function getAll()
+    {
         $conn = connectDB();
         return $conn->query('SELECT * FROM categories')->fetchAll(PDO::FETCH_ASSOC);
     }
 }
-class Product {
-    public function getFiltered($search, $price, $category_id, $limit, $offset) {
+class Product
+{
+    public function getFiltered($search, $price, $category_id, $limit, $offset)
+    {
         $conn = connectDB();
         $sql = "SELECT * FROM products WHERE 1";
         $params = [];
@@ -47,7 +53,8 @@ class Product {
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function countFiltered($search, $price, $category_id) {
+    public function countFiltered($search, $price, $category_id)
+    {
         $conn = connectDB();
         $sql = "SELECT COUNT(*) FROM products WHERE 1";
         $params = [];
@@ -69,5 +76,22 @@ class Product {
         $stmt->execute($params);
         return $stmt->fetchColumn();
     }
+    public function getById($id)
+    {
+        $conn = connectDB();
+        $stmt = $conn->prepare("SELECT * FROM products WHERE id = :id");
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getRelated($category_id, $except_id, $limit = 4)
+    {
+        $conn = connectDB();
+        $stmt = $conn->prepare("SELECT * FROM products WHERE category_id = :cat AND id != :id LIMIT :limit");
+        $stmt->bindValue(':cat', $category_id, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $except_id, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
-?>

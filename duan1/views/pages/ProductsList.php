@@ -74,7 +74,7 @@ $productsToShow = array_slice($filteredProducts, $offset, $limit);
                                                 <?php foreach ($categories as $cat): ?>
                                                     <li>
                                                         <a href="?<?= http_build_query(array_merge($_GET, ['category_id' => $cat['id']])) ?>"
-                                                           <?= (($_GET['category_id'] ?? '') == $cat['id']) ? 'style="font-weight:bold;"' : '' ?>>
+                                                            <?= (($_GET['category_id'] ?? '') == $cat['id']) ? 'style="font-weight:bold;"' : '' ?>>
                                                             <?= htmlspecialchars($cat['name']) ?>
                                                         </a>
                                                     </li>
@@ -87,6 +87,30 @@ $productsToShow = array_slice($filteredProducts, $offset, $limit);
                         </div>
                     </div>
                     <!-- End Category Filter -->
+                    <div class="shop__sidebar__color" style="margin-bottom: 30px;">
+                        <h5 style="margin-bottom: 10px;">Lọc theo màu</h5>
+                        <label class="color color-1" style="background: #000;" title="Đen">
+                            <input type="radio" name="color" value="black" <?= (($_GET['color'] ?? '') == 'black') ? 'checked' : '' ?> onchange="this.form.submit()">
+                        </label>
+                        <label class="color color-2" style="background: #fff; border:1px solid #ccc;" title="Trắng">
+                            <input type="radio" name="color" value="white" <?= (($_GET['color'] ?? '') == 'white') ? 'checked' : '' ?> onchange="this.form.submit()">
+                        </label>
+                        <label class="color color-3" style="background: #e53637;" title="Đỏ">
+                            <input type="radio" name="color" value="red" <?= (($_GET['color'] ?? '') == 'red') ? 'checked' : '' ?> onchange="this.form.submit()">
+                        </label>
+                        <label class="color color-4" style="background: #4287f5;" title="Xanh">
+                            <input type="radio" name="color" value="blue" <?= (($_GET['color'] ?? '') == 'blue') ? 'checked' : '' ?> onchange="this.form.submit()">
+                        </label>
+                        <!-- Thêm các màu khác nếu muốn -->
+                    </div>
+                    <div class="shop__sidebar__tags" style="margin-bottom: 30px;">
+                        <h5 style="margin-bottom: 10px;">Tags</h5>
+                        <a href="?<?= http_build_query(array_merge($_GET, ['tag' => 'ao-thun'])) ?>">Áo thun</a>
+                        <a href="?<?= http_build_query(array_merge($_GET, ['tag' => 'quan-jean'])) ?>">Quần jean</a>
+                        <a href="?<?= http_build_query(array_merge($_GET, ['tag' => 'so-mi'])) ?>">Sơ mi</a>
+                        <a href="?<?= http_build_query(array_merge($_GET, ['tag' => 'phu-kien'])) ?>">Phụ kiện</a>
+                        <!-- Thêm các tag khác nếu muốn -->
+                    </div>
                 </div>
             </div>
             <!-- End Sidebar -->
@@ -123,9 +147,9 @@ $productsToShow = array_slice($filteredProducts, $offset, $limit);
                             <div class="col-lg-4 col-md-6 col-sm-6">
                                 <div class="product__item">
                                     <div class="product__item__pic">
-                                        <img src="<?= !empty($product['image']) ? 'admin/' . htmlspecialchars($product['image']) : 'assets/img/no-image.jpg' ?>"
-                                            alt="<?= htmlspecialchars($product['name']) ?>"
-                                            style="width:100%;height:250px;object-fit:cover;border-radius:8px;">
+                                        <a href="?act=product-detail&id=<?= $product['id'] ?>"><img src="<?= !empty($product['image']) ? 'admin/' . htmlspecialchars($product['image']) : 'assets/img/no-image.jpg' ?>"
+                                                alt="<?= htmlspecialchars($product['name']) ?>"
+                                                style="width:100%;height:250px;object-fit:cover;border-radius:8px;"></a>
                                     </div>
                                     <div class="product__item__text">
                                         <h6><?= htmlspecialchars($product['name']) ?></h6>

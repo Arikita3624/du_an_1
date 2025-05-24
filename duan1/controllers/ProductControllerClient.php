@@ -29,7 +29,23 @@ class ProductControllerCLient
 class ProductDetailController
 {
     public function index()
-    {
-        require_once __DIR__ . '/../views/pages/ProductDetail.php';
+{
+    $productModel = new Product();
+    $categoryModel = new Category();
+
+    $id = $_GET['id'] ?? 0;
+    $product = $productModel->getById($id);
+
+    if (!$product) {
+        // Xử lý khi không tìm thấy sản phẩm
+        die('Không tìm thấy sản phẩm!');
     }
+
+    // Lấy sản phẩm tương tự cùng danh mục (trừ sản phẩm hiện tại)
+    $relatedProducts = $productModel->getRelated($product['category_id'], $product['id']);
+
+    $categories = $categoryModel->getAll(); // Nếu cần danh mục
+
+    require_once __DIR__ . '/../views/pages/ProductDetail.php';
+}
 }
