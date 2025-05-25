@@ -152,6 +152,41 @@
             cursor: pointer;
         }
     }
+
+    /* Thêm CSS cho icon giỏ hàng */
+    .cart-icon {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: #111111;
+        margin-left: 15px;
+        transition: all 0.3s;
+    }
+
+    .cart-icon i {
+        font-size: 28px;
+        color: #7fad39;
+        transition: all 0.3s;
+    }
+
+    .cart-icon:hover i {
+        transform: scale(1.1);
+        color: #5a7d2a;
+    }
+
+    .cart-icon span {
+        background: #7fad39;
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 2px 6px;
+        border-radius: 50%;
+        margin-left: 5px;
+    }
+
+    .cart-icon:hover span {
+        background: #5a7d2a;
+    }
 </style>
 
 <header class="header">
@@ -214,7 +249,7 @@
                             <input type="text" name="keyword" placeholder="Tìm kiếm sản phẩm...">
                             <button type="submit"><i class="fa fa-search"></i></button>
                         </form>
-                        <a href="?act=carts" class="cart-icon"><img src="assets/img/icon/cart.png" alt=""></a>
+                        <a href="?act=carts" class="cart-icon"><i class="fa fa-shopping-cart"></i> <span><?php echo isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0; ?></span></a>
                     </div>
                 </div>
             </div>

@@ -504,26 +504,50 @@ ol {
 }
 
 .header__nav__option {
-	text-align: right;
-	padding: 30px 0;
+    display: flex;
+    align-items: center;
 }
 
 .header__nav__option a {
-	display: inline-block;
-	margin-right: 26px;
-	position: relative;
+    margin-right: 20px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    color: #111111;
+    transition: all 0.3s;
+}
+
+.header__nav__option a:hover {
+    color: #e53637;
+    transform: scale(1.1);
 }
 
 .header__nav__option a span {
-	color: #0d0d0d;
-	font-size: 11px;
-	position: absolute;
-	left: 5px;
-	top: 8px;
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    height: 20px;
+    width: 20px;
+    background: #e53637;
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 20px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.header__nav__option a:last-child {
-	margin-right: 0;
+.header__nav__option a i {
+    font-size: 24px;
+    transition: all 0.3s;
+}
+
+.header__nav__option a:hover i {
+    transform: scale(1.2);
 }
 
 .header__nav__option .price {
