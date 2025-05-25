@@ -5,9 +5,9 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="product__details__breadcrumb">
-                            <a href="?act=/">Home</a>
-                            <a href="?act=product-list">Shop</a>
-                            <span>Product Details</span>
+                            <a href="?act=/">Trang chủ</a>
+                            <a href="?act=product-list">Cửa hàng</a>
+                            <span><?php echo htmlspecialchars($product['name']); ?></span>
                         </div>
                     </div>
                 </div>
@@ -16,10 +16,12 @@
                         <ul class="nav nav-tabs" role="tablist">
                             <li class="nav-item">
                                 <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">
-                                    <div class="product__thumb__pic set-bg" data-setbg="assets/img/shop-details/thumb-1.png">
+                                    <div class="product__thumb__pic set-bg" data-setbg="admin/<?php echo htmlspecialchars($product['image']); ?>">
                                     </div>
                                 </a>
                             </li>
+                            <!-- Add more tabs for additional images if available -->
+                             <?php /*
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">
                                     <div class="product__thumb__pic set-bg" data-setbg="assets/img/shop-details/thumb-2.png">
@@ -39,15 +41,18 @@
                                     </div>
                                 </a>
                             </li>
+                             */ ?>
                         </ul>
                     </div>
                     <div class="col-lg-6 col-md-9">
                         <div class="tab-content">
                             <div class="tab-pane active" id="tabs-1" role="tabpanel">
                                 <div class="product__details__pic__item">
-                                    <img src="assets/img/shop-details/product-big-2.png" alt="">
+                                    <img src="admin/<?php echo htmlspecialchars($product['image']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>">
                                 </div>
                             </div>
+                            <!-- Add more panes for additional images if available -->
+                            <?php /*
                             <div class="tab-pane" id="tabs-2" role="tabpanel">
                                 <div class="product__details__pic__item">
                                     <img src="assets/img/shop-details/product-big-3.png" alt="">
@@ -64,6 +69,7 @@
                                     <a href="https://www.youtube.com/watch?v=8PJ3_p7VqHw&amp;list=RD8PJ3_p7VqHw&amp;start_radio=1" class="video-popup"><i class="fa fa-play"></i></a>
                                 </div>
                             </div>
+                            */ ?>
                         </div>
                     </div>
                 </div>
@@ -74,73 +80,41 @@
                 <div class="row d-flex justify-content-center">
                     <div class="col-lg-8">
                         <div class="product__details__text">
-                            <h4>Hooded thermal anorak</h4>
+                            <h4><?php echo htmlspecialchars($product['name']); ?></h4>
                             <div class="rating">
                                 <i class="fa fa-star"></i>
                                 <i class="fa fa-star"></i>
                                 <i class="fa fa-star"></i>
                                 <i class="fa fa-star"></i>
                                 <i class="fa fa-star-o"></i>
-                                <span> - 5 Reviews</span>
+                                <span> - 0 đánh giá</span> <?php /* TODO: Implement reviews */ ?>
                             </div>
-                            <h3>$270.00 <span>70.00</span></h3>
-                            <p>Coat with quilted lining and an adjustable hood. Featuring long sleeves with adjustable
-                                cuff tabs, adjustable asymmetric hem with elastic side tabs and a front zip fastening
-                            with placket.</p>
+                            <h3><?php echo number_format($product['price'], 0, ',', '.'); ?>₫ <?php if ($product['discount_price'] < $product['price']) { ?><span><?php echo number_format($product['discount_price'], 0, ',', '.'); ?>₫</span><?php } ?></h3>
+                            <p><?php echo nl2br(htmlspecialchars($product['description'])); ?></p>
                             <div class="product__details__option">
-                                <div class="product__details__option__size">
-                                    <span>Size:</span>
-                                    <label for="xxl">xxl
-                                        <input type="radio" id="xxl">
-                                    </label>
-                                    <label class="active" for="xl">xl
-                                        <input type="radio" id="xl">
-                                    </label>
-                                    <label for="l">l
-                                        <input type="radio" id="l">
-                                    </label>
-                                    <label for="sm">s
-                                        <input type="radio" id="sm">
-                                    </label>
-                                </div>
-                                <div class="product__details__option__color">
-                                    <span>Color:</span>
-                                    <label class="c-1" for="sp-1">
-                                        <input type="radio" id="sp-1">
-                                    </label>
-                                    <label class="c-2" for="sp-2">
-                                        <input type="radio" id="sp-2">
-                                    </label>
-                                    <label class="c-3" for="sp-3">
-                                        <input type="radio" id="sp-3">
-                                    </label>
-                                    <label class="c-4" for="sp-4">
-                                        <input type="radio" id="sp-4">
-                                    </label>
-                                    <label class="c-9" for="sp-9">
-                                        <input type="radio" id="sp-9">
-                                    </label>
-                                </div>
                             </div>
                             <div class="product__details__cart__option">
-                                <div class="quantity">
-                                    <div class="pro-qty">
-                                        <input type="text" value="1">
+                                <form action="?act=add-to-cart" method="POST" class="d-flex align-items-center justify-content-center">
+                                    <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id']); ?>">
+                                    <div class="quantity">
+                                        <div class="pro-qty">
+                                            <input type="text" name="quantity" value="1" min="1" id="quantityInput">
+                                        </div>
                                     </div>
-                                </div>
-                                <a href="#" class="primary-btn">add to cart</a>
+                                    <button type="submit" class="primary-btn">Thêm vào giỏ hàng</button>
+                                </form> <?php /* TODO: Implement add to cart */ ?>
                             </div>
                             <div class="product__details__btns__option">
-                                <a href="#"><i class="fa fa-heart"></i> add to wishlist</a>
-                                <a href="#"><i class="fa fa-exchange"></i> Add To Compare</a>
+                                <a href="#"><i class="fa fa-heart"></i> Thêm vào danh sách yêu thích</a> <?php /* TODO: Implement wishlist */ ?>
+                                <a href="#"><i class="fa fa-exchange"></i> Thêm vào so sánh</a> <?php /* TODO: Implement compare */ ?>
                             </div>
                             <div class="product__details__last__option">
-                                <h5><span>Guaranteed Safe Checkout</span></h5>
-                                <img src="img/shop-details/details-payment.png" alt="">
+                                <h5><span>Thanh toán an toàn được đảm bảo</span></h5>
+                                <?php /* TODO: Add payment icons */ ?>
                                 <ul>
-                                    <li><span>SKU:</span> 3812912</li>
-                                    <li><span>Categories:</span> Clothes</li>
-                                    <li><span>Tag:</span> Clothes, Skin, Body</li>
+                                    <li><span>Mã sản phẩm:</span> <?php echo htmlspecialchars($product['id']); ?></li>
+                                    <li><span>Danh mục:</span> <?php echo htmlspecialchars($product['category_name']); ?></li>
+                                    <?php /* TODO: Implement tags */ ?>
                                 </ul>
                             </div>
                         </div>
@@ -151,115 +125,36 @@
                         <div class="product__details__tab">
                             <ul class="nav nav-tabs" role="tablist">
                                 <li class="nav-item">
-                                    <a class="nav-link active" data-toggle="tab" href="#tabs-5"
-                                    role="tab">Description</a>
+                                    <a class="nav-link active" data-toggle="tab" href="#tabs-5" role="tab">Mô tả</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#tabs-6" role="tab">Customer
-                                    Previews(5)</a>
+                                    Đánh giá(0)</a> <?php /* TODO: Implement reviews */ ?>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" data-toggle="tab" href="#tabs-7" role="tab">Additional
-                                    information</a>
+                                    <a class="nav-link" data-toggle="tab" href="#tabs-7" role="tab">Thông tin bổ sung</a> <?php /* TODO: Implement additional info */ ?>
                                 </li>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane active" id="tabs-5" role="tabpanel">
                                     <div class="product__details__tab__content">
-                                        <p class="note">Nam tempus turpis at metus scelerisque placerat nulla deumantos
-                                            solicitud felis. Pellentesque diam dolor, elementum etos lobortis des mollis
-                                            ut risus. Sedcus faucibus an sullamcorper mattis drostique des commodo
-                                        pharetras loremos.</p>
+                                        <?php echo nl2br(htmlspecialchars($product['description'])); ?>
                                         <div class="product__details__tab__content__item">
-                                            <h5>Products Infomation</h5>
-                                            <p>A Pocket PC is a handheld computer, which features many of the same
-                                                capabilities as a modern PC. These handy little devices allow
-                                                individuals to retrieve and store e-mail messages, create a contact
-                                                file, coordinate appointments, surf the internet, exchange text messages
-                                                and more. Every product that is labeled as a Pocket PC must be
-                                                accompanied with specific software to operate the unit and must feature
-                                            a touchscreen and touchpad.</p>
-                                            <p>As is the case with any new technology product, the cost of a Pocket PC
-                                                was substantial during it’s early release. For approximately $700.00,
-                                                consumers could purchase one of top-of-the-line Pocket PCs in 2003.
-                                                These days, customers are finding that prices have become much more
-                                                reasonable now that the newness is wearing off. For approximately
-                                            $350.00, a new Pocket PC can now be purchased.</p>
+                                            <?php /* TODO: Add more detailed product info if available */ ?>
                                         </div>
                                         <div class="product__details__tab__content__item">
-                                            <h5>Material used</h5>
-                                            <p>Polyester is deemed lower quality due to its none natural quality’s. Made
-                                                from synthetic materials, not natural like wool. Polyester suits become
-                                                creased easily and are known for not being breathable. Polyester suits
-                                                tend to have a shine to them compared to wool and cotton suits, this can
-                                                make the suit look cheap. The texture of velvet is luxurious and
-                                                breathable. Velvet is a great choice for dinner party jacket and can be
-                                            worn all year round.</p>
+                                            <?php /* TODO: Add material info if available */ ?>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="tabs-6" role="tabpanel">
                                     <div class="product__details__tab__content">
-                                        <div class="product__details__tab__content__item">
-                                            <h5>Products Infomation</h5>
-                                            <p>A Pocket PC is a handheld computer, which features many of the same
-                                                capabilities as a modern PC. These handy little devices allow
-                                                individuals to retrieve and store e-mail messages, create a contact
-                                                file, coordinate appointments, surf the internet, exchange text messages
-                                                and more. Every product that is labeled as a Pocket PC must be
-                                                accompanied with specific software to operate the unit and must feature
-                                            a touchscreen and touchpad.</p>
-                                            <p>As is the case with any new technology product, the cost of a Pocket PC
-                                                was substantial during it’s early release. For approximately $700.00,
-                                                consumers could purchase one of top-of-the-line Pocket PCs in 2003.
-                                                These days, customers are finding that prices have become much more
-                                                reasonable now that the newness is wearing off. For approximately
-                                            $350.00, a new Pocket PC can now be purchased.</p>
-                                        </div>
-                                        <div class="product__details__tab__content__item">
-                                            <h5>Material used</h5>
-                                            <p>Polyester is deemed lower quality due to its none natural quality’s. Made
-                                                from synthetic materials, not natural like wool. Polyester suits become
-                                                creased easily and are known for not being breathable. Polyester suits
-                                                tend to have a shine to them compared to wool and cotton suits, this can
-                                                make the suit look cheap. The texture of velvet is luxurious and
-                                                breathable. Velvet is a great choice for dinner party jacket and can be
-                                            worn all year round.</p>
-                                        </div>
+                                        <?php /* TODO: Implement customer reviews */ ?>
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="tabs-7" role="tabpanel">
                                     <div class="product__details__tab__content">
-                                        <p class="note">Nam tempus turpis at metus scelerisque placerat nulla deumantos
-                                            solicitud felis. Pellentesque diam dolor, elementum etos lobortis des mollis
-                                            ut risus. Sedcus faucibus an sullamcorper mattis drostique des commodo
-                                        pharetras loremos.</p>
-                                        <div class="product__details__tab__content__item">
-                                            <h5>Products Infomation</h5>
-                                            <p>A Pocket PC is a handheld computer, which features many of the same
-                                                capabilities as a modern PC. These handy little devices allow
-                                                individuals to retrieve and store e-mail messages, create a contact
-                                                file, coordinate appointments, surf the internet, exchange text messages
-                                                and more. Every product that is labeled as a Pocket PC must be
-                                                accompanied with specific software to operate the unit and must feature
-                                            a touchscreen and touchpad.</p>
-                                            <p>As is the case with any new technology product, the cost of a Pocket PC
-                                                was substantial during it’s early release. For approximately $700.00,
-                                                consumers could purchase one of top-of-the-line Pocket PCs in 2003.
-                                                These days, customers are finding that prices have become much more
-                                                reasonable now that the newness is wearing off. For approximately
-                                            $350.00, a new Pocket PC can now be purchased.</p>
-                                        </div>
-                                        <div class="product__details__tab__content__item">
-                                            <h5>Material used</h5>
-                                            <p>Polyester is deemed lower quality due to its none natural quality’s. Made
-                                                from synthetic materials, not natural like wool. Polyester suits become
-                                                creased easily and are known for not being breathable. Polyester suits
-                                                tend to have a shine to them compared to wool and cotton suits, this can
-                                                make the suit look cheap. The texture of velvet is luxurious and
-                                                breathable. Velvet is a great choice for dinner party jacket and can be
-                                            worn all year round.</p>
-                                        </div>
+                                        <?php /* TODO: Implement additional information */ ?>
                                     </div>
                                 </div>
                             </div>
@@ -276,149 +171,253 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <h3 class="related-title">Related Product</h3>
+                    <h3 class="related-title">Sản phẩm liên quan</h3> <?php /* TODO: Implement logic to fetch related products */ ?>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-1.jpg">
-                            <span class="label">New</span>
-                            <ul class="product__hover">
-                                <li><a href="#"><img src="assets/img/icon/heart.png" alt=""></a></li>
-                                <li><a href="#"><img src="assets/img/icon/compare.png" alt=""> <span>Compare</span></a></li>
-                                <li><a href="#"><img src="assets/img/icon/search.png" alt=""></a></li>
-                            </ul>
-                        </div>
-                        <div class="product__item__text">
-                            <h6>Piqué Biker Jacket</h6>
-                            <a href="#" class="add-cart">+ Add To Cart</a>
-                            <div class="rating">
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                            </div>
-                            <h5>$67.24</h5>
-                            <div class="product__color__select">
-                                <label for="pc-1">
-                                    <input type="radio" id="pc-1">
-                                </label>
-                                <label class="active black" for="pc-2">
-                                    <input type="radio" id="pc-2">
-                                </label>
-                                <label class="grey" for="pc-3">
-                                    <input type="radio" id="pc-3">
-                                </label>
+                <?php if (!empty($relatedProducts)): ?>
+                    <?php foreach ($relatedProducts as $relatedProduct): ?>
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg" data-setbg="admin/<?php echo htmlspecialchars($relatedProduct['image']); ?>">
+                                    <?php /* TODO: Add logic for 'New' or 'Sale' label if applicable */ ?>
+                                    <ul class="product__hover">
+                                        <li><a href="#"><i class="fa fa-heart"></i></a></li> <?php /* TODO: Implement wishlist */ ?>
+                                        <li><a href="#"><i class="fa fa-retweet"></i> <span>So sánh</span></a></li> <?php /* TODO: Implement compare */ ?>
+                                        <li><a href="?act=product-detail&id=<?php echo $relatedProduct['id']; ?>" title="Xem chi tiết"><i class="fa fa-search"></i></a></li> <?php /* View Detail Link */ ?>
+                                        <li><a href="#" title="Thêm vào giỏ hàng"><i class="fa fa-shopping-cart"></i></a></li> <?php /* TODO: Implement add to cart */ ?>
+                                    </ul>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6><a href="?act=product-detail&id=<?php echo $relatedProduct['id']; ?>"><?php echo htmlspecialchars($relatedProduct['name']); ?></a></h6> <?php /* Link on product name */ ?>
+                                    <h5><?php echo number_format($relatedProduct['price'], 0, ',', '.'); ?>₫</h5> <?php /* TODO: Display discount price if applicable */ ?>
+                                    <?php /* TODO: Implement rating display if available */ ?>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-2.jpg">
-                            <ul class="product__hover">
-                                <li><a href="#"><img src="assets/img/icon/heart.png" alt=""></a></li>
-                                <li><a href="#"><img src="assets/img/icon/compare.png" alt=""> <span>Compare</span></a></li>
-                                <li><a href="#"><img src="assets/img/icon/search.png" alt=""></a></li>
-                            </ul>
-                        </div>
-                        <div class="product__item__text">
-                            <h6>Piqué Biker Jacket</h6>
-                            <a href="#" class="add-cart">+ Add To Cart</a>
-                            <div class="rating">
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                            </div>
-                            <h5>$67.24</h5>
-                            <div class="product__color__select">
-                                <label for="pc-4">
-                                    <input type="radio" id="pc-4">
-                                </label>
-                                <label class="active black" for="pc-5">
-                                    <input type="radio" id="pc-5">
-                                </label>
-                                <label class="grey" for="pc-6">
-                                    <input type="radio" id="pc-6">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
-                    <div class="product__item sale">
-                        <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-3.jpg">
-                            <span class="label">Sale</span>
-                            <ul class="product__hover">
-                                <li><a href="#"><img src="assets/img/icon/heart.png" alt=""></a></li>
-                                <li><a href="#"><img src="assets/img/icon/compare.png" alt=""> <span>Compare</span></a></li>
-                                <li><a href="#"><img src="assets/img/icon/search.png" alt=""></a></li>
-                            </ul>
-                        </div>
-                        <div class="product__item__text">
-                            <h6>Multi-pocket Chest Bag</h6>
-                            <a href="#" class="add-cart">+ Add To Cart</a>
-                            <div class="rating">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star-o"></i>
-                            </div>
-                            <h5>$43.48</h5>
-                            <div class="product__color__select">
-                                <label for="pc-7">
-                                    <input type="radio" id="pc-7">
-                                </label>
-                                <label class="active black" for="pc-8">
-                                    <input type="radio" id="pc-8">
-                                </label>
-                                <label class="grey" for="pc-9">
-                                    <input type="radio" id="pc-9">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
-                    <div class="product__item">
-                        <div class="product__item__pic set-bg" data-setbg="assets/img/product/product-4.jpg">
-                            <ul class="product__hover">
-                                <li><a href="#"><img src="assets/img/icon/heart.png" alt=""></a></li>
-                                <li><a href="#"><img src="assets/img/icon/compare.png" alt=""> <span>Compare</span></a></li>
-                                <li><a href="#"><img src="assets/img/icon/search.png" alt=""></a></li>
-                            </ul>
-                        </div>
-                        <div class="product__item__text">
-                            <h6>Diagonal Textured Cap</h6>
-                            <a href="#" class="add-cart">+ Add To Cart</a>
-                            <div class="rating">
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <i class="fa fa-star-o"></i>
-                            </div>
-                            <h5>$60.9</h5>
-                            <div class="product__color__select">
-                                <label for="pc-10">
-                                    <input type="radio" id="pc-10">
-                                </label>
-                                <label class="active black" for="pc-11">
-                                    <input type="radio" id="pc-11">
-                                </label>
-                                <label class="grey" for="pc-12">
-                                    <input type="radio" id="pc-12">
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="col-12">Không có sản phẩm liên quan nào.</div>
+                <?php endif; ?>
             </div>
         </div>
     </section>
     <!-- Related Product Section End -->
+
+    <style>
+        /* Custom CSS for Product Detail Page */
+
+        .shop-details {
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+
+        .product__details__pic__item img {
+            width: 100%; /* Make image responsive */
+            height: auto;
+        }
+
+        .product__details__text h4 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .product__details__text .rating i {
+            color: #ffc107; /* Star color */
+        }
+
+        .product__details__text h3 {
+            font-size: 28px;
+            color: #e44; /* Price color */
+            margin-bottom: 20px;
+        }
+
+        .product__details__text h3 span {
+            font-size: 18px;
+            color: #888; /* Original price color */
+            text-decoration: line-through;
+            margin-left: 10px;
+        }
+
+        .product__details__text p {
+            margin-bottom: 25px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .product__details__cart__option {
+            margin-bottom: 30px;
+        }
+
+        .product__details__cart__option .quantity {
+            margin-right: 20px;
+        }
+
+        .product__details__cart__option .pro-qty input {
+            width: 60px;
+            text-align: center;
+            border: 1px solid #e1e1e1;
+            border-radius: 4px;
+        }
+
+        .product__details__cart__option .primary-btn {
+            background-color: #e44;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .product__details__cart__option .primary-btn:hover {
+            background-color: #d43a3a;
+        }
+
+        .product__details__btns__option a {
+            display: inline-block;
+            margin-right: 20px;
+            color: #555;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .product__details__btns__option a i {
+            margin-right: 5px;
+            color: #e44; /* Icon color */
+        }
+
+        .product__details__btns__option a:hover {
+            color: #e44;
+        }
+
+        .product__details__last__option h5 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .product__details__last__option ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .product__details__last__option ul li {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .product__details__last__option ul li span {
+            font-weight: bold;
+            margin-right: 10px;
+            color: #333;
+        }
+
+        .product__details__tab .nav-tabs {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        .product__details__tab .nav-tabs .nav-item {
+            margin-bottom: -1px; /* To make the active tab border connect */
+        }
+
+        .product__details__tab .nav-tabs .nav-link {
+            border: 1px solid transparent;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            color: #555;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+
+        .product__details__tab .nav-tabs .nav-link.active {
+            color: #e44;
+            border-color: #e1e1e1 #e1e1e1 #fff;
+            background-color: #fff;
+        }
+
+         .product__details__tab .nav-tabs .nav-link:hover {
+            border-color: #e1e1e1;
+         }
+
+        .product__details__tab__content {
+            padding-top: 20px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .related.spad {
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+
+        .related-title {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #333;
+            text-align: center;
+        }
+
+        /* Reuse product item styles from product list page */
+         .related .product__item {
+             margin-bottom: 30px;
+             border: 1px solid #e1e1e1;
+             border-radius: 4px;
+             overflow: hidden;
+             transition: all 0.3s ease;
+         }
+
+         .related .product__item:hover {
+             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+             transform: translateY(-5px);
+         }
+
+         .related .product__item__pic {
+              height: 250px;
+             background-size: cover;
+             background-position: center;
+             position: relative;
+         }
+
+         .related .product__item__text {
+             padding: 15px;
+             text-align: center;
+         }
+
+         .related .product__item__text h6 a {
+             font-size: 16px;
+             color: #333;
+             text-decoration: none;
+             margin-bottom: 10px;
+             display: block;
+         }
+
+         .related .product__item__text h5 {
+             color: #e44;
+             font-size: 18px;
+             margin-bottom: 0;
+         }
+
+         .related .product__hover li a {
+             border: 1px solid #e1e1e1;
+             border-radius: 50%;
+             width: 40px;
+             height: 40px;
+             line-height: 38px;
+             text-align: center;
+             background-color: #fff;
+             color: #333;
+             margin: 5px;
+             transition: all 0.3s ease;
+         }
+
+         .related .product__hover li a:hover {
+             background-color: #e44;
+             color: #fff;
+             border-color: #e44;
+         }
+
+    </style>
+
+    <!-- Related Section End -->

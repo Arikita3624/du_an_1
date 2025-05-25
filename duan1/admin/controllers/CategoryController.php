@@ -9,7 +9,14 @@ class CategoryController {
     }
 
     public function index() {
-        $categories = $this->categoryModel->getAllCategories();
+        $keyword = $_GET['keyword'] ?? '';
+        
+        if (!empty($keyword)) {
+            $categories = $this->categoryModel->searchCategories($keyword);
+        } else {
+            $categories = $this->categoryModel->getAllCategories();
+        }
+        
         require_once __DIR__ . '/../views/category/index.php';
     }
 
@@ -25,7 +32,9 @@ class CategoryController {
                 header('Location: index.php?controller=category');
                 exit;
             } else {
-                $_SESSION['error'] = "Có lỗi xảy ra khi thêm danh mục!";
+                $_SESSION['error'] = "Danh mục này đã tồn tại!";
+                header('Location: index.php?controller=category');
+                exit;
             }
         }
         require_once __DIR__ . '/../views/category/create.php';
@@ -52,7 +61,7 @@ class CategoryController {
                 header('Location: index.php?controller=category');
                 exit;
             } else {
-                $_SESSION['error'] = "Có lỗi xảy ra khi cập nhật danh mục!";
+                $_SESSION['error'] = "Danh mục này đã tồn tại!";
             }
         }
         require_once __DIR__ . '/../views/category/edit.php';

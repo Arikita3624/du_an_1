@@ -38,7 +38,15 @@
 
                 <div class="form-group">
                     <label for="image">Hình ảnh</label>
+                    <?php if (!empty($product['image'])): ?>
+                    <div class="mb-2">
+                        <img src="<?php echo htmlspecialchars($product['image']); ?>"
+                             alt="<?php echo htmlspecialchars($product['name']); ?>"
+                             style="max-width: 200px;">
+                    </div>
+                    <?php endif; ?>
                     <input type="file" class="form-control-file" id="image" name="image" accept="image/*">
+                    <small class="form-text text-muted">Để trống nếu không muốn thay đổi hình ảnh</small>
                 </div>
 
                 <div class="form-group">
@@ -50,4 +58,4 @@
             </form>
         </div>
     </div>
-</div> 
+</div>

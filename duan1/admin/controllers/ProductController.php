@@ -25,7 +25,7 @@ class ProductController {
 
         // Lấy danh sách sản phẩm cho trang hiện tại (có filter)
         $products = $this->productModel->getProductsWithPagination($limit, $offset, $keyword, $categoryId);
-        
+
         // Lấy danh sách danh mục cho bộ lọc
         $categories = $this->categoryModel->getAllCategories();
 
@@ -34,7 +34,7 @@ class ProductController {
 
     public function create() {
         $categories = $this->categoryModel->getAllCategories();
-        
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 'name' => $_POST['name'] ?? '',
@@ -74,7 +74,7 @@ class ProductController {
         $id = $_GET['id'] ?? 0;
         $product = $this->productModel->getProductById($id);
         $categories = $this->categoryModel->getAllCategories();
-        
+
         if (!$product) {
             $_SESSION['error'] = "Không tìm thấy sản phẩm!";
             header('Location: index.php?controller=product');
@@ -126,7 +126,7 @@ class ProductController {
     public function delete() {
         $id = $_GET['id'] ?? 0;
         $product = $this->productModel->getProductById($id);
-        
+
         if ($product) {
             // Xóa ảnh sản phẩm nếu có
             if (!empty($product['image'])) {
@@ -135,7 +135,7 @@ class ProductController {
                     unlink($imageFile);
                 }
             }
-            
+
             if ($this->productModel->deleteProduct($id)) {
                 $_SESSION['success'] = "Xóa sản phẩm thành công!";
             } else {
@@ -144,7 +144,7 @@ class ProductController {
         } else {
             $_SESSION['error'] = "Không tìm thấy sản phẩm!";
         }
-        
+
         header('Location: index.php?controller=product');
         exit;
     }

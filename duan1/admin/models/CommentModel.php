@@ -1,9 +1,11 @@
 <?php
+require_once __DIR__ . '/../../commons/Database.php';
+
 class CommentModel {
     private $db;
 
-    public function __construct($db) {
-        $this->db = $db;
+    public function __construct() {
+        $this->db = Database::getInstance();
     }
 
     public function getCommentsByProduct($productId) {

@@ -23,34 +23,35 @@
 <script src="assets/js/owl.carousel.min.js"></script>
 <script src="assets/js/main.js"></script>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    try {
-        const message = document.getElementById('globalMessage');
-        if (message) {
-            console.log('Thông báo được tìm thấy:', message.textContent);
-            setTimeout(() => {
-                message.classList.add('hidden');
-                console.log('Thông báo đã được ẩn sau 2,5 giây');
-            }, 2500);
-        } else {
-            console.log('Không tìm thấy thông báo với ID globalMessage');
-        }
 
-        const loader = document.querySelector('.loader');
-        if (loader) {
-            setTimeout(() => {
-                loader.style.display = 'none';
-                console.log('Loader đã được ẩn');
-            }, 500);
-        } else {
-            console.log('Không tìm thấy loader');
-        }
-    } catch (error) {
-        console.error('Lỗi trong script:', error);
+</body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const categorySelect = document.getElementById('categorySelect');
+    const productList = document.querySelector('.col-lg-9 .row');
+
+    function fetchProducts() {
+        const search = searchInput.value;
+        const category_id = categorySelect.value;
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', `?act=product-list-ajax&search=${encodeURIComponent(search)}&category_id=${encodeURIComponent(category_id)}`, true);
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                productList.innerHTML = xhr.responseText;
+            }
+        };
+        xhr.send();
     }
+
+    searchInput.addEventListener('input', fetchProducts);
+    categorySelect.addEventListener('change', fetchProducts);
+});
+
+document.querySelectorAll('.set-bg').forEach(function(element) {
+    element.style.backgroundImage = 'url(' + element.getAttribute('data-setbg') + ')';
 });
 </script>
 
-</body>
 </html>

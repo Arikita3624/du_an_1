@@ -44,8 +44,9 @@ class SignUpModel
     }
 }
 
-class SignInModel {
-    public function login($email, $password)
+class SignInModel
+{
+    public function login($email, $password = null, $byEmailOnly = false)
     {
         $conn = connectDB();
         $sql = "SELECT * FROM users WHERE email = :email";
@@ -53,11 +54,14 @@ class SignInModel {
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user && password_verify($password, $user['password'])) {
+        if ($byEmailOnly && $user) {
+            return $user;
+        }
+
+        if ($user && $password !== null && password_verify($password, $user['password'])) {
             return $user;
         }
 
         return ['success' => false, 'message' => 'Email hoặc mật khẩu không đúng'];
     }
 }
-?>

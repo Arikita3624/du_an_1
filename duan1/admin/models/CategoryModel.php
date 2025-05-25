@@ -5,7 +5,7 @@ class CategoryModel {
     private $db;
 
     public function __construct() {
-        $this->db = new Database();
+        $this->db = Database::getInstance();
     }
 
     public function getAllCategories() {
@@ -19,6 +19,11 @@ class CategoryModel {
     }
 
     public function createCategory($data) {
+        // Kiểm tra danh mục đã tồn tại chưa
+        if ($this->checkCategoryExists($data['name'])) {
+            return false;
+        }
+
         $sql = "INSERT INTO categories (name, description) VALUES (:name, :description)";
         return $this->db->execute($sql, [
             'name' => $data['name'],
@@ -26,7 +31,25 @@ class CategoryModel {
         ]);
     }
 
+    public function checkCategoryExists($name, $excludeId = null) {
+        $sql = "SELECT COUNT(*) as count FROM categories WHERE name = :name";
+        $params = ['name' => $name];
+        
+        if ($excludeId) {
+            $sql .= " AND id != :id";
+            $params['id'] = $excludeId;
+        }
+        
+        $result = $this->db->queryOne($sql, $params);
+        return $result['count'] > 0;
+    }
+
     public function updateCategory($id, $data) {
+        // Kiểm tra danh mục đã tồn tại chưa (trừ danh mục hiện tại)
+        if ($this->checkCategoryExists($data['name'], $id)) {
+            return false;
+        }
+
         $sql = "UPDATE categories SET name = :name, description = :description WHERE id = :id";
         return $this->db->execute($sql, [
             'id' => $id,
@@ -57,5 +80,10 @@ class CategoryModel {
         }
         
         return $result;
+    }
+
+    public function searchCategories($keyword) {
+        $sql = "SELECT * FROM categories WHERE name LIKE :keyword OR description LIKE :keyword ORDER BY name ASC";
+        return $this->db->query($sql, ['keyword' => '%' . $keyword . '%']);
     }
 } 

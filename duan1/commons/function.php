@@ -18,6 +18,9 @@ function connectDB() {
 
         return $conn;
     } catch (PDOException $e) {
-        echo ("Connection failed: " . $e->getMessage());
+        // echo ("Connection failed: " . $e->getMessage()); // Comment out to prevent unexpected output
+        // Log the error or handle it appropriately without echoing HTML/text
+        // For now, re-throw the exception to be caught elsewhere or let it cause a fatal error if unhandled
+        throw $e;
     }
 }

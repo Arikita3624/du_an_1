@@ -1,28 +1,35 @@
 <?php
 session_start();
-require_once '../commons/Database.php';
+require_once __DIR__ . '/../commons/Database.php';
+require_once __DIR__ . '/middleware/AuthMiddleware.php';
 
-// Kiểm tra đăng nhập
-if (!isset($_SESSION['admin_id'])) {
-    header('Location: login.php');
-    exit;
-}
+// Các route không cần đăng nhập
+$publicRoutes = [
+    'auth/login',
+    'auth/logout'
+];
 
-// Xử lý controller và action
 $controller = $_GET['controller'] ?? 'dashboard';
 $action = $_GET['action'] ?? 'index';
 
-// Đường dẫn đến controller
-$controllerFile = "controllers/" . ucfirst($controller) . "Controller.php";
+$route = $controller . '/' . $action;
+
+// Kiểm tra đăng nhập
+if (!in_array($route, $publicRoutes)) {
+    AuthMiddleware::isLoggedIn();
+} else if ($route === 'auth/login') {
+    AuthMiddleware::isNotLoggedIn();
+}
 
 // Biến để lưu nội dung
 $content = '';
 
+// Load controller
+$controllerFile = __DIR__ . '/controllers/' . ucfirst($controller) . 'Controller.php';
 if (file_exists($controllerFile)) {
     require_once $controllerFile;
-    $controllerClass = ucfirst($controller) . "Controller";
-    $db = new Database();
-    $controllerInstance = new $controllerClass($db);
+    $controllerClass = ucfirst($controller) . 'Controller';
+    $controllerInstance = new $controllerClass();
     
     if (method_exists($controllerInstance, $action)) {
         // Bắt đầu output buffering
@@ -30,10 +37,16 @@ if (file_exists($controllerFile)) {
         $controllerInstance->$action();
         $content = ob_get_clean();
     } else {
-        $content = "Action không tồn tại!";
+        $content = '<div class="alert alert-danger">Action không tồn tại!</div>';
     }
 } else {
-    $content = "Controller không tồn tại!";
+    $content = '<div class="alert alert-danger">Controller không tồn tại!</div>';
+}
+
+// Nếu là trang đăng nhập, chỉ hiển thị nội dung đăng nhập
+if ($route === 'auth/login') {
+    echo $content;
+    exit;
 }
 ?>
 
@@ -103,9 +116,9 @@ if (file_exists($controllerFile)) {
                     </button>
                     <div class="ml-auto">
                         <span class="mr-3">
-                            Xin chào, <?php echo htmlspecialchars($_SESSION['admin_name']); ?>
+                            Xin chào, <?php echo htmlspecialchars($_SESSION['admin_username'] ?? ''); ?>
                         </span>
-                        <a href="logout.php" class="btn btn-danger">
+                        <a href="index.php?controller=auth&action=logout" class="btn btn-danger">
                             <i class="fas fa-sign-out-alt"></i> Đăng xuất
                         </a>
                     </div>

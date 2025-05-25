@@ -6,9 +6,9 @@ class CartController {
     private $cartModel;
     private $productModel;
 
-    public function __construct($db) {
-        $this->cartModel = new CartModel($db);
-        $this->productModel = new ProductModel($db);
+    public function __construct() {
+        $this->cartModel = new CartModel();
+        $this->productModel = new ProductModel();
     }
 
     public function index() {
@@ -108,6 +108,37 @@ class CartController {
             $_SESSION['error'] = 'Có lỗi xảy ra khi xóa giỏ hàng!';
         }
         
+        header('Location: index.php?controller=cart');
+        exit();
+    }
+
+    public function view() {
+        if (isset($_GET['id'])) {
+            $cartId = $_GET['id'];
+            $cart = $this->cartModel->getCartById($cartId);
+            if ($cart) {
+                $cartItems = $this->cartModel->getCartItems($cartId);
+                require_once __DIR__ . '/../views/cart/view.php';
+            } else {
+                $_SESSION['error'] = 'Không tìm thấy giỏ hàng!';
+                header('Location: index.php?controller=cart');
+                exit();
+            }
+        } else {
+            header('Location: index.php?controller=cart');
+            exit();
+        }
+    }
+
+    public function delete() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+            $cartId = $_POST['id'];
+            if ($this->cartModel->deleteCart($cartId)) {
+                $_SESSION['success'] = 'Đã xóa giỏ hàng thành công!';
+            } else {
+                $_SESSION['error'] = 'Có lỗi xảy ra khi xóa giỏ hàng!';
+            }
+        }
         header('Location: index.php?controller=cart');
         exit();
     }

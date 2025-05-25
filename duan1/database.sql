@@ -1,10 +1,47 @@
--- Tạo cơ sở dữ liệu nếu chưa tồn tại
-DROP DATABASE IF EXISTS base_du_an_1;
-CREATE DATABASE base_du_an_1;
+-- Tạo cơ sở dữ liệu
+CREATE DATABASE IF NOT EXISTS base_du_an_1 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE base_du_an_1;
 
--- Tạo bảng users
-CREATE TABLE users (
+-- Bảng admins
+CREATE TABLE IF NOT EXISTS admins (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    full_name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    last_login DATETIME,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Bảng categories
+CREATE TABLE IF NOT EXISTS categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Bảng products
+CREATE TABLE IF NOT EXISTS products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    price DECIMAL(10,2) NOT NULL,
+    discount_price DECIMAL(10,2) DEFAULT NULL,
+    image VARCHAR(255),
+    category_id INT,
+    stock INT NOT NULL DEFAULT 0,
+    views INT DEFAULT 0,
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Bảng users
+CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
@@ -13,41 +50,14 @@ CREATE TABLE users (
     phone VARCHAR(20),
     address TEXT,
     role ENUM('admin', 'user') DEFAULT 'user',
-    status ENUM('active', 'inactive') DEFAULT 'active',
+    status ENUM('active', 'inactive', 'locked') DEFAULT 'active',
     last_login TIMESTAMP NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Tạo bảng categories
-CREATE TABLE categories (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
-    status ENUM('active', 'inactive') DEFAULT 'active',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
-
--- Tạo bảng products
-CREATE TABLE products (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
-    price DECIMAL(10,2) NOT NULL,
-    discount_price DECIMAL(10,2) DEFAULT NULL,
-    category_id INT,
-    image VARCHAR(255),
-    stock INT NOT NULL DEFAULT 0,
-    views INT DEFAULT 0,
-    status ENUM('active', 'inactive') DEFAULT 'active',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (category_id) REFERENCES categories(id)
-);
-
--- Tạo bảng comments
-CREATE TABLE comments (
+-- Bảng comments
+CREATE TABLE IF NOT EXISTS comments (
     id INT AUTO_INCREMENT PRIMARY KEY,
     product_id INT NOT NULL,
     user_id INT NOT NULL,
@@ -56,36 +66,14 @@ CREATE TABLE comments (
     status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (product_id) REFERENCES products(id),
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Tạo bảng carts
-CREATE TABLE carts (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id)
-);
-
--- Tạo bảng cart_items
-CREATE TABLE cart_items (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    cart_id INT NOT NULL,
-    product_id INT NOT NULL,
-    quantity INT NOT NULL DEFAULT 1,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (cart_id) REFERENCES carts(id),
-    FOREIGN KEY (product_id) REFERENCES products(id)
-);
-
--- Tạo bảng orders
-CREATE TABLE orders (
+-- Bảng orders
+CREATE TABLE IF NOT EXISTS orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
-    cart_id INT,
     full_name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
     phone VARCHAR(20) NOT NULL,
@@ -97,12 +85,11 @@ CREATE TABLE orders (
     note TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (cart_id) REFERENCES carts(id)
-);
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Tạo bảng order_items
-CREATE TABLE order_items (
+-- Bảng order_items
+CREATE TABLE IF NOT EXISTS order_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     order_id INT,
     product_id INT,
@@ -110,45 +97,46 @@ CREATE TABLE order_items (
     price DECIMAL(10,2) NOT NULL,
     discount_price DECIMAL(10,2) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (order_id) REFERENCES orders(id),
-    FOREIGN KEY (product_id) REFERENCES products(id)
-);
+    FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Thêm tài khoản admin mặc định
-INSERT INTO users (username, password, full_name, email, role) VALUES
-('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Administrator', 'admin@example.com', 'admin');
+-- Thêm dữ liệu mẫu cho bảng admins
+INSERT INTO admins (username, password, full_name, email) VALUES
+('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Administrator', 'admin@example.com');
+-- Mật khẩu mặc định là 'password'
 
 -- Thêm dữ liệu mẫu cho bảng categories
-INSERT INTO categories (name, description) VALUES 
+INSERT INTO categories (name, description) VALUES
 ('Áo Nam', 'Các loại áo dành cho nam giới'),
-('Áo Nữ', 'Các loại áo dành cho phụ nữ'),
 ('Quần Nam', 'Các loại quần dành cho nam giới'),
-('Quần Nữ', 'Các loại quần dành cho phụ nữ'),
-('Phụ kiện', 'Các loại phụ kiện thời trang');
+('Phụ kiện', 'Các loại phụ kiện thời trang nam'),
+('Giày Dép', 'Giày dép nam thời trang'),
+('Túi Xách', 'Túi xách nam công sở và du lịch');
 
 -- Thêm dữ liệu mẫu cho bảng products
-INSERT INTO products (name, description, price, category_id, stock) VALUES 
+INSERT INTO products (name, description, price, discount_price, category_id, stock) VALUES
 -- Áo Nam
-('Áo sơ mi trắng nam', 'Áo sơ mi trắng cổ trụ, chất liệu cotton', 350000, 1, 50),
-('Áo thun nam basic', 'Áo thun nam basic, chất liệu cotton 100%', 250000, 1, 100),
-('Áo polo nam', 'Áo polo nam, chất liệu cotton pique', 450000, 1, 75),
-
--- Áo Nữ
-('Áo sơ mi nữ trắng', 'Áo sơ mi nữ trắng, thiết kế thanh lịch', 400000, 2, 60),
-('Áo thun nữ basic', 'Áo thun nữ basic, chất liệu cotton mềm mại', 280000, 2, 80),
-('Áo kiểu nữ', 'Áo kiểu nữ, thiết kế hiện đại', 550000, 2, 45),
+('Áo sơ mi trắng nam', 'Áo sơ mi trắng cổ trụ, chất liệu cotton', 350000, 299000, 1, 50),
+('Áo thun nam basic', 'Áo thun nam basic, chất liệu cotton 100%', 250000, 199000, 1, 100),
+('Áo polo nam', 'Áo polo nam, chất liệu cotton pique', 450000, 399000, 1, 75),
 
 -- Quần Nam
-('Quần jean nam slim', 'Quần jean nam slim fit, chất liệu denim', 650000, 3, 40),
-('Quần khaki nam', 'Quần khaki nam, chất liệu cotton', 450000, 3, 55),
-('Quần short nam', 'Quần short nam, chất liệu cotton thoáng mát', 350000, 3, 70),
-
--- Quần Nữ
-('Quần jean nữ skinny', 'Quần jean nữ skinny, chất liệu denim co giãn', 600000, 4, 65),
-('Quần tây nữ', 'Quần tây nữ công sở, chất liệu cao cấp', 500000, 4, 50),
-('Quần short nữ', 'Quần short nữ, thiết kế trẻ trung', 300000, 4, 85),
+('Quần jean nam slim', 'Quần jean nam slim fit, chất liệu denim', 650000, 550000, 2, 40),
+('Quần khaki nam', 'Quần khaki nam, chất liệu cotton', 450000, 399000, 2, 55),
+('Quần short nam', 'Quần short nam, chất liệu cotton thoáng mát', 350000, 299000, 2, 70),
 
 -- Phụ kiện
-('Thắt lưng da nam', 'Thắt lưng da nam, chất liệu da thật', 350000, 5, 30),
-('Túi xách nữ', 'Túi xách nữ, thiết kế thời trang', 850000, 5, 25),
-('Ví da nam', 'Ví da nam, nhiều ngăn tiện dụng', 450000, 5, 35); 
+('Thắt lưng da nam', 'Thắt lưng da nam, chất liệu da thật', 350000, 299000, 3, 30),
+('Ví da nam', 'Ví da nam, nhiều ngăn tiện dụng', 450000, 399000, 3, 35),
+('Đồng hồ nam dây da', 'Đồng hồ nam dây da, thiết kế thanh lịch', 1200000, 999000, 3, 25),
+
+-- Giày Dép
+('Giày lười nam da', 'Giày lười nam da thật, thiết kế tối giản', 850000, 750000, 4, 45),
+('Giày thể thao nam', 'Giày thể thao nam, đế cao su bền bỉ', 1200000, 999000, 4, 60),
+('Dép quai ngang nam', 'Dép quai ngang nam, chất liệu cao su', 250000, 199000, 4, 80),
+
+-- Túi Xách
+('Túi đeo chéo nam', 'Túi đeo chéo nam, thiết kế đơn giản', 550000, 499000, 5, 40),
+('Ba lô nam công sở', 'Ba lô nam công sở, nhiều ngăn tiện dụng', 750000, 650000, 5, 35),
+('Túi xách tay nam', 'Túi xách tay nam, chất liệu da tổng hợp', 950000, 850000, 5, 30); 

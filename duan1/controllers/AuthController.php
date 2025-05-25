@@ -80,6 +80,7 @@ class SignInController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = trim($_POST['email'] ?? '');
             $password = trim($_POST['password'] ?? '');
+            $remember = isset($_POST['remember_me']);
 
             if (empty($email) || empty($password)) {
                 $_SESSION['message'] = 'Vui lòng nhập email và mật khẩu.';
@@ -92,15 +93,20 @@ class SignInController
             $authModel = new SignInModel();
             $user = $authModel->login($email, $password);
 
-            if ($user) {
+            if ($user && !isset($user['success'])) {
                 $_SESSION['user'] = $user;
+                if ($remember) {
+                    setcookie('remember_user', $user['email'], time() + 7 * 24 * 3600, "/");
+                } else {
+                    setcookie('remember_user', '', time() - 3600, "/");
+                }
                 $_SESSION['message'] = 'Đăng nhập thành công!';
                 $_SESSION['message_type'] = 'success';
-                header('Location: ?act=/'); // Chuyển hướng đến trang chính
+                header('Location: ?act=/');
                 ob_end_flush();
                 exit();
             } else {
-                $_SESSION['message'] = 'Email hoặc mật khẩu không đúng.';
+                $_SESSION['message'] = $user['message'] ?? 'Email hoặc mật khẩu không đúng.';
                 $_SESSION['message_type'] = 'error';
                 header('Location: ?act=login');
                 ob_end_flush();
@@ -112,4 +118,3 @@ class SignInController
         ob_end_flush();
     }
 }
-?>

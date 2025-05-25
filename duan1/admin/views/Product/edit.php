@@ -11,20 +11,20 @@
             <form action="index.php?controller=product&action=edit&id=<?php echo $product['id']; ?>" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="name">Tên sản phẩm</label>
-                    <input type="text" class="form-control" id="name" name="name" 
+                    <input type="text" class="form-control" id="name" name="name"
                            value="<?php echo htmlspecialchars($product['name']); ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label for="description">Mô tả</label>
-                    <textarea class="form-control" id="description" name="description" rows="3"><?php 
-                        echo htmlspecialchars($product['description'] ?? ''); 
+                    <textarea class="form-control" id="description" name="description" rows="3"><?php
+                        echo htmlspecialchars($product['description'] ?? '');
                     ?></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="price">Giá</label>
-                    <input type="number" class="form-control" id="price" name="price" 
+                    <input type="number" class="form-control" id="price" name="price"
                            value="<?php echo $product['price']; ?>" required min="0">
                 </div>
 
@@ -33,7 +33,7 @@
                     <select class="form-control" id="category_id" name="category_id">
                         <option value="">Chọn danh mục</option>
                         <?php foreach ($categories as $category): ?>
-                        <option value="<?php echo $category['id']; ?>" 
+                        <option value="<?php echo $category['id']; ?>"
                                 <?php echo $category['id'] == $product['category_id'] ? 'selected' : ''; ?>>
                             <?php echo htmlspecialchars($category['name']); ?>
                         </option>
@@ -45,7 +45,7 @@
                     <label for="image">Hình ảnh</label>
                     <?php if (!empty($product['image'])): ?>
                     <div class="mb-2">
-                        <img src="<?php echo htmlspecialchars($product['image']); ?>" 
+                        <img src="<?php echo htmlspecialchars($product['image']); ?>"
                              alt="<?php echo htmlspecialchars($product['name']); ?>"
                              style="max-width: 200px;">
                     </div>
@@ -56,7 +56,7 @@
 
                 <div class="form-group">
                     <label for="stock">Tồn kho</label>
-                    <input type="number" class="form-control" id="stock" name="stock" 
+                    <input type="number" class="form-control" id="stock" name="stock"
                            value="<?php echo $product['stock']; ?>" required min="0">
                 </div>
 
@@ -64,4 +64,4 @@
             </form>
         </div>
     </div>
-</div> 
+</div>
