@@ -1,28 +1,29 @@
-    <!-- Breadcrumb Section Begin -->
-    <section class="breadcrumb-option">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="breadcrumb__text">
-                        <h4>Shopping Cart</h4>
-                        <div class="breadcrumb__links">
-                            <a href="?act=/">Home</a>
-                            <a href="?act=product-list">Shop</a>
-                            <span>Shopping Cart</span>
-                        </div>
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Shopping Cart</h4>
+                    <div class="breadcrumb__links">
+                        <a href="?act=/">Home</a>
+                        <a href="?act=product-list">Shop</a>
+                        <span>Shopping Cart</span>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <!-- Breadcrumb Section End -->
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
 
-    <!-- Shopping Cart Section Begin -->
-    <section class="shopping-cart spad">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="shopping__cart__table">
+<!-- Shopping Cart Section Begin -->
+<section class="shopping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="shopping__cart__table">
+                    <?php if (!empty($cartItems)): ?>
                         <table>
                             <thead>
                                 <tr>
@@ -33,12 +34,10 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php
-                                $cart = $_SESSION['cart'] ?? [];
-                                $total = 0;
-                                foreach ($cart as $item):
-                                    $item_total = $item['price'] * $item['quantity'];
-                                    $total += $item_total;
+                                <?php $total = 0;
+                                foreach ($cartItems as $item):
+                                    $itemTotal = $item['total_price'];
+                                    $total += $itemTotal;
                                 ?>
                                     <tr>
                                         <td class="product__cart__item">
@@ -51,53 +50,95 @@
                                             </div>
                                         </td>
                                         <td class="quantity__item">
-                                            <form method="post" action="?act=update-cart" style="display:inline-flex;">
-                                                <input type="hidden" name="product_id" value="<?= $item['id'] ?>">
-                                                <input type="number" name="quantity" value="<?= $item['quantity'] ?>" min="1" style="width:50px;text-align:center;">
-                                                <button type="submit" style="margin-left:5px;">Cập nhật</button>
+                                            <form method="post" action="?act=update-cart" style="display:inline;">
+                                                <input type="hidden" name="product_id" value="<?= $item['product_id'] ?? $item['id'] ?>">
+                                                <input type="number" name="quantity" value="<?= $item['quantity'] ?>" min="1" style="width:60px;">
+                                                <button type="submit" class="btn btn-sm btn-primary">Cập nhật</button>
                                             </form>
                                         </td>
-                                        <td class="cart__price"><?= number_format($item_total, 0, ',', '.') ?>₫</td>
+                                        <td class="cart__price"><?= number_format($itemTotal, 0, ',', '.') ?>₫</td>
                                         <td class="cart__close">
-                                            <form method="post" action="?act=remove-cart" style="display:inline;">
-                                                <input type="hidden" name="product_id" value="<?= $item['id'] ?>">
-                                                <button type="submit" style="background:none;border:none;color:red;font-size:18px;"><i class="fa fa-close"></i></button>
+                                            <form method="post" action="?act=remove-cart-item" style="display:inline;">
+                                                <input type="hidden" name="product_id" value="<?= $item['product_id'] ?? $item['id'] ?>">
+                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Xóa sản phẩm này?')">
+                                                    <i class="fa fa-close"></i>
+                                                </button>
                                             </form>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
-                    </div>
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="continue__btn">
-                                <a href="#">Continue Shopping</a>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
-                            <div class="continue__btn update__btn">
-                                <a href="#"><i class="fa fa-spinner"></i> Update cart</a>
-                            </div>
-                        </div>
-                    </div>
+                    <?php else: ?>
+                        <p>Giỏ hàng của bạn đang trống.</p>
+                    <?php endif; ?>
                 </div>
-                <div class="col-lg-4">
-                    <div class="cart__discount">
-                        <h6>Discount codes</h6>
-                        <form action="#">
-                            <input type="text" placeholder="Coupon code">
-                            <button type="submit">Apply</button>
-                        </form>
-                    </div>
-                    <div class="cart__total">
-                        <ul>
-                            <li>Subtotal <span><?= number_format($total, 0, ',', '.') ?>₫</span></li>
-                            <li>Total <span><?= number_format($total, 0, ',', '.') ?>₫</span></li>
-                        </ul>
+                <div class="row mt-3">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="continue__btn">
+                            <a href="?act=product-list">Tiếp tục mua hàng</a>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="col-lg-4">
+                <div class="cart__total">
+                    <h6>Cart total</h6>
+                    <ul>
+                        <li>Tổng cộng <span><?= isset($total) ? number_format($total, 0, ',', '.') : 0 ?>₫</span></li>
+                    </ul>
+                    <?php if (!empty($cartItems)): ?>
+                        <a href="?act=checkout" class="primary-btn btn btn-success btn-block">Thanh toán</a>
+                    <?php endif; ?>
+                </div>
+            </div>
         </div>
-    </section>
-    <!-- Shopping Cart Section End -->
+    </div>
+</section>
+<!-- Shopping Cart Section End -->
+
+<style>
+    .cart__close button,
+.cart__close .btn-danger {
+    background: #e53637 !important;
+    border: none !important;
+    border-radius: 12px !important;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    transition: background 0.2s;
+    box-shadow: none !important;
+}
+
+.cart__close button:hover,
+.cart__close .btn-danger:hover {
+    background: #b91c1c !important;
+}
+
+.cart__close .fa-close {
+    color: #222;
+    font-size: 24px;
+    margin: 0;
+}
+
+/* Nút cập nhật style đơn giản, bo góc, nền đen */
+.btn-update-cart,
+.btn.btn-primary {
+    background: #111 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 6px 18px !important;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.btn-update-cart:hover,
+.btn.btn-primary:hover {
+    background: #e53637 !important;
+    color: #fff !important;
+}
+</style>

@@ -3,15 +3,13 @@ require_once __DIR__ . '/../commons/env.php';
 require_once __DIR__ . '/../commons/function.php';
 require_once __DIR__ . '/../models/Client.php';
 
-
-class ProductControllerCLient
+class ProductControllerClient
 {
     public function list()
     {
-        $categoryModel = new Category();
-        $productModel = new Product();
+        $productModel = new ProductModels();
+        $categoryModel = new CategoryModels();
 
-        $categories = $categoryModel->getAll();
         $search = $_GET['search'] ?? '';
         $price = $_GET['price'] ?? '';
         $category_id = $_GET['category_id'] ?? '';
@@ -20,32 +18,49 @@ class ProductControllerCLient
         $offset = ($page - 1) * $limit;
 
         $products = $productModel->getFiltered($search, $price, $category_id, $limit, $offset);
-        $total = $productModel->countFiltered($search, $price, $category_id);
+        $totalProducts = $productModel->countFiltered($search, $price, $category_id);
 
-        require __DIR__ . '/../views/pages/ProductsList.php';
+        $conn = connectDB();
+        foreach ($products as $key => $product) {
+            $categoryId = $product['category_id'];
+            $stmt = $conn->prepare('SELECT name FROM categories WHERE id = :id');
+            $stmt->execute([':id' => $categoryId]);
+            $category = $stmt->fetch(PDO::FETCH_ASSOC);
+            $products[$key]['category_name'] = $category['name'] ?? 'Chưa phân loại';
+        }
+
+        $categories = $categoryModel->getAll();
+        $totalPages = ceil($totalProducts / $limit);
+
+        if (empty($products)) {
+            error_log("No products found. Total products: $totalProducts, Search: $search, Price: $price, Category: $category_id");
+        }
+
+        require_once __DIR__ . '/../views/pages/ProductsList.php';
     }
-}
+    public function detail()
+    {
+        $productModel = new ProductModels();
+        $categoryModel = new CategoryModels();
 
-class ProductDetailController
-{
-    public function index()
-{
-    $productModel = new Product();
-    $categoryModel = new Category();
+        $id = $_GET['id'] ?? 0;
+        $product = $productModel->getById($id);
 
-    $id = $_GET['id'] ?? 0;
-    $product = $productModel->getById($id);
+        if (!$product) {
+            die('Không tìm thấy sản phẩm!');
+        }
 
-    if (!$product) {
-        // Xử lý khi không tìm thấy sản phẩm
-        die('Không tìm thấy sản phẩm!');
+        // Lấy tên danh mục từ bảng categories
+        $categoryId = $product['category_id'];
+        $stmt = connectDB()->prepare('SELECT name FROM categories WHERE id = :id');
+        $stmt->execute([':id' => $categoryId]);
+        $category = $stmt->fetch(PDO::FETCH_ASSOC);
+        $product['category_name'] = $category['name'] ?? 'Chưa phân loại';
+
+        // Lấy sản phẩm tương tự cùng danh mục (trừ sản phẩm hiện tại)
+        $relatedProducts = $productModel->getRelated($product['category_id'], $product['id']);
+
+        $categories = $categoryModel->getAll();
+        require_once __DIR__ . '/../views/pages/ProductDetail.php';
     }
-
-    // Lấy sản phẩm tương tự cùng danh mục (trừ sản phẩm hiện tại)
-    $relatedProducts = $productModel->getRelated($product['category_id'], $product['id']);
-
-    $categories = $categoryModel->getAll(); // Nếu cần danh mục
-
-    require_once __DIR__ . '/../views/pages/ProductDetail.php';
-}
 }

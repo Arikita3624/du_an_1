@@ -5,9 +5,10 @@ require_once __DIR__ . '/../models/Client.php';
 
 class HomeController
 {
-    public function index() {
-        $model = new HomePageModels();
-        $products = $model->getAllProducts(); // Lấy sản phẩm bán chạy
+    public function index()
+    {
+        $productModel = new ProductModels();
+        $latestProducts = $productModel->getLatest(8); // Lấy 8 sản phẩm mới nhất
         require_once __DIR__ . '/../views/pages/HomePage.php';
     }
 }

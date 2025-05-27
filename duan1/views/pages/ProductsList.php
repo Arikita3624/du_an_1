@@ -17,32 +17,11 @@
 <!-- Breadcrumb Section End -->
 
 <?php
-// Xử lý lọc sản phẩm
-$search = $_GET['search'] ?? '';
-$category_id = $_GET['category_id'] ?? '';
-$price = $_GET['price'] ?? '';
 $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $limit = 12;
-$offset = ($page - 1) * $limit;
 
-// Lọc sản phẩm
-$filteredProducts = array_filter($products, function ($product) use ($search, $price, $category_id) {
-    $match = true;
-    if ($search) {
-        $match = stripos($product['name'], $search) !== false;
-    }
-    if ($match && $category_id) {
-        $match = $product['category_id'] == $category_id;
-    }
-    if ($match && $price) {
-        [$min, $max] = explode('-', $price);
-        $match = $product['price'] >= $min && $product['price'] <= $max;
-    }
-    return $match;
-});
-$totalProducts = count($filteredProducts);
-$totalPages = $totalProducts > 0 ? ceil($totalProducts / $limit) : 1;
-$productsToShow = array_slice($filteredProducts, $offset, $limit);
+// Debug thông tin phân trang
+echo "<!-- Debug: Total Products = $totalProducts, Total Pages = $totalPages, Current Page = $page -->";
 ?>
 
 <!-- Shop Section Begin -->
@@ -101,7 +80,6 @@ $productsToShow = array_slice($filteredProducts, $offset, $limit);
                         <label class="color color-4" style="background: #4287f5;" title="Xanh">
                             <input type="radio" name="color" value="blue" <?= (($_GET['color'] ?? '') == 'blue') ? 'checked' : '' ?> onchange="this.form.submit()">
                         </label>
-                        <!-- Thêm các màu khác nếu muốn -->
                     </div>
                     <div class="shop__sidebar__tags" style="margin-bottom: 30px;">
                         <h5 style="margin-bottom: 10px;">Tags</h5>
@@ -109,7 +87,6 @@ $productsToShow = array_slice($filteredProducts, $offset, $limit);
                         <a href="?<?= http_build_query(array_merge($_GET, ['tag' => 'quan-jean'])) ?>">Quần jean</a>
                         <a href="?<?= http_build_query(array_merge($_GET, ['tag' => 'so-mi'])) ?>">Sơ mi</a>
                         <a href="?<?= http_build_query(array_merge($_GET, ['tag' => 'phu-kien'])) ?>">Phụ kiện</a>
-                        <!-- Thêm các tag khác nếu muốn -->
                     </div>
                 </div>
             </div>
@@ -122,7 +99,6 @@ $productsToShow = array_slice($filteredProducts, $offset, $limit);
                     <div class="col-lg-6 col-md-6 col-sm-6"></div>
                     <div class="col-lg-6 col-md-6 col-sm-6 d-flex justify-content-end">
                         <form method="GET" action="" class="form-inline" style="gap:10px;">
-                            <!-- Giữ lại các tham số khác nếu có -->
                             <input type="hidden" name="search" value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
                             <input type="hidden" name="category_id" value="<?= htmlspecialchars($_GET['category_id'] ?? '') ?>">
                             <label for="price" style="margin-right:8px;">Lọc theo giá:</label>
@@ -142,8 +118,8 @@ $productsToShow = array_slice($filteredProducts, $offset, $limit);
 
                 <!-- Product List -->
                 <div class="row">
-                    <?php if (!empty($productsToShow)): ?>
-                        <?php foreach ($productsToShow as $product): ?>
+                    <?php if (!empty($products)): ?>
+                        <?php foreach ($products as $product): ?>
                             <div class="col-lg-4 col-md-6 col-sm-6">
                                 <div class="product__item">
                                     <div class="product__item__pic">
@@ -165,13 +141,85 @@ $productsToShow = array_slice($filteredProducts, $offset, $limit);
                     <?php endif; ?>
                 </div>
                 <!-- Pagination -->
-                <?php if ($totalPages > 1): ?>
-                    <div class="product__pagination">
-                        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                            <a href="?<?= http_build_query(array_merge($_GET, ['page' => $i])) ?>" <?= ($i == $page) ? 'class="active"' : '' ?>><?= $i ?></a>
-                        <?php endfor; ?>
-                    </div>
-                <?php endif; ?>
+                <!-- Pagination -->
+                <style>
+                    .product__pagination {
+                        padding-top: 25px;
+                        text-align: center;
+                    }
+
+                    .product__pagination .pagination-btn {
+                        display: inline-flex;
+                        /* Sử dụng flex để căn giữa text */
+                        justify-content: center;
+                        /* Căn giữa theo chiều ngang */
+                        align-items: center;
+                        /* Căn giữa theo chiều dọc */
+                        margin: 0 5px;
+                        padding: 8px 12px;
+                        /* Giảm padding để text vừa vặn */
+                        border: 1px solid #ddd;
+                        border-radius: 5px;
+                        text-decoration: none;
+                        font-size: 16px;
+                        font-weight: 700;
+                        color: #111111;
+                        transition: background 0.3s, color 0.3s;
+                        min-width: 60px;
+                        /* Đặt kích thước tối thiểu để đồng đều */
+                    }
+
+                    .product__pagination .pagination-btn:hover:not([aria-disabled="true"]) {
+                        background: #f0f0f0;
+                    }
+
+                    .product__pagination .pagination-btn.active {
+                        background: #e53637;
+                        color: #fff;
+                        border-color: #e53637;
+                    }
+
+                    .product__pagination .pagination-btn[aria-disabled="true"] {
+                        color: #999;
+                        border-color: #eee;
+                        cursor: not-allowed;
+                        pointer-events: none;
+                    }
+                </style>
+                <div class="product__pagination">
+                    <a href="?<?= http_build_query(array_merge($_GET, ['page' => max(1, $page - 1)])) ?>"
+                        class="pagination-btn"
+                        aria-disabled="<?= $page <= 1 ? 'true' : 'false' ?>">
+                        Trước
+                    </a>
+                    <?php
+                    $range = 2;
+                    $start = max(1, $page - $range);
+                    $end = min($totalPages, $page + $range);
+
+                    if ($start > 1) {
+                        echo '<a href="?' . http_build_query(array_merge($_GET, ['page' => 1])) . '" class="pagination-btn' . ($page == 1 ? ' active' : '') . '">1</a>';
+                        if ($start > 2) echo '<span style="margin: 0 5px;">...</span>';
+                    }
+
+                    for ($i = $start; $i <= $end; $i++): ?>
+                        <a href="?<?= http_build_query(array_merge($_GET, ['page' => $i])) ?>"
+                            class="pagination-btn <?= ($i == $page) ? 'active' : '' ?>">
+                            <?= $i ?>
+                        </a>
+                    <?php endfor;
+
+                    if ($end < $totalPages) {
+                        if ($end < $totalPages - 1) echo '<span style="margin: 0 5px;">...</span>';
+                        echo '<a href="?' . http_build_query(array_merge($_GET, ['page' => $totalPages])) . '" class="pagination-btn' . ($page == $totalPages ? ' active' : '') . '">' . $totalPages . '</a>';
+                    }
+                    ?>
+                    <a href="?<?= http_build_query(array_merge($_GET, ['page' => min($totalPages, $page + 1)])) ?>"
+                        class="pagination-btn"
+                        aria-disabled="<?= $page >= $totalPages ? 'true' : 'false' ?>">
+                        Sau
+                    </a>
+                </div>
             </div>
             <!-- End Product List -->
         </div>

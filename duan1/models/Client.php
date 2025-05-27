@@ -19,7 +19,7 @@ class HomePageModels
         return $products;
     }
 }
-class Category
+class CategoryModels
 {
     public function getAll()
     {
@@ -27,7 +27,8 @@ class Category
         return $conn->query('SELECT * FROM categories')->fetchAll(PDO::FETCH_ASSOC);
     }
 }
-class Product
+
+class ProductModels
 {
     public function getFiltered($search, $price, $category_id, $limit, $offset)
     {
@@ -53,6 +54,7 @@ class Product
         $stmt->execute($params);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
     public function countFiltered($search, $price, $category_id)
     {
         $conn = connectDB();
@@ -76,6 +78,7 @@ class Product
         $stmt->execute($params);
         return $stmt->fetchColumn();
     }
+
     public function getById($id)
     {
         $conn = connectDB();
@@ -94,4 +97,20 @@ class Product
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+    public function getTopViews($limit = 4)
+    {
+        $conn = connectDB();
+        $stmt = $conn->prepare("SELECT * FROM products ORDER BY views DESC LIMIT :limit");
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getLatest($limit = 8) {
+    $db = connectDB();
+    $stmt = $db->prepare("SELECT * FROM products ORDER BY created_at DESC LIMIT ?");
+    $stmt->bindValue(1, $limit, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 }

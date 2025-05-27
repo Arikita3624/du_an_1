@@ -16,7 +16,7 @@ class OrderController {
     public function view() {
         $id = $_GET['id'] ?? 0;
         $order = $this->orderModel->getOrderById($id);
-        
+
         if (!$order) {
             $_SESSION['error'] = "Không tìm thấy đơn hàng!";
             header('Location: index.php?controller=order');
@@ -31,7 +31,7 @@ class OrderController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id'] ?? 0;
             $status = $_POST['status'] ?? '';
-            
+
             if ($this->orderModel->updateOrderStatus($id, $status)) {
                 $_SESSION['success'] = "Cập nhật trạng thái đơn hàng thành công!";
             } else {
@@ -50,4 +50,4 @@ class OrderController {
             exit;
         }
     }
-} 
+}

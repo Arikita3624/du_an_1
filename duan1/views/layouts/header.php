@@ -59,15 +59,15 @@
                             <?php else: ?>
                                 <?php unset($_SESSION['user']); // Xóa session không hợp lệ
                                 ?>
-                                <a href="?act=login" class="logout-link">Sign in</a>
+                                <a href="?act=login" class="logout-link">Đăng nhập</a>
                             <?php endif; ?>
                         </div>
                         <div class="header__top__hover">
-                            <span>Usd <i class="arrow_carrot-down"></i></span>
+                            <span>VND<i class="arrow_carrot-down"></i></span>
                             <ul>
+                                <li>VND</li>
                                 <li>USD</li>
-                                <li>EUR</li>
-                                <li>USD</li>
+                                <li>URO</li>
                             </ul>
                         </div>
                     </div>
@@ -86,19 +86,10 @@
             <div class="col-lg-6 col-md-6">
                 <nav class="header__menu mobile-menu">
                     <ul>
-                        <li class="active"><a href="?act=/">Home</a></li>
-                        <li><a href="?act=product-list">Shop</a></li>
-                        <li><a href="#">Pages</a>
-                            <ul class="dropdown">
-                                <li><a href="?act=about">About Us</a></li>
-                                <li><a href="?act=product-detail">Shop Details</a></li>
-                                <li><a href="?act=carts">Shopping Cart</a></li>
-                                <li><a href="?act=checkout">Check Out</a></li>
-                                <li><a href="blog-details.html">Blog Details</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="?act=about">About</a></li>
-                        <li><a href="contact.html">Contacts</a></li>
+                        <li class="active"><a href="?act=/">Trang chủ</a></li>
+                        <li><a href="?act=product-list">Sản phẩm</a></li>
+                        <li><a href="?act=about">Về chúng tôi</a></li>
+                        <li><a href="contact.html">Liên Hệ</a></li>
                     </ul>
                 </nav>
             </div>
@@ -106,8 +97,7 @@
                 <div class="header__nav__option">
                     <a href="#" class="search-switch"><img src="assets/img/icon/search.png" alt="Search"></a>
                     <a href="#"><img src="assets/img/icon/heart.png" alt="Wishlist"></a>
-                    <a href="#"><img src="assets/img/icon/cart.png" alt="Cart"> <span>0</span></a>
-                    <div class="price">$0.00</div>
+                    <a href="?act=carts"><img src="assets/img/icon/cart.png" alt="Cart"></a>
                 </div>
             </div>
         </div>

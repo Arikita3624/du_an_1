@@ -1,4 +1,50 @@
 <!-- Shop Details Section Begin -->
+<style>
+    /* Ảnh lớn */
+    .product__details__pic__item img {
+        max-height: 500px !important;
+        height: 500px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+    /* Ảnh nhỏ */
+    .product__thumb__pic img {
+        width: 120px !important;
+        height: 120px !important;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+    /* Ảnh sản phẩm tương tự */
+    .related .product__item__pic img {
+        height: 260px !important;
+        max-height: 260px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+    /* Số lượng */
+    .product__details__cart__option .quantity-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 10px;
+    }
+    .product__details__cart__option label {
+        font-weight: 500;
+        margin-bottom: 0;
+        display: inline-block;
+        min-width: 80px;
+        text-align: left;
+        font-size: 18px;
+    }
+    .product__details__cart__option input[type="number"] {
+        width: 70px;
+        text-align: center;
+        font-size: 16px;
+        padding: 6px 0;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+</style>
 <section class="shop-details">
     <div class="product__details__pic">
         <div class="container">
@@ -12,15 +58,14 @@
                 </div>
             </div>
             <div class="row">
-                <!-- Ảnh nhỏ (nếu có nhiều ảnh thì lặp, ở đây chỉ 1 ảnh đại diện) -->
+                <!-- Ảnh nhỏ -->
                 <div class="col-lg-3 col-md-3">
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">
                                 <div class="product__thumb__pic">
                                     <img src="<?= !empty($product['image']) ? 'admin/' . htmlspecialchars($product['image']) : 'assets/img/no-image.jpg' ?>"
-                                        alt="<?= htmlspecialchars($product['name']) ?>"
-                                        style="width:100px;height:100px;object-fit:cover;">
+                                        alt="<?= htmlspecialchars($product['name']) ?>">
                                 </div>
                             </a>
                         </li>
@@ -32,8 +77,7 @@
                         <div class="tab-pane active" id="tabs-1" role="tabpanel">
                             <div class="product__details__pic__item">
                                 <img src="<?= !empty($product['image']) ? 'admin/' . htmlspecialchars($product['image']) : 'assets/img/no-image.jpg' ?>"
-                                    alt="<?= htmlspecialchars($product['name']) ?>"
-                                    style="width:100%;max-height:400px;object-fit:cover;">
+                                    alt="<?= htmlspecialchars($product['name']) ?>">
                             </div>
                         </div>
                     </div>
@@ -47,12 +91,10 @@
                         </div>
                         <h3><?= number_format($product['price'], 0, ',', '.') ?>₫</h3>
                         <p><?= nl2br(htmlspecialchars($product['description'])) ?></p>
-                        <!-- filepath: c:\xampp\htdocs\Nhom4\duan1\views\pages\ProductDetail.php -->
-                        <form method="post" action="?act=add-to-cart" class="product__details__cart__option" style="display: flex; flex-direction: column; gap: 20px;">
-                            <div class="quantity">
-                                <div class="pro-qty">
-                                    <input type="number" name="quantity" value="1" min="1" style="width: 60px; text-align: center;">
-                                </div>
+                        <form method="post" action="?act=add-to-cart" class="product__details__cart__option">
+                            <div class="quantity-row">
+                                <label for="quantity">Số lượng:</label>
+                                <input type="number" id="quantity" name="quantity" value="1" min="1">
                             </div>
                             <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id']) ?>">
                             <button type="submit" class="primary-btn">Thêm vào giỏ hàng</button>
@@ -63,8 +105,8 @@
                         </div>
                         <div class="product__details__last__option">
                             <ul>
-                                <li><span>Danh mục:</span> <?= htmlspecialchars($product['category_id']) ?></li>
-                                <li><span>Mã sản phẩm:</span> <?= htmlspecialchars($product['id']) ?></li>
+                                <li><span>Danh mục:</span> <?= htmlspecialchars($product['category_name']) ?></li>
+                                <!-- Đã xóa mã sản phẩm -->
                             </ul>
                         </div>
                     </div>
@@ -72,32 +114,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Tab mô tả, đánh giá, thông tin thêm -->
-    <div class="product__details__content">
-        <div class="container">
-            <div class="row d-flex justify-content-center">
-                <div class="col-lg-8">
-                    <div class="product__details__tab">
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#tabs-5" role="tab">Mô tả</a>
-                            </li>
-                        </ul>
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="tabs-5" role="tabpanel">
-                                <div class="product__details__tab__content">
-                                    <p><?= nl2br(htmlspecialchars($product['description'])) ?></p>
-                                </div>
-                            </div>
-                            <!-- Có thể bổ sung thêm tab đánh giá, thông tin khác nếu muốn -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
 </section>
 <!-- Shop Details Section End -->
 
@@ -118,7 +134,7 @@
                                 <a href="?act=product-detail&id=<?= $item['id'] ?>">
                                     <img src="<?= !empty($item['image']) ? 'admin/' . htmlspecialchars($item['image']) : 'assets/img/no-image.jpg' ?>"
                                         alt="<?= htmlspecialchars($item['name']) ?>"
-                                        style="width:100%;height:200px;object-fit:cover;">
+                                        style="width:100%;height:260px;object-fit:cover;border-radius:8px;">
                                 </a>
                             </div>
                             <div class="product__item__text">

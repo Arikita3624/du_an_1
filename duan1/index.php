@@ -1,33 +1,30 @@
 <style>
     .message {
         padding: 10px;
-        margin: 10px 0; /* Thêm margin để tránh chồng lấn */
+        margin: 10px 0;
         max-width: 600px;
         border-radius: 4px;
         text-align: center;
         font-size: 14px;
         transition: opacity 0.5s ease;
         position: fixed;
-        top: 60px; /* Tăng top để tránh che header */
+        top: 60px;
         left: 50%;
         transform: translateX(-50%);
         z-index: 1000;
         width: 100%;
         box-sizing: border-box;
     }
-
     .message.success {
         background-color: #d4edda;
         color: #155724;
         border: 1px solid #c3e6cb;
     }
-
     .message.error {
         background-color: #f8d7da;
         color: #721c24;
         border: 1px solid #f5c6cb;
     }
-
     .message.hidden {
         opacity: 0;
         visibility: hidden;
@@ -35,88 +32,72 @@
 </style>
 
 <?php
-// Bắt đầu bộ đệm đầu ra
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 ob_start();
 session_start();
 
-// Kiểm tra cookie để đăng nhập tự động
+// Tự động đăng nhập nếu có cookie
 if (!isset($_SESSION['user']) && isset($_COOKIE['remember_user'])) {
-    require_once __DIR__ . '/models/Auth.php'; // Sử dụng đúng file Auth.php
+    require_once __DIR__ . '/models/Auth.php';
     $authModel = new SignInModel();
     $user = $authModel->login($_COOKIE['remember_user'], null, true);
     if ($user && is_array($user) && !isset($user['success']) && !empty($user['username'])) {
         $_SESSION['user'] = $user;
     } else {
-        // Xóa cookie nếu không hợp lệ
         setcookie('remember_user', '', time() - 3600, "/");
-        unset($_SESSION['user']); // Đảm bảo xóa session nếu có
+        unset($_SESSION['user']);
     }
 }
 
-// Xử lý logout trước khi load layout
+// Xử lý logout
 $act = $_GET['act'] ?? '/';
 if ($act === 'logout') {
-    // Xóa cookie remember_user
     setcookie('remember_user', '', time() - 3600, "/");
-    // Xóa session
     session_destroy();
-    session_start(); // Khởi lại session mới
+    session_start();
     $_SESSION['message'] = 'Đã đăng xuất thành công!';
     $_SESSION['message_type'] = 'success';
     header('Location: ?act=login');
     ob_end_flush();
     exit();
 }
+
+// Xử lý thêm vào giỏ hàng (nếu dùng trực tiếp ở đây, còn không thì dùng controller)
 if ($act === 'add-to-cart' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Nếu chưa đăng nhập thì chuyển hướng sang trang đăng nhập
+    if (!isset($_SESSION['user'])) {
+        $_SESSION['message'] = 'Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng!';
+        $_SESSION['message_type'] = 'error';
+        header('Location: ?act=login');
+        exit;
+    }
+
     $product_id = intval($_POST['product_id']);
     $quantity = max(1, intval($_POST['quantity']));
 
     require_once __DIR__ . '/models/Client.php';
-    $productModel = new Product();
+    require_once __DIR__ . '/models/Carts.php';
+
+    $productModel = new ProductModels();
     $product = $productModel->getById($product_id);
 
-    if ($product) {
-        if (!isset($_SESSION['cart'])) $_SESSION['cart'] = [];
-        if (isset($_SESSION['cart'][$product_id])) {
-            $_SESSION['cart'][$product_id]['quantity'] += $quantity;
-        } else {
-            $_SESSION['cart'][$product_id] = [
-                'id' => $product['id'],
-                'name' => $product['name'],
-                'image' => $product['image'],
-                'price' => $product['price'],
-                'quantity' => $quantity
-            ];
-        }
-        $_SESSION['message'] = 'Đã thêm vào giỏ hàng!';
-        $_SESSION['message_type'] = 'success';
-    } else {
+    if (!$product) {
         $_SESSION['message'] = 'Sản phẩm không tồn tại!';
         $_SESSION['message_type'] = 'error';
+        header('Location: ?act=product-list');
+        exit;
     }
-    header('Location: ?act=carts');
-    exit;
-}
 
-if ($act === 'update-cart' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $product_id = intval($_POST['product_id']);
-    $quantity = max(1, intval($_POST['quantity']));
-    if (isset($_SESSION['cart'][$product_id])) {
-        $_SESSION['cart'][$product_id]['quantity'] = $quantity;
-        $_SESSION['message'] = 'Cập nhật số lượng thành công!';
-        $_SESSION['message_type'] = 'success';
-    }
-    header('Location: ?act=carts');
-    exit;
-}
+    // Đảm bảo chỉ thêm vào giỏ hàng theo user_id
+    $cartModel = new CartModels();
+    $cart_id = $cartModel->getOrCreateCart($_SESSION['user']['id']);
+    $cartModel->addToCart($cart_id, $product_id, $quantity, $product['price']);
 
-if ($act === 'remove-cart' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-    $product_id = intval($_POST['product_id']);
-    if (isset($_SESSION['cart'][$product_id])) {
-        unset($_SESSION['cart'][$product_id]);
-        $_SESSION['message'] = 'Đã xóa sản phẩm khỏi giỏ hàng!';
-        $_SESSION['message_type'] = 'success';
-    }
+    $_SESSION['message'] = 'Đã thêm vào giỏ hàng!';
+    $_SESSION['message_type'] = 'success';
     header('Location: ?act=carts');
     exit;
 }
@@ -149,17 +130,23 @@ if (isset($_SESSION['message']) && isset($_SESSION['message_type'])) {
     </script>';
     unset($_SESSION['message'], $_SESSION['message_type']);
 }
+
+// Điều hướng tìm kiếm về product-list
 if ($act === '/' && (isset($_GET['search']) || isset($_GET['category_id']))) {
     $act = 'product-list';
 }
-// Gọi controller xử lý
+
+// Xử lý route
 try {
     match ($act) {
         '/' => (new HomeController())->index(),
         'about' => (new AboutsController())->index(),
         'product-list' => (new ProductControllerClient())->list(),
-        'product-detail' => (new ProductDetailController())->index(),
+        'product-detail' => (new ProductControllerClient())->detail(),
         'carts' => (new CartsController())->index(),
+        'add-to-cart' => (new CartsController())->addToCart(),
+        'update-cart' => (new CartsController())->updateCart(),
+        'remove-cart-item' => (new CartsController())->removeCartItem(),
         'checkout' => (new CheckoutController())->index(),
         'login' => (new SignInController())->index(),
         'register' => (new SignUpController())->index(),

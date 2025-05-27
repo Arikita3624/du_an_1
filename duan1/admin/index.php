@@ -23,7 +23,7 @@ if (file_exists($controllerFile)) {
     $controllerClass = ucfirst($controller) . "Controller";
     $db = new Database();
     $controllerInstance = new $controllerClass($db);
-    
+
     if (method_exists($controllerInstance, $action)) {
         // Bắt đầu output buffering
         ob_start();
