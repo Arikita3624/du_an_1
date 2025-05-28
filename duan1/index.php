@@ -111,7 +111,7 @@ require_once './controllers/ProductControllerClient.php';
 require_once './controllers/CartsController.php';
 require_once './controllers/CheckoutController.php';
 require_once './controllers/AuthController.php';
-
+require_once './controllers/OrderController.php';
 // Hiển thị layout top
 require_once __DIR__ . '/views/layouts/layouttop.php';
 
@@ -148,8 +148,11 @@ try {
         'update-cart' => (new CartsController())->updateCart(),
         'remove-cart-item' => (new CartsController())->removeCartItem(),
         'checkout' => (new CheckoutController())->index(),
+        'process-checkout' => (new CheckoutController())->processCheckout(),
+        'order-confirmation' => (new CheckoutController())->orderConfirmation(),
         'login' => (new SignInController())->index(),
         'register' => (new SignUpController())->index(),
+        'order-list' => (new OrderController())->list(),
         default => throw new Exception("Route không hợp lệ: $act"),
     };
 } catch (Exception $e) {

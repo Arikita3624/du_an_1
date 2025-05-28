@@ -42,12 +42,6 @@
                                  Được chế tác có đạo đức với cam kết không ngừng
                              về chất lượng vượt trội.</p>
                             <a href="#" class="primary-btn">Mua ngay<span class="arrow_right"></span></a>
-                            <div class="hero__social">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-pinterest"></i></a>
-                                <a href="#"><i class="fa fa-instagram"></i></a>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -64,12 +58,6 @@
                                  Được chế tác có đạo đức với cam kết không ngừng
                              về chất lượng vượt trội.</p>
                             <a href="#" class="primary-btn">Mua ngay <span class="arrow_right"></span></a>
-                            <div class="hero__social">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-pinterest"></i></a>
-                                <a href="#"><i class="fa fa-instagram"></i></a>
-                            </div>
                         </div>
                     </div>
                 </div>

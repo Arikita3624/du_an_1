@@ -80,7 +80,7 @@
 
 <section class="form-section">
     <div class="form-container">
-        <h2 class="form-title">Login to Your Account</h2>
+        <h2 class="form-title">Đăng nhập tài khoản</h2>
         <form action="?act=login" method="POST">
             <div class="form-group">
                 <label>Email address</label>
@@ -92,12 +92,12 @@
             </div>
             <div class="form-checkbox display-flex justify-content-between">
                 <input type="checkbox" id="remember_me" name="remember_me"/>
-                <label for="remember_me">Remember me</label>
+                <label for="remember_me">Nhớ tôi !</label>
             </div>
-            <button type="submit" class="form-btn">Login</button>
+            <button type="submit" class="form-btn">Đăng nhập</button>
             <p class="form-footer">
-                Don’t have an account?
-                <a href="?act=register">Sign up</a>
+                Chưa có tài khoản?
+                <a href="?act=register">Đăng ký</a>
             </p>
         </form>
     </div>

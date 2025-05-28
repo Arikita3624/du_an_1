@@ -93,7 +93,7 @@
 
 <section class="form-section">
   <div class="form-container">
-    <h2 class="form-title">Create an Account</h2>
+    <h2 class="form-title">Đăng ký tài khoản</h2>
 
     <?php
     $type = $_SESSION['message_type'] ?? '';
@@ -113,24 +113,24 @@
         <input type="text" name="username" id="username" required />
       </div>
       <div class="form-group">
-        <label>Email address</label>
+        <label>Email</label>
         <input type="email" name="email" id="email" required />
       </div>
       <div class="form-group">
-        <label>Password</label>
+        <label>Mật khẩu</label>
         <input type="password" name="password" id="password" required />
       </div>
       <div class="form-group">
-        <label>Address</label>
+        <label>Địa chỉ</label>
         <input type="text" name="address" id="address">
       </div>
       <div class="form-group">
-        <label>Phone</label>
+        <label>Số điện thoại</label>
         <input type="text" name="phone" id="phone" />
       </div>
-      <button type="submit" class="form-btn">Sign Up</button>
+      <button type="submit" class="form-btn">Đăng Ký</button>
       <p class="form-footer">
-        Already have an account? <a href="?act=login">Login</a>
+        Đã có tải khoản ? <a href="?act=login">Đăng nhập</a>
       </p>
     </form>
   </div>
