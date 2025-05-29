@@ -116,7 +116,7 @@ CREATE TABLE order_items (
 
 -- Thêm tài khoản admin mặc định
 INSERT INTO users (username, password, full_name, email, role) VALUES
-('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Administrator', 'admin@example.com', 'admin');
+('admin', '123', 'Administrator', 'admin@example.com', 'admin');
 
 -- Thêm dữ liệu mẫu cho bảng categories
 INSERT INTO categories (name, description) VALUES 

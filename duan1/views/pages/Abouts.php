@@ -139,29 +139,29 @@
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="team__item">
                         <img src="assets/img/about/team-1.jpg" alt="">
-                        <h4>John Smith</h4>
-                        <span>Fashion Design</span>
+                        <h4>Nguyễn Duy Hưng</h4>
+                        <span>Trưởng Nhóm</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="team__item">
                         <img src="assets/img/about/team-2.jpg" alt="">
-                        <h4>Christine Wise</h4>
-                        <span>C.E.O</span>
+                        <h4>Lê Đức Quân</h4>
+                        <span>Thành Viên</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="team__item">
                         <img src="assets/img/about/team-3.jpg" alt="">
-                        <h4>Sean Robbins</h4>
-                        <span>Manager</span>
+                        <h4>Vi Hoài Nam</h4>
+                        <span>Thành Viên</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="team__item">
                         <img src="assets/img/about/team-4.jpg" alt="">
-                        <h4>Lucy Myers</h4>
-                        <span>Delivery</span>
+                        <h4>Nguyễn Văn Dũng</h4>
+                        <span>Thành Viên</span>
                     </div>
                 </div>
             </div>
