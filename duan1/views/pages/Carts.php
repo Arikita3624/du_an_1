@@ -4,11 +4,11 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="breadcrumb__text">
-                    <h4>Shopping Cart</h4>
+                    <h4>Giỏ Hàng</h4>
                     <div class="breadcrumb__links">
-                        <a href="?act=/">Home</a>
-                        <a href="?act=product-list">Shop</a>
-                        <span>Shopping Cart</span>
+                        <a href="?act=/">Trang Chủ</a>
+                        <a href="?act=product-list">Cửa Hàng</a>
+                        <span>Giỏ Hàng</span>
                     </div>
                 </div>
             </div>
@@ -27,9 +27,9 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Product</th>
-                                    <th>Quantity</th>
-                                    <th>Total</th>
+                                    <th>Sản Phẩm</th>
+                                    <th>Số Lượng</th>
+                                    <th>Thành Tiền</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -46,21 +46,21 @@
                                             </div>
                                             <div class="product__cart__item__text">
                                                 <h6><?= htmlspecialchars($item['name']) ?></h6>
-                                                <h5><?= number_format($item['price'], 0, ',', '.') ?>₫</h5>
+                                                <h5 class="item-price"><?= number_format($item['price'], 0, ',', '.') ?>₫</h5>
                                             </div>
                                         </td>
                                         <td class="quantity__item">
-                                            <form method="post" action="?act=update-cart" style="display:inline;">
+                                            <form method="post" action="?act=update-cart" style="display:inline;" class="update-form">
                                                 <input type="hidden" name="product_id" value="<?= $item['product_id'] ?? $item['id'] ?>">
-                                                <input type="number" name="quantity" value="<?= $item['quantity'] ?>" min="1" style="width:60px;">
-                                                <button type="submit" class="btn btn-sm btn-primary">Cập nhật</button>
+                                                <input type="number" name="quantity" value="<?= $item['quantity'] ?>" min="1" style="width:60px;" class="quantity-input" data-price="<?= $item['price'] ?>">
+                                                <button type="submit" class="btn btn-sm btn-primary">Cập Nhật</button>
                                             </form>
                                         </td>
-                                        <td class="cart__price"><?= number_format($itemTotal, 0, ',', '.') ?>₫</td>
+                                        <td class="cart__price item-total"><?= number_format($itemTotal, 0, ',', '.') ?>₫</td>
                                         <td class="cart__close">
                                             <form method="post" action="?act=remove-cart-item" style="display:inline;">
                                                 <input type="hidden" name="product_id" value="<?= $item['product_id'] ?? $item['id'] ?>">
-                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Xóa sản phẩm này?')">
+                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
                                                     <i class="fa fa-close"></i>
                                                 </button>
                                             </form>
@@ -76,19 +76,19 @@
                 <div class="row mt-3">
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="continue__btn">
-                            <a href="?act=product-list">Tiếp tục mua hàng</a>
+                            <a href="?act=product-list">Tiếp Tục Mua Hàng</a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-4">
                 <div class="cart__total">
-                    <h6>Cart total</h6>
+                    <h6>Tổng Giỏ Hàng</h6>
                     <ul>
-                        <li>Tổng cộng <span><?= isset($total) ? number_format($total, 0, ',', '.') : 0 ?>₫</span></li>
+                        <li>Tổng Cộng <span id="cart-total"><?= isset($total) ? number_format($total, 0, ',', '.') : 0 ?>₫</span></li>
                     </ul>
                     <?php if (!empty($cartItems)): ?>
-                        <a href="?act=checkout" class="primary-btn btn btn-success btn-block">Thanh toán</a>
+                        <a href="?act=checkout" class="primary-btn btn btn-success btn-block">Thanh Toán</a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -142,3 +142,61 @@
     color: #fff !important;
 }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Hàm định dạng số tiền
+    function formatMoney(amount) {
+        return new Intl.NumberFormat('vi-VN').format(amount) + '₫';
+    }
+
+    // Hàm cập nhật tổng tiền
+    function updateTotal() {
+        let total = 0;
+        document.querySelectorAll('.item-total').forEach(function(element) {
+            total += parseInt(element.getAttribute('data-total') || 0);
+        });
+        document.getElementById('cart-total').textContent = formatMoney(total);
+    }
+
+    // Xử lý sự kiện thay đổi số lượng
+    document.querySelectorAll('.quantity-input').forEach(function(input) {
+        input.addEventListener('change', function() {
+            const price = parseInt(this.getAttribute('data-price'));
+            const quantity = parseInt(this.value);
+            const total = price * quantity;
+            
+            // Cập nhật thành tiền của sản phẩm
+            const itemTotal = this.closest('tr').querySelector('.item-total');
+            itemTotal.textContent = formatMoney(total);
+            itemTotal.setAttribute('data-total', total);
+            
+            // Cập nhật tổng tiền
+            updateTotal();
+        });
+    });
+
+    // Xử lý submit form
+    document.querySelectorAll('.update-form').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            // Gửi request cập nhật
+            fetch(this.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(() => {
+                // Reload trang sau khi cập nhật thành công
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Có lỗi xảy ra khi cập nhật giỏ hàng!');
+            });
+        });
+    });
+});
+</script>

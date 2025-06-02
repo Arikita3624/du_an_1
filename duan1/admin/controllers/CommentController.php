@@ -6,9 +6,9 @@ class CommentController {
     private $commentModel;
     private $productModel;
 
-    public function __construct($db) {
-        $this->commentModel = new CommentModel($db);
-        $this->productModel = new ProductModel($db);
+    public function __construct() {
+        $this->commentModel = new CommentModel();
+        $this->productModel = new ProductModel();
     }
 
     public function index() {

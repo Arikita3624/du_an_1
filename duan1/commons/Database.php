@@ -1,12 +1,13 @@
 <?php
 class Database {
+    private static $instance = null;
     private $host = 'localhost';
     private $db_name = 'base_du_an_1';
     private $username = 'root';
     private $password = '';
     private $conn;
 
-    public function __construct() {
+    private function __construct() {
         try {
             $this->conn = new PDO(
                 "mysql:host=" . $this->host . ";dbname=" . $this->db_name . ";charset=utf8",
@@ -19,6 +20,13 @@ class Database {
             echo "Lỗi kết nối database: " . $e->getMessage();
             die();
         }
+    }
+
+    public static function getInstance() {
+        if (self::$instance == null) {
+            self::$instance = new Database();
+        }
+        return self::$instance;
     }
 
     public function query($sql, $params = []) {

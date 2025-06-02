@@ -93,7 +93,7 @@
                         <p><?= nl2br(htmlspecialchars($product['description'])) ?></p>
                         <form method="post" action="?act=add-to-cart" class="product__details__cart__option">
                             <div class="quantity-row">
-                                <label for="quantity">Số lượng:</label>
+                                <label for="quantity">Số lượng tồn kho: <?= htmlspecialchars($product['stock']) ?></label>
                                 <input type="number" id="quantity" name="quantity" value="1" min="1">
                             </div>
                             <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id']) ?>">

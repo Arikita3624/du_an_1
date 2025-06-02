@@ -19,7 +19,7 @@
     <?php endif; ?>
 
     <?php if (isset($_SESSION['error'])): ?>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
         <?php 
         echo $_SESSION['error'];
         unset($_SESSION['error']);
@@ -28,10 +28,41 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
+    <script>
+        setTimeout(function() {
+            var alert = document.getElementById('errorAlert');
+            if (alert) {
+                alert.style.transition = 'opacity 0.5s';
+                alert.style.opacity = '0';
+                setTimeout(function() {
+                    alert.remove();
+                }, 500);
+            }
+        }, 2000);
+    </script>
     <?php endif; ?>
 
     <div class="card shadow mb-4">
         <div class="card-body">
+            <form action="index.php?controller=category" method="GET" class="mb-4">
+                <input type="hidden" name="controller" value="category">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="keyword" 
+                           placeholder="Nhập tên hoặc mô tả danh mục..." 
+                           value="<?php echo isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : ''; ?>">
+                    <div class="input-group-append">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search"></i> Tìm kiếm
+                        </button>
+                        <?php if (!empty($_GET['keyword'])): ?>
+                            <a href="index.php?controller=category" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Xóa tìm kiếm
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </form>
+
             <div class="table-responsive">
                 <table class="table table-bordered" width="100%" cellspacing="0">
                     <thead>

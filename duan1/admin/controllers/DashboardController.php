@@ -17,16 +17,16 @@ class DashboardController {
     public function index() {
         // Lấy thống kê đơn hàng
         $orderStats = $this->orderModel->getOrderStatistics();
-
+        
         // Lấy số lượng sản phẩm
         $productCount = $this->productModel->getProductCount();
-
+        
         // Lấy số lượng người dùng
         $userCount = $this->userModel->getUserCount();
-
+        
         // Lấy đơn hàng mới nhất
         $latestOrders = $this->orderModel->getLatestOrders(5);
-
+        
         // Hiển thị view
         ?>
         <div class="container-fluid">
@@ -140,7 +140,7 @@ class DashboardController {
                                     </td>
                                     <td><?php echo date('d/m/Y H:i', strtotime($order['created_at'])); ?></td>
                                     <td>
-                                        <a href="index.php?controller=order&action=view&id=<?php echo $order['id']; ?>"
+                                        <a href="index.php?controller=order&action=view&id=<?php echo $order['id']; ?>" 
                                            class="btn btn-info btn-sm">
                                             <i class="fas fa-eye"></i>
                                         </a>

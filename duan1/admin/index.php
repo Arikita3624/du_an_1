@@ -1,39 +1,56 @@
 <?php
 session_start();
-require_once '../commons/Database.php';
+require_once __DIR__ . '/../commons/Database.php';
+require_once __DIR__ . '/middleware/AuthMiddleware.php';
 
-// Kiểm tra đăng nhập
-if (!isset($_SESSION['admin_id'])) {
-    header('Location: login.php');
-    exit;
-}
+// Xác định base URL
+$base_url = '/DUAN1/du_an_1/duan1';
+define('BASE_URL', $base_url);
 
-// Xử lý controller và action
+// Các route không cần đăng nhập
+$publicRoutes = [
+    'auth/login',
+    'auth/logout'
+];
+
 $controller = $_GET['controller'] ?? 'dashboard';
 $action = $_GET['action'] ?? 'index';
 
-// Đường dẫn đến controller
-$controllerFile = "controllers/" . ucfirst($controller) . "Controller.php";
+$route = $controller . '/' . $action;
+
+// Kiểm tra đăng nhập
+if (!in_array($route, $publicRoutes)) {
+    AuthMiddleware::isLoggedIn();
+} else if ($route === 'auth/login') {
+    AuthMiddleware::isNotLoggedIn();
+}
 
 // Biến để lưu nội dung
 $content = '';
 
+// Load controller
+$controllerFile = __DIR__ . '/controllers/' . ucfirst($controller) . 'Controller.php';
 if (file_exists($controllerFile)) {
     require_once $controllerFile;
-    $controllerClass = ucfirst($controller) . "Controller";
-    $db = new Database();
-    $controllerInstance = new $controllerClass($db);
-
+    $controllerClass = ucfirst($controller) . 'Controller';
+    $controllerInstance = new $controllerClass();
+    
     if (method_exists($controllerInstance, $action)) {
         // Bắt đầu output buffering
         ob_start();
         $controllerInstance->$action();
         $content = ob_get_clean();
     } else {
-        $content = "Action không tồn tại!";
+        $content = '<div class="alert alert-danger">Action không tồn tại!</div>';
     }
 } else {
-    $content = "Controller không tồn tại!";
+    $content = '<div class="alert alert-danger">Controller không tồn tại!</div>';
+}
+
+// Nếu là trang đăng nhập, chỉ hiển thị nội dung đăng nhập
+if ($route === 'auth/login') {
+    echo $content;
+    exit;
 }
 ?>
 
@@ -45,7 +62,7 @@ if (file_exists($controllerFile)) {
     <title>Admin Panel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/admin/assets/css/admin.css">
 </head>
 <body>
     <div class="wrapper">
@@ -57,38 +74,33 @@ if (file_exists($controllerFile)) {
 
             <ul class="list-unstyled components">
                 <li class="<?php echo $controller == 'dashboard' ? 'active' : ''; ?>">
-                    <a href="index.php?controller=dashboard">
+                    <a href="<?php echo BASE_URL; ?>/admin/index.php?controller=dashboard">
                         <i class="fas fa-tachometer-alt"></i> Dashboard
                     </a>
                 </li>
                 <li class="<?php echo $controller == 'product' ? 'active' : ''; ?>">
-                    <a href="index.php?controller=product">
+                    <a href="<?php echo BASE_URL; ?>/admin/index.php?controller=product">
                         <i class="fas fa-box"></i> Quản lý sản phẩm
                     </a>
                 </li>
                 <li class="<?php echo $controller == 'category' ? 'active' : ''; ?>">
-                    <a href="index.php?controller=category">
+                    <a href="<?php echo BASE_URL; ?>/admin/index.php?controller=category">
                         <i class="fas fa-list"></i> Quản lý danh mục
                     </a>
                 </li>
                 <li class="<?php echo $controller == 'order' ? 'active' : ''; ?>">
-                    <a href="index.php?controller=order">
+                    <a href="<?php echo BASE_URL; ?>/admin/index.php?controller=order">
                         <i class="fas fa-shopping-cart"></i> Quản lý đơn hàng
                     </a>
                 </li>
                 <li class="<?php echo $controller == 'user' ? 'active' : ''; ?>">
-                    <a href="index.php?controller=user">
+                    <a href="<?php echo BASE_URL; ?>/admin/index.php?controller=user">
                         <i class="fas fa-users"></i> Quản lý người dùng
                     </a>
                 </li>
                 <li class="<?php echo $controller == 'comment' ? 'active' : ''; ?>">
-                    <a href="index.php?controller=comment">
+                    <a href="<?php echo BASE_URL; ?>/admin/index.php?controller=comment">
                         <i class="fas fa-comments"></i> Quản lý bình luận
-                    </a>
-                </li>
-                <li class="<?php echo $controller == 'cart' ? 'active' : ''; ?>">
-                    <a href="index.php?controller=cart">
-                        <i class="fas fa-shopping-cart"></i> Quản lý giỏ hàng
                     </a>
                 </li>
             </ul>
@@ -103,9 +115,9 @@ if (file_exists($controllerFile)) {
                     </button>
                     <div class="ml-auto">
                         <span class="mr-3">
-                            Xin chào, <?php echo htmlspecialchars($_SESSION['admin_name']); ?>
+                            Xin chào, <?php echo htmlspecialchars($_SESSION['admin_username'] ?? ''); ?>
                         </span>
-                        <a href="logout.php" class="btn btn-danger">
+                        <a href="<?php echo BASE_URL; ?>/admin/index.php?controller=auth&action=logout" class="btn btn-danger">
                             <i class="fas fa-sign-out-alt"></i> Đăng xuất
                         </a>
                     </div>

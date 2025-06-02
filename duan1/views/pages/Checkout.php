@@ -5,61 +5,34 @@
             <form action="?act=process-checkout" method="POST" id="checkoutForm">
                 <div class="row">
                     <div class="col-lg-8 col-md-6">
-                        <h6 class="coupon__code"><span class="icon_tag_alt"></span> Have a coupon? <a href="#">Click here</a> to enter your code</h6>
-                        <h6 class="checkout__title">Billing Details</h6>
+                        <h6 class="checkout__title">Thông Tin Thanh Toán</h6>
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="checkout__input">
-                                    <p>Họ tênn<span>*</span></p>
-                                    <input type="text" name="first_name" required>
+                                    <p>Họ tên<span>*</span></p>
+                                    <input type="text" name="first_name" value="<?= isset($_SESSION['user']['username']) ? htmlspecialchars($_SESSION['user']['username']) : '' ?>" required>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
-                                <div class="checkout__input">
-                                    <p>Tên người nhận<span>*</span></p>
-                                    <input type="text" name="last_name" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="checkout__input">
-                            <p>Khu vực<span>*</span></p>
-                            <input type="text" name="country" required>
-                        </div>
-                        <div class="checkout__input">
-                            <p>Địa chỉ<span>*</span></p>
-                            <input type="text" placeholder="Street Address" class="checkout__input__add" name="street_address" required>
-                            <input type="text" placeholder="Apartment, suite, unite ect (optional)" name="apartment">
-                        </div>
-                        <div class="row">
                             <div class="col-lg-6">
                                 <div class="checkout__input">
                                     <p>Số điện thoại<span>*</span></p>
-                                    <input type="text" name="phone" required pattern="[0-9]+" title="Please enter a valid phone number">
+                                    <input type="text" name="phone" value="<?= isset($_SESSION['user']['phone']) ? htmlspecialchars($_SESSION['user']['phone']) : '' ?>" required pattern="[0-9]+" title="Vui lòng nhập số điện thoại hợp lệ">
                                 </div>
                             </div>
-                            <div class="col-lg-6">
-                                <div class="checkout__input">
-                                    <p>Email<span>*</span></p>
-                                    <input type="email" name="email" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="checkout__input__checkbox">
-                            <label for="diff-acc">
-                                Ghi chú
-                                <input type="checkbox" id="diff-acc">
-                                <span class="checkmark"></span>
-                            </label>
                         </div>
                         <div class="checkout__input">
-                            <p>Nội dung</p>
-                            <input type="text" placeholder="Notes about your order, e.g. special notes for delivery." name="order_notes">
+                            <p>Địa chỉ<span>*</span></p>
+                            <input type="text" placeholder="Địa chỉ nhận hàng" class="checkout__input__add" name="street_address" value="<?= isset($_SESSION['user']['address']) ? htmlspecialchars($_SESSION['user']['address']) : '' ?>" required>
+                        </div>
+                        <div class="checkout__input">
+                            <p>Email<span>*</span></p>
+                            <input type="email" name="email" value="<?= isset($_SESSION['user']['email']) ? htmlspecialchars($_SESSION['user']['email']) : '' ?>" required>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">
                         <div class="checkout__order">
-                            <h4 class="order__title">Đơn hàng của bạn</h4>
-                            <div class="checkout__order__products">Sản phẩm <span>Tổng giá</span></div>
+                            <h4 class="order__title">Đơn Hàng Của Bạn</h4>
+                            <div class="checkout__order__products">Sản Phẩm <span>Tổng Giá</span></div>
                             <ul class="checkout__total__products">
                                 <?php
                                 $total = 0;
@@ -78,31 +51,17 @@
                                 ?>
                             </ul>
                             <ul class="checkout__total__all">
-                                <li>Subtotal <span><?= number_format($total, 0, ',', '.') ?>₫</span></li>
-                                <li>Total <span><?= number_format($total, 0, ',', '.') ?>₫</span></li>
+                                <li>Tạm Tính <span><?= number_format($total, 0, ',', '.') ?>₫</span></li>
+                                <li>Tổng Cộng <span><?= number_format($total, 0, ',', '.') ?>₫</span></li>
                             </ul>
                             <div class="checkout__input__checkbox">
                                 <label for="cod">
-                                    Thanh toán khi nhận hàng (COD)
+                                    Thanh Toán Khi Nhận Hàng (COD)
                                     <input type="radio" id="cod" name="payment_method" value="cod" checked>
                                     <span class="checkmark"></span>
                                 </label>
                             </div>
-                            <div class="checkout__input__checkbox">
-                                <label for="payment">
-                                    Chuyển khoản ngân hàng
-                                    <input type="radio" id="payment" name="payment_method" value="banking">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <div class="checkout__input__checkbox">
-                                <label for="paypal">
-                                    Paypal
-                                    <input type="radio" id="paypal" name="payment_method" value="paypal">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <button type="submit" class="site-btn">Thanh toán</button>
+                            <button type="submit" class="site-btn">Thanh Toán</button>
                         </div>
                     </div>
                 </div>
@@ -249,19 +208,10 @@
         font-size: 16px;
         cursor: pointer;
         transition: background 0.2s;
+        width: 100%;
     }
 
     .site-btn:hover {
         background: #b91c1c;
-    }
-
-    @media (max-width: 991px) {
-        .checkout__form {
-            padding: 25px 10px 20px 10px;
-        }
-
-        .checkout__order {
-            padding: 18px 8px 12px 8px;
-        }
     }
 </style>

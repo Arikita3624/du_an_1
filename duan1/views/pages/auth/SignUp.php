@@ -109,11 +109,15 @@
 
     <form action="?act=register" method="POST">
       <div class="form-group">
-        <label>Username</label>
+        <label>Username<span>*</span></label>
         <input type="text" name="username" id="username" required />
       </div>
       <div class="form-group">
-        <label>Email</label>
+        <label>Họ và tên<span>*</span></label>
+        <input type="text" name="full_name" id="full_name" required />
+      </div>
+      <div class="form-group">
+        <label>Email<span>*</span></label>
         <input type="email" name="email" id="email" required />
       </div>
       <div class="form-group">
@@ -121,12 +125,12 @@
         <input type="password" name="password" id="password" required />
       </div>
       <div class="form-group">
-        <label>Địa chỉ</label>
-        <input type="text" name="address" id="address">
+        <label>Địa chỉ<span>*</span></label>
+        <input type="text" name="address" id="address" required>
       </div>
       <div class="form-group">
-        <label>Số điện thoại</label>
-        <input type="text" name="phone" id="phone" />
+        <label>Số điện thoại<span>*</span></label>
+        <input type="text" name="phone" id="phone" required pattern="[0-9]+" title="Vui lòng nhập số điện thoại hợp lệ">
       </div>
       <button type="submit" class="form-btn">Đăng Ký</button>
       <p class="form-footer">

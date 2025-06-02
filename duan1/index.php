@@ -149,10 +149,10 @@ try {
         'remove-cart-item' => (new CartsController())->removeCartItem(),
         'checkout' => (new CheckoutController())->index(),
         'process-checkout' => (new CheckoutController())->processCheckout(),
-        'order-confirmation' => (new CheckoutController())->orderConfirmation(),
+        'order-list' => (new OrderController())->list(),
+        'order-confirmation' => (new OrderController())->view(),
         'login' => (new SignInController())->index(),
         'register' => (new SignUpController())->index(),
-        'order-list' => (new OrderController())->list(),
         default => throw new Exception("Route không hợp lệ: $act"),
     };
 } catch (Exception $e) {

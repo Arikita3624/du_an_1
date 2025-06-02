@@ -113,4 +113,10 @@ class ProductModels
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+    public function updateStock($productId, $newStock) {
+        $conn = connectDB();
+        $stmt = $conn->prepare("UPDATE products SET stock = ? WHERE id = ?");
+        return $stmt->execute([$newStock, $productId]);
+    }
 }

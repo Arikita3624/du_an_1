@@ -5,7 +5,7 @@ class UserModel {
     private $db;
 
     public function __construct() {
-        $this->db = new Database();
+        $this->db = Database::getInstance();
     }
 
     public function getUserCount() {
@@ -100,5 +100,41 @@ class UserModel {
         
         $result = $this->db->queryOne($sql, $params);
         return $result['count'] > 0;
+    }
+
+    public function searchUsers($keyword) {
+        $sql = "SELECT * FROM users 
+                WHERE username LIKE :keyword 
+                OR full_name LIKE :keyword 
+                OR email LIKE :keyword 
+                OR phone LIKE :keyword 
+                OR address LIKE :keyword 
+                ORDER BY created_at DESC";
+        return $this->db->query($sql, ['keyword' => '%' . $keyword . '%']);
+    }
+
+    public function toggleUserStatus($id) {
+        $sql = "UPDATE users SET 
+                status = CASE WHEN status = 'active' THEN 'locked' ELSE 'active' END,
+                updated_at = NOW()
+                WHERE id = :id";
+        return $this->db->execute($sql, ['id' => $id]);
+    }
+
+    public function getUserStatus($id) {
+        $sql = "SELECT status FROM users WHERE id = :id";
+        $result = $this->db->queryOne($sql, ['id' => $id]);
+        return $result ? $result['status'] : null;
+    }
+
+    public function updateUserRole($id, $role) {
+        $sql = "UPDATE users SET 
+                role = :role,
+                updated_at = NOW()
+                WHERE id = :id";
+        return $this->db->execute($sql, [
+            'id' => $id,
+            'role' => $role
+        ]);
     }
 } 

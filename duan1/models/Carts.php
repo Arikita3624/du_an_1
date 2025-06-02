@@ -14,7 +14,7 @@ class CartModels
             return $cart['id'];
         }
 
-        $stmt = $db->prepare("INSERT INTO carts (user_id) VALUES (?)");
+        $stmt = $db->prepare("INSERT INTO carts (user_id, total_price) VALUES (?, 0)");
         $stmt->execute([$userId]);
         return $db->lastInsertId();
     }

@@ -46,18 +46,24 @@ class CheckoutModel
     }
     public function getOrderById($order_id)
     {
-        $stmt = $this->conn->prepare("SELECT * FROM orders WHERE id = :order_id");
+        $stmt = $this->conn->prepare("
+            SELECT o.*, u.full_name, u.email, u.phone, u.address 
+            FROM orders o
+            LEFT JOIN users u ON o.user_id = u.id
+            WHERE o.id = :order_id
+        ");
         $stmt->execute([':order_id' => $order_id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function getOrderDetails($order_id)
     {
-        $stmt = $this->conn->prepare(
-            "SELECT oi.*, p.name FROM order_items oi
-         JOIN products p ON oi.product_id = p.id
-         WHERE oi.order_id = :order_id"
-        );
+        $stmt = $this->conn->prepare("
+            SELECT oi.*, p.name, p.image 
+            FROM order_items oi
+            LEFT JOIN products p ON oi.product_id = p.id
+            WHERE oi.order_id = :order_id
+        ");
         $stmt->execute([':order_id' => $order_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -66,5 +72,24 @@ class CheckoutModel
         $stmt = $this->conn->prepare("SELECT * FROM orders WHERE user_id = :user_id ORDER BY created_at DESC");
         $stmt->execute([':user_id' => $user_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function updateOrderStatus($order_id, $status)
+    {
+        try {
+            $stmt = $this->conn->prepare("
+                UPDATE orders 
+                SET status = :status, 
+                    updated_at = CURRENT_TIMESTAMP 
+                WHERE id = :order_id
+            ");
+            return $stmt->execute([
+                ':status' => $status,
+                ':order_id' => $order_id
+            ]);
+        } catch (PDOException $e) {
+            error_log("Error updating order status: " . $e->getMessage());
+            return false;
+        }
     }
 }
