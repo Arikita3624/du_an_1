@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/env.php';
+
 // Kết nối CSDL qua PDO
 function connectDB() {
     // Kết nối CSDL
