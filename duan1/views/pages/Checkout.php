@@ -36,14 +36,18 @@
                             <ul class="checkout__total__products">
                                 <?php
                                 $total = 0;
+                                $totalQuantity = 0;
                                 if (!empty($cartItems)) {
                                     foreach ($cartItems as $index => $item) {
                                         $itemTotal = $item['total_price'];
                                         $total += $itemTotal;
+                                        $totalQuantity += $item['quantity'];
                                 ?>
                                         <li>
                                             <img src="<?= !empty($item['image']) ? 'admin/' . htmlspecialchars($item['image']) : 'assets/img/no-image.jpg' ?>" alt="" style="width: 50px;">
-                                            <?= sprintf("%02d", $index + 1) ?>. <?= htmlspecialchars($item['name']) ?> <span><?= number_format($itemTotal, 0, ',', '.') ?>₫</span>
+                                            <?= sprintf("%02d", $index + 1) ?>. <?= htmlspecialchars($item['name']) ?> 
+                                            <span class="quantity">(<?= $item['quantity'] ?>)</span>
+                                            <span><?= number_format($itemTotal, 0, ',', '.') ?>₫</span>
                                         </li>
                                 <?php
                                     }
@@ -51,6 +55,7 @@
                                 ?>
                             </ul>
                             <ul class="checkout__total__all">
+                                <li>Tổng Số Lượng <span><?= $totalQuantity ?> sản phẩm</span></li>
                                 <li>Tạm Tính <span><?= number_format($total, 0, ',', '.') ?>₫</span></li>
                                 <li>Tổng Cộng <span><?= number_format($total, 0, ',', '.') ?>₫</span></li>
                             </ul>
@@ -171,6 +176,12 @@
         margin-bottom: 8px;
         font-size: 15px;
         color: #333;
+    }
+
+    .checkout__total__products .quantity {
+        color: #666;
+        font-size: 14px;
+        margin: 0 5px;
     }
 
     .checkout__total__products img {

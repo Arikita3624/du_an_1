@@ -31,124 +31,95 @@
                                 <!--end row-->
 
                                 <div class="row">
-                                    <div class="col-xl-3 col-md-6">
-                                        <!-- card -->
-                                        <div class="card card-animate">
+                                    <div class="col-xl-3 col-md-6 mb-4">
+                                        <div class="card border-left-primary shadow h-100 py-2">
                                             <div class="card-body">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="flex-grow-1 overflow-hidden">
-                                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> Total Earnings</p>
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                            Tổng đơn hàng</div>
+                                                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                            <?php echo number_format($orderStats['total_orders']); ?>
+                                                        </div>
                                                     </div>
-                                                    <div class="flex-shrink-0">
-                                                        <h5 class="text-success fs-14 mb-0">
-                                                            <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +16.24 %
-                                                        </h5>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex align-items-end justify-content-between mt-4">
-                                                    <div>
-                                                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">$<span class="counter-value" data-target="559.25">0</span>k </h4>
-                                                        <a href="#" class="text-decoration-underline">View net earnings</a>
-                                                    </div>
-                                                    <div class="avatar-sm flex-shrink-0">
-                                                        <span class="avatar-title bg-success-subtle rounded fs-3">
-                                                            <i class="bx bx-dollar-circle text-success"></i>
-                                                        </span>
+                                                    <div class="col-auto">
+                                                        <i class="fas fa-shopping-cart fa-2x text-gray-300"></i>
                                                     </div>
                                                 </div>
-                                            </div><!-- end card body -->
-                                        </div><!-- end card -->
-                                    </div><!-- end col -->
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                    <div class="col-xl-3 col-md-6">
-                                        <!-- card -->
-                                        <div class="card card-animate">
+                                    <div class="col-xl-3 col-md-6 mb-4">
+                                        <div class="card border-left-success shadow h-100 py-2">
                                             <div class="card-body">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="flex-grow-1 overflow-hidden">
-                                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Orders</p>
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                            Doanh thu</div>
+                                                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                            <?php echo number_format($orderStats['total_revenue']); ?> VNĐ
+                                                        </div>
                                                     </div>
-                                                    <div class="flex-shrink-0">
-                                                        <h5 class="text-danger fs-14 mb-0">
-                                                            <i class="ri-arrow-right-down-line fs-13 align-middle"></i> -3.57 %
-                                                        </h5>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex align-items-end justify-content-between mt-4">
-                                                    <div>
-                                                        <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value" data-target="36894">0</span></h4>
-                                                        <a href="#" class="text-decoration-underline">View all orders</a>
-                                                    </div>
-                                                    <div class="avatar-sm flex-shrink-0">
-                                                        <span class="avatar-title bg-info-subtle rounded fs-3">
-                                                            <i class="bx bx-shopping-bag text-info"></i>
-                                                        </span>
+                                                    <div class="col-auto">
+                                                        <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
                                                     </div>
                                                 </div>
-                                            </div><!-- end card body -->
-                                        </div><!-- end card -->
-                                    </div><!-- end col -->
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                    <div class="col-xl-3 col-md-6">
-                                        <!-- card -->
-                                        <div class="card card-animate">
+                                    <div class="col-xl-3 col-md-6 mb-4">
+                                        <div class="card border-left-info shadow h-100 py-2">
                                             <div class="card-body">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="flex-grow-1 overflow-hidden">
-                                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0">Customers</p>
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                            Sản phẩm</div>
+                                                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                            <?php echo number_format($productCount); ?>
+                                                        </div>
                                                     </div>
-                                                    <div class="flex-shrink-0">
-                                                        <h5 class="text-success fs-14 mb-0">
-                                                            <i class="ri-arrow-right-up-line fs-13 align-middle"></i> +29.08 %
-                                                        </h5>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex align-items-end justify-content-between mt-4">
-                                                    <div>
-                                                        <h4 class="fs-22 fw-semibold ff-secondary mb-4"><span class="counter-value" data-target="183.35">0</span>M </h4>
-                                                        <a href="#" class="text-decoration-underline">See details</a>
-                                                    </div>
-                                                    <div class="avatar-sm flex-shrink-0">
-                                                        <span class="avatar-title bg-warning-subtle rounded fs-3">
-                                                            <i class="bx bx-user-circle text-warning"></i>
-                                                        </span>
+                                                    <div class="col-auto">
+                                                        <i class="fas fa-box fa-2x text-gray-300"></i>
                                                     </div>
                                                 </div>
-                                            </div><!-- end card body -->
-                                        </div><!-- end card -->
-                                    </div><!-- end col -->
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                    <div class="col-xl-3 col-md-6">
-                                        <!-- card -->
-                                        <div class="card card-animate">
+                                    <div class="col-xl-3 col-md-6 mb-4">
+                                        <div class="card border-left-warning shadow h-100 py-2">
                                             <div class="card-body">
-                                                <div class="d-flex align-items-center">
-                                                    <div class="flex-grow-1 overflow-hidden">
-                                                        <p class="text-uppercase fw-medium text-muted text-truncate mb-0"> My Balance</p>
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                            Người dùng</div>
+                                                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                            <?php echo number_format($userCount); ?>
+                                                        </div>
                                                     </div>
-                                                    <div class="flex-shrink-0">
-                                                        <h5 class="text-muted fs-14 mb-0">
-                                                            +0.00 %
-                                                        </h5>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex align-items-end justify-content-between mt-4">
-                                                    <div>
-                                                        <h4 class="fs-22 fw-semibold ff-secondary mb-4">$<span class="counter-value" data-target="165.89">0</span>k </h4>
-                                                        <a href="#" class="text-decoration-underline">Withdraw money</a>
-                                                    </div>
-                                                    <div class="avatar-sm flex-shrink-0">
-                                                        <span class="avatar-title bg-primary-subtle rounded fs-3">
-                                                            <i class="bx bx-wallet text-primary"></i>
-                                                        </span>
+                                                    <div class="col-auto">
+                                                        <i class="fas fa-users fa-2x text-gray-300"></i>
                                                     </div>
                                                 </div>
-                                            </div><!-- end card body -->
-                                        </div><!-- end card -->
-                                    </div><!-- end col -->
-                                </div> <!-- end row-->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div class="row">
+                                    <div class="col-xl-4 col-lg-5">
+                                        <div class="card shadow mb-4">
+                                            <div class="card-header py-3">
+                                                <h6 class="m-0 font-weight-bold text-primary">Thống kê trạng thái đơn hàng</h6>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="order-status-pie-chart"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="col-xl-8">
                                         <div class="card">
                                             <div class="card-header border-0 align-items-center d-flex">
@@ -209,47 +180,6 @@
                                             </div><!-- end card body -->
                                         </div><!-- end card -->
                                     </div><!-- end col -->
-
-                                    <div class="col-xl-4">
-                                        <!-- card -->
-                                        <div class="card card-height-100">
-                                            <div class="card-header align-items-center d-flex">
-                                                <h4 class="card-title mb-0 flex-grow-1">Sales by Locations</h4>
-                                                <div class="flex-shrink-0">
-                                                    <button type="button" class="btn btn-soft-primary material-shadow-none btn-sm">
-                                                        Export Report
-                                                    </button>
-                                                </div>
-                                            </div><!-- end card header -->
-
-                                            <!-- card body -->
-                                            <div class="card-body">
-
-                                                <div id="sales-by-locations" data-colors='["--vz-light", "--vz-success", "--vz-primary"]' data-colors-interactive='["--vz-light", "--vz-info", "--vz-primary"]' style="height: 269px" dir="ltr"></div>
-
-                                                <div class="px-2 py-2 mt-1">
-                                                    <p class="mb-1">Canada <span class="float-end">75%</span></p>
-                                                    <div class="progress mt-2" style="height: 6px;">
-                                                        <div class="progress-bar progress-bar-striped bg-primary" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="75"></div>
-                                                    </div>
-
-                                                    <p class="mt-3 mb-1">Greenland <span class="float-end">47%</span>
-                                                    </p>
-                                                    <div class="progress mt-2" style="height: 6px;">
-                                                        <div class="progress-bar progress-bar-striped bg-primary" role="progressbar" style="width: 47%" aria-valuenow="47" aria-valuemin="0" aria-valuemax="47"></div>
-                                                    </div>
-
-                                                    <p class="mt-3 mb-1">Russia <span class="float-end">82%</span></p>
-                                                    <div class="progress mt-2" style="height: 6px;">
-                                                        <div class="progress-bar progress-bar-striped bg-primary" role="progressbar" style="width: 82%" aria-valuenow="82" aria-valuemin="0" aria-valuemax="82"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- end card body -->
-                                        </div>
-                                        <!-- end card -->
-                                    </div>
-                                    <!-- end col -->
                                 </div>
 
                                 <div class="row">
@@ -834,3 +764,82 @@
 
                         </div> <!-- end col -->
                     </div>
+
+    <script>
+        // Biểu đồ thống kê trạng thái đơn hàng (ApexCharts Pie Chart)
+        var orderStatusCounts = <?php echo json_encode($orderStatusCounts); ?>;
+
+        var statusLabels = {
+            'pending': 'Chờ xử lý',
+            'processing': 'Đang xử lý',
+            'delivering': 'Đang giao hàng',
+            'completed': 'Đã giao hàng',
+            'finished': 'Hoàn thành',
+            'cancelled': 'Đã hủy'
+        };
+
+        var seriesData = [];
+        var chartLabels = [];
+        var chartColors = [];
+
+        // Define colors for each status (adjust as needed)
+        var colorMap = {
+            'pending': '#ffc107',     // warning
+            'processing': '#17a2b8', // info
+            'delivering': '#007bff',  // primary
+            'completed': '#28a745',   // success
+            'finished': '#28a745',   // success (can use a different shade if needed)
+            'cancelled': '#dc3545'    // danger
+        };
+
+        // Populate data for the chart, ensuring order and including statuses with count 0
+        var orderedStatuses = ['pending', 'processing', 'delivering', 'completed', 'finished', 'cancelled'];
+
+        orderedStatuses.forEach(function(status) {
+            var count = orderStatusCounts[status] || 0;
+            if (count > 0) { // Only include statuses with counts greater than 0
+                 seriesData.push(count);
+                 chartLabels.push(statusLabels[status] + ' (' + count + ')');
+                 chartColors.push(colorMap[status]);
+            }
+        });
+
+        // If no orders exist, display a message or a default state
+        if (seriesData.length === 0) {
+             document.getElementById('order-status-pie-chart').innerHTML = '<p class="text-center text-muted">Chưa có dữ liệu đơn hàng để thống kê.</p>';
+        } else {
+             var options = {
+                 series: seriesData,
+                 chart: {
+                     type: 'pie',
+                     height: 350,
+                 },
+                 labels: chartLabels,
+                 colors: chartColors,
+                 responsive: [{
+                     breakpoint: 480,
+                     options: {
+                         chart: {
+                             width: 200
+                         },
+                         legend: {
+                             position: 'bottom'
+                         }
+                     }
+                 }],
+                 legend: {
+                     position: 'bottom'
+                 },
+                 tooltip: {
+                     y: {
+                         formatter: function(value) {
+                             return value + " đơn hàng";
+                         }
+                     }
+                 }
+             };
+
+             var chart = new ApexCharts(document.querySelector("#order-status-pie-chart"), options);
+             chart.render();
+        }
+    </script>

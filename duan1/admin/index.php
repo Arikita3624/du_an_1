@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . '/../commons/Database.php';
 require_once __DIR__ . '/middleware/AuthMiddleware.php';
+require_once __DIR__ . '/controllers/CommentController.php';
 
 // Xác định base URL
 $base_url = '/DUAN1/du_an_1/duan1';

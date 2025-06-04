@@ -76,11 +76,11 @@ class OrderController {
                 $currentIndex = array_search($currentStatus, $statusOrder);
                 $newIndex = array_search($newStatus, $statusOrder);
 
-                // Chỉ cho phép chuyển sang trạng thái có thứ tự lớn hơn
-                if ($newIndex !== false && $currentIndex !== false && $newIndex > $currentIndex) {
+                // Chỉ cho phép chuyển sang trạng thái kế tiếp trực tiếp
+                if ($newIndex !== false && $currentIndex !== false && $newIndex === $currentIndex + 1) {
                     $isUpdateAllowed = true;
                 } else {
-                    $_SESSION['error'] = "Không thể cập nhật trạng thái từ '" . getStatusText($currentStatus) . "' sang '" . getStatusText($newStatus) . "'!";
+                    $_SESSION['error'] = "Không thể cập nhật trạng thái từ '" . getStatusText($currentStatus) . "' sang '" . getStatusText($newStatus) . "'! Vui lòng cập nhật theo đúng thứ tự.";
                 }
             }
 

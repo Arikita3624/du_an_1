@@ -59,6 +59,7 @@ if (isset($_SESSION['message']) && isset($_SESSION['message_type'])) {
             <th>Tổng tiền</th>
             <th>Phương thức thanh toán</th>
             <th>Trạng thái</th>
+            <th>Trạng thái thanh toán</th>
             <th>Chi tiết</th>
         </tr>
     </thead>
@@ -69,7 +70,16 @@ if (isset($_SESSION['message']) && isset($_SESSION['message_type'])) {
                 <td><?= htmlspecialchars($order['created_at']) ?></td>
                 <td><?= number_format($order['total_price'], 0, ',', '.') ?>₫</td>
                 <td><?= $order['payment_method'] === 'cod' ? 'Thanh toán khi nhận hàng (COD)' : 'Chuyển khoản ngân hàng' ?></td>
-                <td><?= getStatusText($order['status']) ?></td>
+                <td>
+                    <span class="badge badge-<?= getStatusBadgeClass($order['status']) ?>">
+                        <?= getStatusText($order['status']) ?>
+                    </span>
+                </td>
+                <td>
+                    <span class="badge badge-<?= getPaymentStatusBadgeClass($order['payment_status']) ?>">
+                        <?= getPaymentStatusText($order['payment_status']) ?>
+                    </span>
+                </td>
                 <td><a href="?act=order-confirmation&order_id=<?= $order['id'] ?>">Xem</a></td>
             </tr>
         <?php endforeach; ?>
@@ -123,66 +133,73 @@ if (isset($_SESSION['message']) && isset($_SESSION['message_type'])) {
         margin-bottom: 40px;
     }
 
-    .table thead {
-        background: #f9f9f9;
-    }
-
-    .table th,
-    .table td {
-        padding: 14px 12px;
-        text-align: center;
-        font-size: 16px;
-    }
-
     .table th {
-        color: #111;
-        font-weight: 700;
-        border-bottom: 2px solid #e53637;
-        background: #f6f6f6;
-        letter-spacing: 0.5px;
+        background: #f8f9fa;
+        padding: 15px;
+        font-weight: 600;
+        color: #333;
+        text-align: left;
+        border-bottom: 2px solid #dee2e6;
     }
 
-    .table tbody tr {
-        transition: background 0.2s;
-    }
-
-    .table tbody tr:nth-child(even) {
-        background: #fafafa;
+    .table td {
+        padding: 15px;
+        border-bottom: 1px solid #dee2e6;
+        vertical-align: middle;
     }
 
     .table tbody tr:hover {
-        background: #ffeaea;
+        background-color: #f8f9fa;
     }
 
-    .table td {
-        color: #333;
-        border-bottom: 1px solid #f0f0f0;
-    }
-
-    .table a {
-        color: #fff;
-        background: #e53637;
-        padding: 6px 18px;
-        border-radius: 5px;
+    /* Badge styles */
+    .badge {
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 12px;
         font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .badge-warning {
+        background-color: #ffc107;
+        color: #000;
+    }
+
+    .badge-info {
+        background-color: #17a2b8;
+        color: #fff;
+    }
+
+    .badge-primary {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .badge-success {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .badge-danger {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    .badge-secondary {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
+    /* Link styles */
+    .table a {
+        color: #007bff;
         text-decoration: none;
-        transition: background 0.2s;
-        display: inline-block;
+        font-weight: 500;
     }
 
     .table a:hover {
-        background: #b91c1c;
-    }
-
-    @media (max-width: 768px) {
-        .table th,
-        .table td {
-            font-size: 14px;
-            padding: 10px 4px;
-        }
-
-        h3 {
-            font-size: 20px;
-        }
+        color: #0056b3;
+        text-decoration: underline;
     }
 </style>

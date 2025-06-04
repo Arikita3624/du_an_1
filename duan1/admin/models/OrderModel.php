@@ -154,4 +154,26 @@ class OrderModel {
                 LIMIT " . (int)$limit;
         return $this->db->query($sql);
     }
+
+    public function getOrderStatusCounts() {
+        $sql = "SELECT status, COUNT(*) as count FROM orders GROUP BY status";
+        try {
+            $results = $this->db->query($sql);
+            $counts = [];
+            foreach ($results as $row) {
+                $counts[$row['status']] = $row['count'];
+            }
+            // Ensure all expected statuses are present, even if count is 0
+            $allStatuses = ['pending', 'processing', 'delivering', 'completed', 'finished', 'cancelled'];
+            foreach ($allStatuses as $status) {
+                if (!isset($counts[$status])) {
+                    $counts[$status] = 0;
+                }
+            }
+            return $counts;
+        } catch (Exception $e) {
+            error_log("Lỗi khi lấy thống kê trạng thái đơn hàng: " . $e->getMessage());
+            return [];
+        }
+    }
 } 

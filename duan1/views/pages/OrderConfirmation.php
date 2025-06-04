@@ -54,9 +54,24 @@ require_once __DIR__ . '/../../commons/helpers.php';
                                 <p class="text-muted">Ngày đặt: <?= date('d/m/Y H:i', strtotime($order['created_at'])) ?></p>
                             </div>
                             <div class="col-md-6 text-end">
-                                <span class="badge <?= getStatusBadgeClass($order['status']) ?>">
-                                    <?= getStatusText($order['status']) ?>
-                                </span>
+                                <div class="order-summary-status">
+                                    <div class="status-item">
+                                        <span class="status-label">Trạng thái đơn hàng:</span>
+                                        <span class="badge <?= getStatusBadgeClass($order['status']) ?>">
+                                            <?= getStatusText($order['status']) ?>
+                                        </span>
+                                    </div>
+                                    <div class="status-item">
+                                        <span class="status-label">Trạng thái thanh toán:</span>
+                                        <span class="badge <?= getPaymentStatusBadgeClass($order['payment_status']) ?>">
+                                            <?= getPaymentStatusText($order['payment_status']) ?>
+                                        </span>
+                                    </div>
+                                    <div class="payment-method-item">
+                                        <span class="status-label">Phương thức thanh toán:</span>
+                                        <span><?= getPaymentMethodText($order['payment_method']) ?></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -118,21 +133,6 @@ require_once __DIR__ . '/../../commons/helpers.php';
                         </div>
                     </div>
 
-                    <!-- Thông tin thanh toán -->
-                    <div class="order-details__section">
-                        <h5>Thông tin thanh toán</h5>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <p><strong>Phương thức thanh toán:</strong> <?= getPaymentMethodText($order['payment_method']) ?></p>
-                                <p><strong>Trạng thái thanh toán:</strong> 
-                                    <span class="badge <?= getPaymentStatusBadgeClass($order['payment_status']) ?>">
-                                        <?= getPaymentStatusText($order['payment_status']) ?>
-                                    </span>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="order-details__actions">
                         <a href="?act=order-list" class="btn btn-secondary">Quay lại</a>
                         <?php if (in_array($order['status'], ['pending', 'processing'])): ?>
@@ -140,6 +140,14 @@ require_once __DIR__ . '/../../commons/helpers.php';
                                 Hủy đơn hàng
                             </button>
                         <?php endif; ?>
+
+                        <?php if ($order['status'] === 'completed'): ?>
+                            <form action="?act=mark-order-received" method="POST" onsubmit="return confirm('Xác nhận đã nhận được đơn hàng?');">
+                                <input type="hidden" name="order_id" value="<?= $order['id'] ?>">
+                                <button type="submit" class="btn btn-success">Đã nhận hàng</button>
+                            </form>
+                        <?php endif; ?>
+
                         <a href="?act=product-list" class="btn btn-primary">Tiếp tục mua sắm</a>
                     </div>
                 </div>
@@ -160,6 +168,12 @@ require_once __DIR__ . '/../../commons/helpers.php';
             <div class="modal-body">
                 <p>Bạn có chắc chắn muốn hủy đơn hàng #<?= htmlspecialchars($order['id']) ?>?</p>
                 <p class="text-danger">Lưu ý: Hành động này không thể hoàn tác.</p>
+                
+                <div class="form-group mt-3">
+                    <label for="cancel_reason">Lý do hủy (Không bắt buộc):</label>
+                    <textarea class="form-control" id="cancel_reason" name="cancel_reason" rows="3"></textarea>
+                </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
@@ -223,6 +237,70 @@ require_once __DIR__ . '/../../commons/helpers.php';
         margin-bottom: 5px;
     }
 
+    .order-summary-status {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .status-item,
+    .payment-method-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .status-label {
+        color: #666;
+        font-size: 14px;
+        min-width: 160px;
+        text-align: left;
+    }
+
+    .payment-method-item span:last-child {
+        font-size: 14px;
+        color: #333;
+    }
+
+    .badge {
+        padding: 6px 12px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .badge-warning {
+        background-color: #ffc107;
+        color: #000;
+    }
+
+    .badge-info {
+        background-color: #17a2b8;
+        color: #fff;
+    }
+
+    .badge-primary {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .badge-success {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .badge-danger {
+        background-color: #dc3545;
+        color: #fff;
+    }
+
+    .badge-secondary {
+        background-color: #6c757d;
+        color: #fff;
+    }
+
     .order-details__section {
         margin-bottom: 30px;
         padding-bottom: 20px;
@@ -250,60 +328,70 @@ require_once __DIR__ . '/../../commons/helpers.php';
         width: 60px;
         height: 60px;
         object-fit: cover;
-        border-radius: 5px;
+        border-radius: 4px;
+        margin-right: 10px;
     }
 
     .table {
+        width: 100%;
         margin-bottom: 0;
     }
 
     .table th {
+        background: #f8f9fa;
         font-weight: 600;
-        color: #111;
-        border-bottom: 2px solid #eee;
+        color: #333;
+        border-bottom: 2px solid #dee2e6;
     }
 
     .table td {
         vertical-align: middle;
-        color: #333;
-    }
-
-    .badge {
-        padding: 8px 12px;
-        font-weight: 500;
-        font-size: 13px;
+        border-bottom: 1px solid #dee2e6;
     }
 
     .order-details__actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
         margin-top: 30px;
-        text-align: right;
     }
 
     .btn {
-        padding: 10px 24px;
-        font-weight: 600;
-        border-radius: 5px;
-        margin-left: 10px;
-    }
-
-    .btn-primary {
-        background: #e53637;
-        border-color: #e53637;
-    }
-
-    .btn-primary:hover {
-        background: #b91c1c;
-        border-color: #b91c1c;
+        padding: 8px 20px;
+        border-radius: 4px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s;
     }
 
     .btn-secondary {
         background: #6c757d;
-        border-color: #6c757d;
+        color: #fff;
     }
 
     .btn-secondary:hover {
         background: #5a6268;
-        border-color: #545b62;
+        color: #fff;
+    }
+
+    .btn-danger {
+        background: #dc3545;
+        color: #fff;
+    }
+
+    .btn-danger:hover {
+        background: #c82333;
+        color: #fff;
+    }
+
+    .btn-primary {
+        background: #007bff;
+        color: #fff;
+    }
+
+    .btn-primary:hover {
+        background: #0056b3;
+        color: #fff;
     }
 
     @media (max-width: 768px) {

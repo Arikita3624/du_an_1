@@ -164,6 +164,12 @@ $title = "Chi tiết đơn hàng #" . $order['id'];
                             </tr>
                         <?php endif; ?>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="5" class="text-right"><strong>Tổng tiền đơn hàng:</strong></td>
+                            <td><strong><?php echo number_format($order['total_amount']); ?> VNĐ</strong></td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -185,7 +191,9 @@ $title = "Chi tiết đơn hàng #" . $order['id'];
                         <option value="delivering" <?php echo $order['status'] == 'delivering' ? 'selected' : ''; ?>>Đang giao hàng</option>
                         <option value="completed" <?php echo $order['status'] == 'completed' ? 'selected' : ''; ?>>Đã giao hàng</option>
                         <option value="finished" <?php echo $order['status'] == 'finished' ? 'selected' : ''; ?>>Hoàn thành</option>
-                        <option value="cancelled" <?php echo $order['status'] == 'cancelled' ? 'selected' : ''; ?>>Đã hủy</option>
+                        <option value="cancelled" <?php echo $order['status'] == 'cancelled' ? 'selected' : ''; ?>
+                                 <?php echo in_array($order['status'], ['delivering', 'completed', 'finished']) ? 'disabled' : ''; ?>
+                                 >Đã hủy</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary">Cập nhật</button>

@@ -57,8 +57,11 @@ class OrderController {
                 exit;
             }
 
+            // Lấy lý do hủy (nếu có)
+            $cancel_reason = $_POST['cancel_reason'] ?? null;
+
             // Cập nhật trạng thái đơn hàng
-            $result = $this->checkoutModel->updateOrderStatus($order_id, 'cancelled');
+            $result = $this->checkoutModel->updateOrderStatus($order_id, 'cancelled', $cancel_reason);
             error_log("Update result: " . ($result ? 'true' : 'false'));
             
             if ($result) {
@@ -73,5 +76,43 @@ class OrderController {
 
         $order_details = $this->checkoutModel->getOrderDetails($order_id);
         require_once __DIR__ . '/../views/pages/OrderConfirmation.php';
+    }
+
+    public function markAsReceived() {
+        if (!isset($_SESSION['user'])) {
+            header('Location: ?act=login');
+            exit;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['order_id'])) {
+            $order_id = intval($_POST['order_id']);
+            $user_id = $_SESSION['user']['id'];
+
+            $order = $this->checkoutModel->getOrderById($order_id);
+
+            // Kiểm tra đơn hàng tồn tại, thuộc về user và ở trạng thái 'completed'
+            if ($order && $order['user_id'] == $user_id && $order['status'] === 'completed') {
+                // Cập nhật trạng thái sang 'finished'
+                $result = $this->checkoutModel->updateOrderStatus($order_id, 'finished');
+
+                if ($result) {
+                    $_SESSION['success'] = "Đã xác nhận nhận hàng!";
+                } else {
+                    $_SESSION['error'] = "Có lỗi xảy ra khi xác nhận nhận hàng.";
+                }
+            } else if ($order && $order['user_id'] == $user_id && $order['status'] !== 'completed') {
+                 $_SESSION['error'] = "Đơn hàng chưa ở trạng thái sẵn sàng để xác nhận nhận hàng.";
+            } else {
+                 $_SESSION['error'] = "Không tìm thấy đơn hàng hoặc bạn không có quyền thao tác.";
+            }
+
+            // Chuyển hướng về trang chi tiết đơn hàng
+            header('Location: index.php?act=order-confirmation&order_id=' . $order_id);
+            exit;
+        }
+
+        // Nếu không phải POST request hợp lệ, chuyển hướng về danh sách đơn hàng
+        header('Location: ?act=order-list');
+        exit;
     }
 }

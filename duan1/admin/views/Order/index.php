@@ -60,10 +60,10 @@ $title = "Quản lý đơn hàng";
                         <tr>
                             <th>ID</th>
                             <th>Khách hàng</th>
-                            <th>Email</th>
                             <th>Số điện thoại</th>
                             <th>Tổng tiền</th>
                             <th>Phương thức thanh toán</th>
+                            <th>Trạng thái thanh toán</th>
                             <th>Trạng thái đơn hàng</th>
                             <th>Ngày đặt</th>
                             <th>Thao tác</th>
@@ -75,7 +75,6 @@ $title = "Quản lý đơn hàng";
                             <tr>
                                 <td><?php echo $order['id']; ?></td>
                                 <td><?php echo htmlspecialchars($order['customer_name'] ?? 'N/A'); ?></td>
-                                <td><?php echo htmlspecialchars($order['email']); ?></td>
                                 <td><?php echo htmlspecialchars($order['phone']); ?></td>
                                 <td><?php echo number_format($order['total_amount']); ?> VNĐ</td>
                                 <td><?php
@@ -91,6 +90,11 @@ $title = "Quản lý đơn hàng";
                                             break;
                                     }
                                 ?></td>
+                                <td>
+                                    <span class="badge badge-<?php echo getPaymentStatusBadgeClass($order['payment_status']); ?>">
+                                        <?php echo getPaymentStatusText($order['payment_status']); ?>
+                                    </span>
+                                </td>
                                 <td>
                                         <span class="badge badge-<?php echo getStatusBadgeClass($order['status']); ?>">
                                             <?php echo getStatusText($order['status']); ?>

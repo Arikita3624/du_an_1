@@ -18,6 +18,9 @@ class DashboardController {
         // Lấy thống kê đơn hàng
         $orderStats = $this->orderModel->getOrderStatistics();
         
+        // Lấy thống kê trạng thái đơn hàng
+        $orderStatusCounts = $this->orderModel->getOrderStatusCounts();
+        
         // Lấy số lượng sản phẩm
         $productCount = $this->productModel->getProductCount();
         
@@ -162,7 +165,11 @@ class DashboardController {
                 return 'warning';
             case 'processing':
                 return 'info';
+            case 'delivering':
+                return 'primary';
             case 'completed':
+                return 'success';
+            case 'finished':
                 return 'success';
             case 'cancelled':
                 return 'danger';
@@ -177,7 +184,11 @@ class DashboardController {
                 return 'Chờ xử lý';
             case 'processing':
                 return 'Đang xử lý';
+            case 'delivering':
+                return 'Đang giao hàng';
             case 'completed':
+                return 'Đã giao hàng';
+            case 'finished':
                 return 'Hoàn thành';
             case 'cancelled':
                 return 'Đã hủy';

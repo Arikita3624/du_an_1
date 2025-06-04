@@ -1,9 +1,9 @@
+<?php
+$title = "Quản lý bình luận";
+?>
+
 <div class="container-fluid">
-    <h1 class="mt-4">Quản lý bình luận</h1>
-    <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
-        <li class="breadcrumb-item active">Bình luận</li>
-    </ol>
+    <h1 class="h3 mb-2 text-gray-800">Quản lý bình luận</h1>
 
     <?php if (isset($_SESSION['success'])): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -29,68 +29,75 @@
         </div>
     <?php endif; ?>
 
-
     <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Danh sách bình luận chờ duyệt</h6>
-        </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Người bình luận</th>
                             <th>Sản phẩm</th>
-                            <th>Người dùng</th>
                             <th>Nội dung</th>
-                            <th>Đánh giá</th>
-                            <th>Ngày tạo</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày bình luận</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (is_array($comments)): ?>
+                        <?php if (!empty($comments)): ?>
                             <?php foreach ($comments as $comment): ?>
                                 <tr>
                                     <td><?php echo $comment['id']; ?></td>
+                                    <td><?php echo htmlspecialchars($comment['username']); ?></td>
                                     <td><?php echo htmlspecialchars($comment['product_name']); ?></td>
-                                    <td><?php echo htmlspecialchars($comment['full_name']); ?></td>
-                                    <td><?php echo htmlspecialchars($comment['content']); ?></td>
+                                    <td><?php echo nl2br(htmlspecialchars($comment['comment_text'])); ?></td>
                                     <td>
-                                        <?php for ($i = 1; $i <= 5; $i++): ?>
-                                            <i class="fas fa-star <?php echo $i <= $comment['rating'] ? 'text-warning' : 'text-muted'; ?>"></i>
-                                        <?php endfor; ?>
+                                        <?php 
+                                            $statusClass = 'secondary';
+                                            $statusText = 'Không xác định';
+                                            switch ($comment['status']) {
+                                                case 'pending':
+                                                    $statusClass = 'warning';
+                                                    $statusText = 'Chờ duyệt';
+                                                    break;
+                                                case 'approved':
+                                                    $statusClass = 'success';
+                                                    $statusText = 'Đã duyệt';
+                                                    break;
+                                                case 'rejected':
+                                                    $statusClass = 'danger';
+                                                    $statusText = 'Đã từ chối';
+                                                    break;
+                                            }
+                                        ?>
+                                        <span class="badge badge-<?php echo $statusClass; ?>">
+                                            <?php echo $statusText; ?>
+                                        </span>
                                     </td>
                                     <td><?php echo date('d/m/Y H:i', strtotime($comment['created_at'])); ?></td>
                                     <td>
-                                        <a href="index.php?controller=comment&action=view&id=<?php echo $comment['id']; ?>" 
-                                           class="btn btn-info btn-sm">
-                                            <i class="fas fa-eye"></i>
+                                        <?php if ($comment['status'] === 'pending'): ?>
+                                            <a href="index.php?controller=comment&action=approve&id=<?php echo $comment['id']; ?>" 
+                                               class="btn btn-success btn-sm mb-1">
+                                                <i class="fas fa-check"></i> Duyệt
+                                            </a>
+                                            <a href="index.php?controller=comment&action=reject&id=<?php echo $comment['id']; ?>" 
+                                               class="btn btn-warning btn-sm mb-1">
+                                                <i class="fas fa-times"></i> Từ chối
+                                            </a>
+                                        <?php endif; ?>
+                                        <a href="index.php?controller=comment&action=delete&id=<?php echo $comment['id']; ?>" 
+                                           class="btn btn-danger btn-sm" 
+                                           onclick="return confirm('Bạn có chắc chắn muốn xóa bình luận này?')">
+                                            <i class="fas fa-trash"></i> Xóa
                                         </a>
-                                        <form action="index.php?controller=comment&action=approve" method="POST" class="d-inline">
-                                            <input type="hidden" name="id" value="<?php echo $comment['id']; ?>">
-                                            <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Bạn có chắc muốn duyệt bình luận này?')">
-                                                <i class="fas fa-check"></i>
-                                            </button>
-                                        </form>
-                                        <form action="index.php?controller=comment&action=reject" method="POST" class="d-inline">
-                                            <input type="hidden" name="id" value="<?php echo $comment['id']; ?>">
-                                            <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Bạn có chắc muốn từ chối bình luận này?')">
-                                                <i class="fas fa-times"></i>
-                                            </button>
-                                        </form>
-                                        <form action="index.php?controller=comment&action=delete" method="POST" class="d-inline">
-                                            <input type="hidden" name="id" value="<?php echo $comment['id']; ?>">
-                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa bình luận này?')">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="7" class="text-center">Không có bình luận nào chờ duyệt hoặc xảy ra lỗi khi tải dữ liệu.</td>
+                                <td colspan="7" class="text-center">Không có bình luận nào.</td>
                             </tr>
                         <?php endif; ?>
                     </tbody>
