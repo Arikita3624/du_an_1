@@ -99,10 +99,10 @@
                             <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id']) ?>">
                             <button type="submit" class="primary-btn">Thêm vào giỏ hàng</button>
                         </form>
-                        <div class="product__details__btns__option">
+                        <!-- <div class="product__details__btns__option">
                             <a href="#"><i class="fa fa-heart"></i> Yêu thích</a>
                             <a href="#"><i class="fa fa-exchange"></i> So sánh</a>
-                        </div>
+                        </div> -->
                         <div class="product__details__last__option">
                             <ul>
                                 <li><span>Danh mục:</span> <?= htmlspecialchars($product['category_name']) ?></li>

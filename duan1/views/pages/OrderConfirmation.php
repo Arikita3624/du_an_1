@@ -81,12 +81,12 @@ require_once __DIR__ . '/../../commons/helpers.php';
                         <h5>Thông tin khách hàng</h5>
                         <div class="row">
                             <div class="col-md-6">
-                                <p><strong>Họ tên:</strong> <?= htmlspecialchars($order['full_name'] ?? $order['full_name']) ?></p>
-                                <p><strong>Email:</strong> <?= htmlspecialchars($order['email'] ?? $order['email']) ?></p>
+                                <p><strong>Họ tên:</strong> <?= htmlspecialchars($order['full_name']) ?></p>
+                                <p><strong>Email:</strong> <?= htmlspecialchars($order['email']) ?></p>
                             </div>
                             <div class="col-md-6">
-                                <p><strong>Số điện thoại:</strong> <?= htmlspecialchars($order['phone'] ?? $order['phone']) ?></p>
-                                <p><strong>Địa chỉ:</strong> <?= htmlspecialchars($order['address'] ?? $order['address']) ?></p>
+                                <p><strong>Số điện thoại:</strong> <?= htmlspecialchars($order['phone']) ?></p>
+                                <p><strong>Địa chỉ:</strong> <?= htmlspecialchars($order['address']) ?></p>
                             </div>
                         </div>
                     </div>
@@ -269,6 +269,11 @@ require_once __DIR__ . '/../../commons/helpers.php';
         font-size: 12px;
         font-weight: 600;
         text-transform: uppercase;
+        display: inline-block;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
     }
 
     .badge-warning {

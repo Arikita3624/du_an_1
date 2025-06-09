@@ -11,7 +11,8 @@ class CommentModel {
 
     // Thêm bình luận mới
     public function addComment($product_id, $user_id, $comment_text) {
-        $sql = "INSERT INTO comments (product_id, user_id, comment_text) VALUES (:product_id, :user_id, :comment_text)";
+        $sql = "INSERT INTO comments (product_id, user_id, comment_text, status) 
+                VALUES (:product_id, :user_id, :comment_text, 'approved')";
         return $this->db->execute($sql, [
             'product_id' => $product_id,
             'user_id' => $user_id,

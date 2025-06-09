@@ -47,9 +47,12 @@ class CheckoutModel
     public function getOrderById($order_id)
     {
         $stmt = $this->conn->prepare("
-            SELECT o.*, u.full_name, u.email, u.phone, u.address 
+            SELECT o.*, 
+                   o.full_name,
+                   o.email,
+                   o.phone,
+                   o.address
             FROM orders o
-            LEFT JOIN users u ON o.user_id = u.id
             WHERE o.id = :order_id
         ");
         $stmt->execute([':order_id' => $order_id]);

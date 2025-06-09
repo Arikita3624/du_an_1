@@ -29,7 +29,7 @@ class CommentController {
                 $result = $this->commentModel->addComment($product_id, $user_id, $comment_text);
 
                 if ($result) {
-                    $_SESSION['success'] = 'Bình luận của bạn đã được gửi và đang chờ duyệt.';
+                    $_SESSION['success'] = 'Bình luận của bạn đã được đăng thành công.';
                 } else {
                     $_SESSION['error'] = 'Có lỗi xảy ra khi gửi bình luận.';
                 }

@@ -58,10 +58,17 @@ class OrderController {
             $currentStatus = $order['status'];
 
             // Định nghĩa thứ tự các trạng thái
-            $statusOrder = ['pending', 'processing', 'delivering', 'completed', 'finished'];
+            $statusOrder = ['pending', 'processing', 'delivering', 'completed'];
 
             // Kiểm tra xem trạng thái mới có hợp lệ theo thứ tự không
             $isUpdateAllowed = false;
+
+            // Kiểm tra nếu cố gắng chuyển sang trạng thái hoàn thành
+            if ($newStatus === 'finished') {
+                $_SESSION['error'] = "Đơn hàng được hoàn thành khi khách hàng nhận được hàng!";
+                header('Location: index.php?controller=order&action=view&id=' . $id);
+                exit;
+            }
 
             // Trường hợp đặc biệt: Hủy đơn hàng
             if ($newStatus === 'cancelled') {
@@ -76,7 +83,7 @@ class OrderController {
                 $currentIndex = array_search($currentStatus, $statusOrder);
                 $newIndex = array_search($newStatus, $statusOrder);
 
-                // Chỉ cho phép chuyển sang trạng thái kế tiếp trực tiếp
+                // Chỉ cho phép chuyển sang trạng thái kế tiếp
                 if ($newIndex !== false && $currentIndex !== false && $newIndex === $currentIndex + 1) {
                     $isUpdateAllowed = true;
                 } else {

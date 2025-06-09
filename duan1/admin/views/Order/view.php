@@ -78,6 +78,12 @@ $title = "Chi tiết đơn hàng #" . $order['id'];
                                 <th>Tổng tiền:</th>
                                 <td class="font-weight-bold"><?php echo number_format($order['total_amount']); ?> VNĐ</td>
                             </tr>
+                            <?php if ($order['status'] === 'cancelled' && !empty($order['cancel_reason'])): ?>
+                            <tr>
+                                <th>Lý do hủy:</th>
+                                <td class="text-danger"><?php echo htmlspecialchars($order['cancel_reason']); ?></td>
+                            </tr>
+                            <?php endif; ?>
                     </table>
                     </div>
                 </div>
