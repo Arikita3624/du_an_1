@@ -22,7 +22,7 @@
                         </div>
                         <div class="checkout__input">
                             <p>Địa chỉ<span>*</span></p>
-                            <input type="text" placeholder="Địa chỉ nhận hàng" class="checkout__input__add" name="street_address" value="<?= isset($_SESSION['user']['address']) ? htmlspecialchars($_SESSION['user']['address']) : '' ?>" required>
+                            <input type="text" placeholder="Địa chỉ nhận hàng" class="checkout__input__add" name="address" value="<?= isset($_SESSION['user']['address']) ? htmlspecialchars($_SESSION['user']['address']) : '' ?>" required>
                         </div>
                         <div class="checkout__input">
                             <p>Email<span>*</span></p>
@@ -45,7 +45,7 @@
                                 ?>
                                         <li>
                                             <img src="<?= !empty($item['image']) ? 'admin/' . htmlspecialchars($item['image']) : 'assets/img/no-image.jpg' ?>" alt="" style="width: 50px;">
-                                            <?= sprintf("%02d", $index + 1) ?>. <?= htmlspecialchars($item['name']) ?> 
+                                            <?= sprintf("%02d", $index + 1) ?>. <?= htmlspecialchars($item['name']) ?>
                                             <span class="quantity">(<?= $item['quantity'] ?>)</span>
                                             <span><?= number_format($itemTotal, 0, ',', '.') ?>₫</span>
                                         </li>

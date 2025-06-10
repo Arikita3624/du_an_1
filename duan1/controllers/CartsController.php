@@ -2,20 +2,21 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-require_once __DIR__ . '/../models/CartModel.php';
-require_once __DIR__ . '/../models/ProductModel.php';
+require_once __DIR__ . '/../models/Carts.php';
 
 class CartsController
 {
     private $cartModel;
     private $productModel;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->cartModel = new CartModels();
         $this->productModel = new ProductModels();
     }
 
-    private function writeLog($message) {
+    private function writeLog($message)
+    {
         $timestamp = date('Y-m-d H:i:s');
         $logMessage = "[$timestamp] $message";
         error_log($logMessage, 3, "C:/laragon/www/DUAN1/du_an_1/duan1/logs/cart.log");
@@ -69,16 +70,30 @@ class CartsController
                 throw new Exception("Sản phẩm không tồn tại!");
             }
 
-            if ($product['stock'] < $quantity) {
+            $cartQuantity = 0;
+            if (isset($_SESSION['user'])) {
+                $cart_id = $this->cartModel->getOrCreateCart($_SESSION['user']['id']);
+                $cartItem = $this->cartModel->getCartItem($cart_id, $product_id);
+                if ($cartItem) {
+                    $cartQuantity = intval($cartItem['quantity']);
+                }
+            } else {
+                if (isset($_SESSION['cart'][$product_id])) {
+                    $cartQuantity = intval($_SESSION['cart'][$product_id]['quantity']);
+                }
+            }
+            $totalQuantity = $cartQuantity + $quantity;
+
+            if ($product['stock'] < $totalQuantity) {
                 echo "<pre>";
                 echo "Lỗi: Số lượng trong kho không đủ\n";
                 echo "Stock hiện tại: {$product['stock']}\n";
-                echo "Số lượng yêu cầu: $quantity\n";
+                echo "Số lượng đã có trong giỏ: {$cartQuantity}\n";
+                echo "Số lượng muốn thêm: {$quantity}\n";
                 echo "</pre>";
                 die();
                 throw new Exception("Số lượng sản phẩm trong kho không đủ!");
             }
-
             // Debug: In thông tin trước khi cập nhật
             echo "<pre>";
             echo "Thông tin trước khi cập nhật:\n";
@@ -211,7 +226,7 @@ class CartsController
             $conn->beginTransaction();
 
             $cart_id = $this->cartModel->getOrCreateCart($_SESSION['user']['id']);
-            
+
             // Lấy thông tin sản phẩm trong giỏ hàng
             $stmt = $conn->prepare("SELECT quantity FROM cart_items WHERE cart_id = ? AND product_id = ?");
             $stmt->execute([$cart_id, $product_id]);

@@ -10,7 +10,7 @@ $title = "Quản lý đơn hàng";
 
     <?php if (isset($_SESSION['success'])): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <?php 
+            <?php
             echo $_SESSION['success'];
             unset($_SESSION['success']);
             ?>
@@ -22,7 +22,7 @@ $title = "Quản lý đơn hàng";
 
     <?php if (isset($_SESSION['error'])): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <?php 
+            <?php
             echo $_SESSION['error'];
             unset($_SESSION['error']);
             ?>
@@ -102,17 +102,17 @@ $title = "Quản lý đơn hàng";
                                 </td>
                                 <td><?php echo date('d/m/Y H:i', strtotime($order['created_at'])); ?></td>
                                 <td>
-                                    <a href="index.php?controller=order&action=view&id=<?php echo $order['id']; ?>" 
+                                    <a href="index.php?controller=order&action=view&id=<?php echo $order['id']; ?>"
                                        class="btn btn-info btn-sm">
                                             <i class="fas fa-eye"></i>
                                     </a>
-                                        <button type="button" 
-                                                class="btn btn-primary btn-sm" 
-                                                data-toggle="modal" 
+                                        <button type="button"
+                                                class="btn btn-primary btn-sm"
+                                                data-toggle="modal"
                                                 data-target="#updateStatusModal<?php echo $order['id']; ?>">
                                             <i class="fas fa-edit"></i>
                                         </button>
-                                    <a href="index.php?controller=order&action=delete&id=<?php echo $order['id']; ?>" 
+                                    <a href="index.php?controller=order&action=delete&id=<?php echo $order['id']; ?>"
                                        class="btn btn-danger btn-sm"
                                        onclick="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')">
                                             <i class="fas fa-trash"></i>
@@ -181,4 +181,4 @@ $title = "Quản lý đơn hàng";
             </nav>
         </div>
     </div>
-</div> 
+</div>

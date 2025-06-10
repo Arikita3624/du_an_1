@@ -123,7 +123,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <h3 class="comment-title">Bình luận</h3>
-                
+
                 <!-- Danh sách bình luận -->
                 <div class="comment-list">
                     <?php if (!empty($comments)): ?>

@@ -9,9 +9,9 @@ class OrderModel {
     }
 
     public function getAllOrders() {
-        $sql = "SELECT o.*, u.full_name as customer_name 
-                FROM orders o 
-                LEFT JOIN users u ON o.user_id = u.id 
+        $sql = "SELECT o.*, u.full_name as customer_name
+                FROM orders o
+                LEFT JOIN users u ON o.user_id = u.id
                 ORDER BY o.created_at DESC";
         return $this->db->query($sql);
     }
@@ -43,10 +43,10 @@ class OrderModel {
 
     public function getOrders($keyword = '', $status = '', $page = 1, $limit = 10) {
         $offset = ($page - 1) * $limit;
-        $sql = "SELECT o.*, 
+        $sql = "SELECT o.*,
                 COALESCE(SUM(oi.quantity * oi.price), 0) as total_amount,
                 COALESCE(u.full_name, o.full_name) as customer_name
-                FROM orders o 
+                FROM orders o
                 LEFT JOIN order_items oi ON o.id = oi.order_id
                 LEFT JOIN users u ON o.user_id = u.id
                 WHERE 1=1";
@@ -77,22 +77,22 @@ class OrderModel {
     }
 
     public function getOrderById($id) {
-        $sql = "SELECT o.*, 
+        $sql = "SELECT o.*,
                 COALESCE(SUM(oi.quantity * oi.price), 0) as total_amount,
                 COALESCE(u.full_name, o.full_name) as full_name,
                 COALESCE(u.address, o.address) as address
-                FROM orders o 
-                LEFT JOIN order_items oi ON o.id = oi.order_id 
+                FROM orders o
+                LEFT JOIN order_items oi ON o.id = oi.order_id
                 LEFT JOIN users u ON o.user_id = u.id
-                WHERE o.id = :id 
+                WHERE o.id = :id
                 GROUP BY o.id";
         return $this->db->queryOne($sql, ['id' => $id]);
     }
 
     public function getOrderItems($orderId) {
-        $sql = "SELECT oi.*, p.name as product_name, p.image 
-                FROM order_items oi 
-                LEFT JOIN products p ON oi.product_id = p.id 
+        $sql = "SELECT oi.*, p.name as product_name, p.image
+                FROM order_items oi
+                LEFT JOIN products p ON oi.product_id = p.id
                 WHERE oi.order_id = :order_id";
         return $this->db->query($sql, ['order_id' => $orderId]);
     }
@@ -109,7 +109,7 @@ class OrderModel {
         // Xóa các order items trước
         $sql = "DELETE FROM order_items WHERE order_id = :id";
         $this->db->execute($sql, ['id' => $id]);
-        
+
         // Sau đó xóa order
         $sql = "DELETE FROM orders WHERE id = :id";
         return $this->db->execute($sql, ['id' => $id]);
@@ -117,21 +117,21 @@ class OrderModel {
 
     public function getOrderStatistics() {
         try {
-        $sql = "SELECT 
+        $sql = "SELECT
                         COUNT(DISTINCT o.id) as total_orders,
                         COALESCE(SUM(oi.quantity * oi.price), 0) as total_revenue
-                    FROM orders o 
+                    FROM orders o
                     LEFT JOIN order_items oi ON o.id = oi.order_id
                     WHERE o.status != 'cancelled'";
             $result = $this->db->queryOne($sql);
-            
+
             if (!$result) {
                 return [
                     'total_orders' => 0,
                     'total_revenue' => 0
                 ];
             }
-            
+
             return $result;
         } catch (Exception $e) {
             error_log("Lỗi khi lấy thống kê đơn hàng: " . $e->getMessage());
@@ -143,14 +143,14 @@ class OrderModel {
     }
 
     public function getLatestOrders($limit = 5) {
-        $sql = "SELECT o.*, 
+        $sql = "SELECT o.*,
                        COALESCE(SUM(oi.quantity * oi.price), 0) as total_amount,
-                       u.full_name 
-                FROM orders o 
-                LEFT JOIN order_items oi ON o.id = oi.order_id 
-                LEFT JOIN users u ON o.user_id = u.id 
-                GROUP BY o.id 
-                ORDER BY o.created_at DESC 
+                       u.full_name
+                FROM orders o
+                LEFT JOIN order_items oi ON o.id = oi.order_id
+                LEFT JOIN users u ON o.user_id = u.id
+                GROUP BY o.id
+                ORDER BY o.created_at DESC
                 LIMIT " . (int)$limit;
         return $this->db->query($sql);
     }
@@ -176,4 +176,4 @@ class OrderModel {
             return [];
         }
     }
-} 
+}

@@ -14,7 +14,7 @@ $title = "Chi tiết đơn hàng #" . $order['id'];
 
     <?php if (isset($_SESSION['success'])): ?>
         <div class="alert alert-success">
-            <?php 
+            <?php
             echo $_SESSION['success'];
             unset($_SESSION['success']);
             ?>
@@ -23,7 +23,7 @@ $title = "Chi tiết đơn hàng #" . $order['id'];
 
     <?php if (isset($_SESSION['error'])): ?>
         <div class="alert alert-danger">
-            <?php 
+            <?php
             echo $_SESSION['error'];
             unset($_SESSION['error']);
             ?>
@@ -63,7 +63,7 @@ $title = "Chi tiết đơn hàng #" . $order['id'];
                             <tr>
                                 <th>Trạng thái thanh toán:</th>
                                 <td>
-                                    <span class="badge badge-<?php 
+                                    <span class="badge badge-<?php
                                         if ($order['payment_status'] === 'pending') {
                                             echo 'info';
                                         } else {
@@ -155,7 +155,7 @@ $title = "Chi tiết đơn hàng #" . $order['id'];
                                 <td><?php echo htmlspecialchars($item['product_name']); ?></td>
                                 <td>
                                         <?php if (!empty($item['image'])): ?>
-                                            <img src="<?php echo $item['image']; ?>" alt="<?php echo htmlspecialchars($item['product_name']); ?>" 
+                                            <img src="<?php echo $item['image']; ?>" alt="<?php echo htmlspecialchars($item['product_name']); ?>"
                                                  style="max-width: 50px; max-height: 50px;">
                                     <?php endif; ?>
                                 </td>
@@ -206,4 +206,4 @@ $title = "Chi tiết đơn hàng #" . $order['id'];
             </form>
         </div>
     </div>
-</div> 
+</div>

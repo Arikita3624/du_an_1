@@ -11,7 +11,6 @@ class CheckoutController
     {
         $this->checkoutModel = new CheckoutModel();
     }
-
     public function index()
     {
         if (!isset($_SESSION['user'])) {
@@ -35,6 +34,9 @@ class CheckoutController
 
         $user_id = $_SESSION['user']['id'];
         $full_name = $_POST['full_name'] ?? '';
+        if (empty($full_name)) {
+            $full_name = $_SESSION['user']['full_name'] ?? $_SESSION['user']['username'] ?? '';
+        }
         $email = $_POST['email'] ?? '';
         $phone = $_POST['phone'] ?? '';
         $address = $_POST['address'] ?? '';
@@ -70,6 +72,20 @@ class CheckoutController
             );
 
             $this->checkoutModel->saveOrderDetails($order_id, $cartItems);
+
+            // Thay đổi số lượng sản phẩm trong kho
+
+            require_once __DIR__ . '/../models/Client.php';
+            $productModel = new ProductModels();
+            foreach ($cartItems as $item) {
+                $product = $productModel->getById($item['product_id']);
+                if ($product) {
+                    $newStock = max(0, $product['stock'] - $item['quantity']);
+                    $productModel->updateStock($item['product_id'], $newStock);
+                }
+            }
+
+
 
             // Xóa giỏ hàng trong database
             $cartModel->clearCart($cart_id);
