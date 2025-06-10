@@ -71,6 +71,20 @@ class CheckoutController
 
             $this->checkoutModel->saveOrderDetails($order_id, $cartItems);
 
+            // Thay đổi số lượng sản phẩm trong kho
+
+            require_once __DIR__ . '/../models/Client.php';
+            $productModel = new ProductModels();
+            foreach ($cartItems as $item) {
+                $product = $productModel->getById($item['product_id']);
+                if ($product) {
+                    $newStock = max(0, $product['stock'] - $item['quantity']);
+                    $productModel->updateStock($item['product_id'], $newStock);
+                }
+            }
+
+
+
             // Xóa giỏ hàng trong database
             $cartModel->clearCart($cart_id);
 

@@ -2,14 +2,17 @@
 // controllers/OrderController.php
 require_once __DIR__ . '/../models/Checkout.php';
 
-class OrderController {
+class OrderController
+{
     private $checkoutModel;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->checkoutModel = new CheckoutModel();
     }
 
-    public function list() {
+    public function list()
+    {
         if (!isset($_SESSION['user'])) {
             header('Location: ?act=login');
             exit;
@@ -19,7 +22,8 @@ class OrderController {
         require_once __DIR__ . '/../views/pages/OrderList.php';
     }
 
-    public function view() {
+    public function view()
+    {
         if (!isset($_SESSION['user'])) {
             header('Location: ?act=login');
             exit;
@@ -49,7 +53,7 @@ class OrderController {
         // Xử lý hủy đơn hàng
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'cancel') {
             error_log("Processing cancel order request");
-            
+
             // Kiểm tra trạng thái đơn hàng
             if (!in_array($order['status'], ['pending', 'processing'])) {
                 $_SESSION['error'] = "Không thể hủy đơn hàng ở trạng thái này";
@@ -61,10 +65,23 @@ class OrderController {
             $cancel_reason = $_POST['cancel_reason'] ?? null;
 
             // Cập nhật trạng thái đơn hàng
+            // Cập nhật trạng thái đơn hàng
             $result = $this->checkoutModel->updateOrderStatus($order_id, 'cancelled', $cancel_reason);
             error_log("Update result: " . ($result ? 'true' : 'false'));
-            
+
             if ($result) {
+                // HOÀN LẠI SỐ LƯỢNG SẢN PHẨM
+                require_once __DIR__ . '/../models/Client.php';
+                $productModel = new ProductModels();
+                $order_details = $this->checkoutModel->getOrderDetails($order_id);
+                foreach ($order_details as $item) {
+                    $product = $productModel->getById($item['product_id']);
+                    if ($product) {
+                        $newStock = $product['stock'] + $item['quantity'];
+                        $productModel->updateStock($item['product_id'], $newStock);
+                    }
+                }
+
                 $_SESSION['success'] = "Đã hủy đơn hàng thành công";
                 header('Location: index.php?act=order-list');
             } else {
@@ -78,7 +95,8 @@ class OrderController {
         require_once __DIR__ . '/../views/pages/OrderConfirmation.php';
     }
 
-    public function markAsReceived() {
+    public function markAsReceived()
+    {
         if (!isset($_SESSION['user'])) {
             header('Location: ?act=login');
             exit;
@@ -101,9 +119,9 @@ class OrderController {
                     $_SESSION['error'] = "Có lỗi xảy ra khi xác nhận nhận hàng.";
                 }
             } else if ($order && $order['user_id'] == $user_id && $order['status'] !== 'completed') {
-                 $_SESSION['error'] = "Đơn hàng chưa ở trạng thái sẵn sàng để xác nhận nhận hàng.";
+                $_SESSION['error'] = "Đơn hàng chưa ở trạng thái sẵn sàng để xác nhận nhận hàng.";
             } else {
-                 $_SESSION['error'] = "Không tìm thấy đơn hàng hoặc bạn không có quyền thao tác.";
+                $_SESSION['error'] = "Không tìm thấy đơn hàng hoặc bạn không có quyền thao tác.";
             }
 
             // Chuyển hướng về trang chi tiết đơn hàng
