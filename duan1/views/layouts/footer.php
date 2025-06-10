@@ -6,7 +6,7 @@
                         <div class="footer__logo">
                             <a href="#"><img src="assets/img/footer-logo.png" alt=""></a>
                         </div>
-                        <p>The customer is at the heart of our unique business model, which includes design.</p>
+                        <p>Khách hàng là trọng tâm trong mô hình kinh doanh độc đáo của chúng tôi, bao gồm cả thiết kế.</p>
                         <a href="#"><img src="assets/img/payment.png" alt=""></a>
                     </div>
                 </div>
@@ -23,7 +23,7 @@
                 </div>
                 <div class="col-lg-2 col-md-3 col-sm-6">
                     <div class="footer__widget">
-                        <h6>Shopping</h6>
+                        <h6>looking for</h6>
                         <ul>
                             <li><a href="#">Contact Us</a></li>
                             <li><a href="#">Payment Methods</a></li>
@@ -36,7 +36,7 @@
                     <div class="footer__widget">
                         <h6>NewLetter</h6>
                         <div class="footer__newslatter">
-                            <p>Be the first to know about new arrivals, look books, sales & promos!</p>
+                            <p>Hãy là người đầu tiên biết về hàng mới về, danh mục sản phẩm, chương trình khuyến mãi và bán hàng!</p>
                             <form action="#">
                                 <input type="text" placeholder="Your email">
                                 <button type="submit"><span class="icon_mail_alt"></span></button>
