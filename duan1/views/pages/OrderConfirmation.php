@@ -57,7 +57,7 @@ require_once __DIR__ . '/../../commons/helpers.php';
                                 <div class="order-summary-status">
                                     <div class="status-item">
                                         <span class="status-label">Trạng thái đơn hàng:</span>
-                                        <span style="background:#28a745; color:#fff; padding:6px 14px; border-radius:6px; display:inline-block; font-weight:600;">
+                                        <span style="background:#ffc107; color:#fff; padding:6px 14px; border-radius:6px; display:inline-block; font-weight:600;">
                                             <?= getStatusText($order['status']) ?>
                                         </span>
                                     </div>

@@ -52,7 +52,7 @@
                                         <td class="quantity__item">
                                             <form method="post" action="?act=update-cart" style="display:inline;" class="update-form">
                                                 <input type="hidden" name="product_id" value="<?= $item['product_id'] ?? $item['id'] ?>">
-                                                <input type="number" name="quantity" value="<?= $item['quantity'] ?>" min="1" style="width:60px;" class="quantity-input" data-price="<?= $item['price'] ?>">
+                                                
                                                 <button type="submit" class="btn btn-sm btn-primary">Cập Nhật</button>
                                             </form>
                                         </td>
