@@ -113,7 +113,7 @@
         <input type="text" name="username" id="username" required />
       </div>
       <div class="form-group">
-        <label>Họ và tên<span>*</span></label>
+        <label for="full_name">Họ và tên<span>*</span></label>
         <input type="text" name="full_name" id="full_name" required />
       </div>
       <div class="form-group">

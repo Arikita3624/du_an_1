@@ -3,6 +3,9 @@ require_once __DIR__ . '/../commons/function.php';
 
 class CartModels
 {
+
+    private $db;
+
     public function getOrCreateCart($userId)
     {
         $db = connectDB();
@@ -82,5 +85,10 @@ class CartModels
         $db = connectDB();
         $stmt = $db->prepare("DELETE FROM cart_items WHERE cart_id = ?");
         $stmt->execute([$cartId]);
+    }
+     public function getCartItem($cartId, $productId)
+    {
+        $sql = "SELECT * FROM cart_items WHERE cart_id = ? AND product_id = ?";
+        return $this->db->queryOne($sql, [$cartId, $productId]);
     }
 }

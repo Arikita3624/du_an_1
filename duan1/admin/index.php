@@ -5,7 +5,7 @@ require_once __DIR__ . '/middleware/AuthMiddleware.php';
 require_once __DIR__ . '/controllers/CommentController.php';
 
 // Xác định base URL
-$base_url = '/DUAN1/du_an_1/duan1';
+$base_url = '/Nhom3.1/du_an_1/duan1';
 define('BASE_URL', $base_url);
 
 // Các route không cần đăng nhập

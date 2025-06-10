@@ -27,7 +27,7 @@ require_once __DIR__ . '/../../commons/helpers.php';
             <div class="col-lg-12">
                 <?php if (isset($_SESSION['success'])): ?>
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <?php 
+                        <?php
                         echo $_SESSION['success'];
                         unset($_SESSION['success']);
                         ?>
@@ -37,7 +37,7 @@ require_once __DIR__ . '/../../commons/helpers.php';
 
                 <?php if (isset($_SESSION['error'])): ?>
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <?php 
+                        <?php
                         echo $_SESSION['error'];
                         unset($_SESSION['error']);
                         ?>
@@ -57,13 +57,13 @@ require_once __DIR__ . '/../../commons/helpers.php';
                                 <div class="order-summary-status">
                                     <div class="status-item">
                                         <span class="status-label">Trạng thái đơn hàng:</span>
-                                        <span class="badge <?= getStatusBadgeClass($order['status']) ?>">
+                                        <span style="background:#28a745; color:#fff; padding:6px 14px; border-radius:6px; display:inline-block; font-weight:600;">
                                             <?= getStatusText($order['status']) ?>
                                         </span>
                                     </div>
                                     <div class="status-item">
                                         <span class="status-label">Trạng thái thanh toán:</span>
-                                        <span class="badge <?= getPaymentStatusBadgeClass($order['payment_status']) ?>">
+                                        <span style="background:#17a2b8; color:#fff; padding:6px 14px; border-radius:6px; display:inline-block; font-weight:600;">
                                             <?= getPaymentStatusText($order['payment_status']) ?>
                                         </span>
                                     </div>
@@ -111,8 +111,8 @@ require_once __DIR__ . '/../../commons/helpers.php';
                                                 <div class="d-flex align-items-center">
                                                     <?php if (!empty($item['image'])): ?>
                                                         <img src="<?= $item['image'] ?>"
-                                                             alt="<?= htmlspecialchars($item['name']) ?>"
-                                                             class="product-image">
+                                                            alt="<?= htmlspecialchars($item['name']) ?>"
+                                                            class="product-image">
                                                     <?php endif; ?>
                                                     <span class="ms-3"><?= htmlspecialchars($item['name']) ?></span>
                                                 </div>
@@ -168,7 +168,7 @@ require_once __DIR__ . '/../../commons/helpers.php';
             <div class="modal-body">
                 <p>Bạn có chắc chắn muốn hủy đơn hàng #<?= htmlspecialchars($order['id']) ?>?</p>
                 <p class="text-danger">Lưu ý: Hành động này không thể hoàn tác.</p>
-                
+
                 <div class="form-group mt-3">
                     <label for="cancel_reason">Lý do hủy (Không bắt buộc):</label>
                     <textarea class="form-control" id="cancel_reason" name="cancel_reason" rows="3"></textarea>
@@ -189,16 +189,27 @@ require_once __DIR__ . '/../../commons/helpers.php';
 <style>
     .breadcrumb-option {
         background: #f6f6f6;
-        padding: 22px 0 18px 0;
+        padding: 32px 0 28px 0;
+        /* tăng padding trên/dưới */
         border-radius: 8px;
         margin-bottom: 32px;
     }
 
+    .breadcrumb__text {
+        padding-left: 18px;
+        /* căn lề trái cho nội dung */
+    }
+
     .breadcrumb__text h4 {
-        font-size: 22px;
+        font-size: 28px;
         font-weight: 700;
         color: #e53637;
-        margin-bottom: 6px;
+        margin-bottom: 10px;
+    }
+
+    .breadcrumb__links {
+        padding-left: 2px;
+        font-size: 18px;
     }
 
     .breadcrumb__links a {

@@ -21,7 +21,6 @@ class OrderController
         $orders = $this->checkoutModel->getOrdersByUserId($user_id);
         require_once __DIR__ . '/../views/pages/OrderList.php';
     }
-
     public function view()
     {
         if (!isset($_SESSION['user'])) {
@@ -64,7 +63,6 @@ class OrderController
             // Lấy lý do hủy (nếu có)
             $cancel_reason = $_POST['cancel_reason'] ?? null;
 
-            // Cập nhật trạng thái đơn hàng
             // Cập nhật trạng thái đơn hàng
             $result = $this->checkoutModel->updateOrderStatus($order_id, 'cancelled', $cancel_reason);
             error_log("Update result: " . ($result ? 'true' : 'false'));

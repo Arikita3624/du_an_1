@@ -11,7 +11,6 @@ class CheckoutController
     {
         $this->checkoutModel = new CheckoutModel();
     }
-
     public function index()
     {
         if (!isset($_SESSION['user'])) {
@@ -35,6 +34,9 @@ class CheckoutController
 
         $user_id = $_SESSION['user']['id'];
         $full_name = $_POST['full_name'] ?? '';
+        if (empty($full_name)) {
+            $full_name = $_SESSION['user']['full_name'] ?? $_SESSION['user']['username'] ?? '';
+        }
         $email = $_POST['email'] ?? '';
         $phone = $_POST['phone'] ?? '';
         $address = $_POST['address'] ?? '';
