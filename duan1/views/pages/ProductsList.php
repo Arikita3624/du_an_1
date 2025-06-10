@@ -66,7 +66,7 @@ echo "<!-- Debug: Total Products = $totalProducts, Total Pages = $totalPages, Cu
                         </div>
                     </div>
                     <!-- End Category Filter -->
-                    <div class="shop__sidebar__color" style="margin-bottom: 30px;">
+                    <!-- <div class="shop__sidebar__color" style="margin-bottom: 30px;">
                         <h5 style="margin-bottom: 10px;">Lọc theo màu</h5>
                         <label class="color color-1" style="background: #000;" title="Đen">
                             <input type="radio" name="color" value="black" <?= (($_GET['color'] ?? '') == 'black') ? 'checked' : '' ?> onchange="this.form.submit()">
@@ -87,7 +87,7 @@ echo "<!-- Debug: Total Products = $totalProducts, Total Pages = $totalPages, Cu
                         <a href="?<?= http_build_query(array_merge($_GET, ['tag' => 'quan-jean'])) ?>">Quần jean</a>
                         <a href="?<?= http_build_query(array_merge($_GET, ['tag' => 'so-mi'])) ?>">Sơ mi</a>
                         <a href="?<?= http_build_query(array_merge($_GET, ['tag' => 'phu-kien'])) ?>">Phụ kiện</a>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <!-- End Sidebar -->
@@ -102,8 +102,8 @@ echo "<!-- Debug: Total Products = $totalProducts, Total Pages = $totalPages, Cu
                             <input type="hidden" name="search" value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
                             <input type="hidden" name="category_id" value="<?= htmlspecialchars($_GET['category_id'] ?? '') ?>">
                             <label for="price" style="margin-right:8px;">Lọc theo giá:</label>
-                            <select name="price" id="price" class="form-control" style="width:auto;">
-                                <option value="">Tất cả mức giá</option>
+                            <select name="price" id="price" class="form-control" style="min-width:180px;">
+                                <option value="">Các mức giá</option>
                                 <option value="0-100000" <?= (($_GET['price'] ?? '') == '0-100000') ? 'selected' : '' ?>>Dưới 100.000₫</option>
                                 <option value="100000-300000" <?= (($_GET['price'] ?? '') == '100000-300000') ? 'selected' : '' ?>>100.000₫ - 300.000₫</option>
                                 <option value="300000-500000" <?= (($_GET['price'] ?? '') == '300000-500000') ? 'selected' : '' ?>>300.000₫ - 500.000₫</option>
@@ -184,6 +184,13 @@ echo "<!-- Debug: Total Products = $totalProducts, Total Pages = $totalPages, Cu
                         border-color: #eee;
                         cursor: not-allowed;
                         pointer-events: none;
+                    }
+
+                    select.form-control,
+                    select {
+                        min-width: 180px;
+                        width: auto;
+                        max-width: 100%;
                     }
                 </style>
                 <div class="product__pagination">

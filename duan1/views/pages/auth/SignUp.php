@@ -93,7 +93,7 @@
 
 <section class="form-section">
   <div class="form-container">
-    <h2 class="form-title">Create an Account</h2>
+    <h2 class="form-title">Đăng ký tài khoản</h2>
 
     <?php
     $type = $_SESSION['message_type'] ?? '';
@@ -109,28 +109,32 @@
 
     <form action="?act=register" method="POST">
       <div class="form-group">
-        <label>Username</label>
+        <label>Username<span>*</span></label>
         <input type="text" name="username" id="username" required />
       </div>
       <div class="form-group">
-        <label>Email address</label>
+        <label for="full_name">Họ và tên<span>*</span></label>
+        <input type="text" name="full_name" id="full_name" required />
+      </div>
+      <div class="form-group">
+        <label>Email<span>*</span></label>
         <input type="email" name="email" id="email" required />
       </div>
       <div class="form-group">
-        <label>Password</label>
+        <label>Mật khẩu</label>
         <input type="password" name="password" id="password" required />
       </div>
       <div class="form-group">
-        <label>Address</label>
-        <input type="text" name="address" id="address">
+        <label>Địa chỉ<span>*</span></label>
+        <input type="text" name="address" id="address" required>
       </div>
       <div class="form-group">
-        <label>Phone</label>
-        <input type="text" name="phone" id="phone" />
+        <label>Số điện thoại<span>*</span></label>
+        <input type="text" name="phone" id="phone" required pattern="[0-9]+" title="Vui lòng nhập số điện thoại hợp lệ">
       </div>
-      <button type="submit" class="form-btn">Sign Up</button>
+      <button type="submit" class="form-btn">Đăng Ký</button>
       <p class="form-footer">
-        Already have an account? <a href="?act=login">Login</a>
+        Đã có tải khoản ? <a href="?act=login">Đăng nhập</a>
       </p>
     </form>
   </div>

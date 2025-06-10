@@ -17,16 +17,19 @@ class DashboardController {
     public function index() {
         // Lấy thống kê đơn hàng
         $orderStats = $this->orderModel->getOrderStatistics();
-
+        
+        // Lấy thống kê trạng thái đơn hàng
+        $orderStatusCounts = $this->orderModel->getOrderStatusCounts();
+        
         // Lấy số lượng sản phẩm
         $productCount = $this->productModel->getProductCount();
-
+        
         // Lấy số lượng người dùng
         $userCount = $this->userModel->getUserCount();
-
+        
         // Lấy đơn hàng mới nhất
         $latestOrders = $this->orderModel->getLatestOrders(5);
-
+        
         // Hiển thị view
         ?>
         <div class="container-fluid">
@@ -140,7 +143,7 @@ class DashboardController {
                                     </td>
                                     <td><?php echo date('d/m/Y H:i', strtotime($order['created_at'])); ?></td>
                                     <td>
-                                        <a href="index.php?controller=order&action=view&id=<?php echo $order['id']; ?>"
+                                        <a href="index.php?controller=order&action=view&id=<?php echo $order['id']; ?>" 
                                            class="btn btn-info btn-sm">
                                             <i class="fas fa-eye"></i>
                                         </a>
@@ -162,7 +165,11 @@ class DashboardController {
                 return 'warning';
             case 'processing':
                 return 'info';
+            case 'delivering':
+                return 'primary';
             case 'completed':
+                return 'success';
+            case 'finished':
                 return 'success';
             case 'cancelled':
                 return 'danger';
@@ -177,7 +184,11 @@ class DashboardController {
                 return 'Chờ xử lý';
             case 'processing':
                 return 'Đang xử lý';
+            case 'delivering':
+                return 'Đang giao hàng';
             case 'completed':
+                return 'Đã giao hàng';
+            case 'finished':
                 return 'Hoàn thành';
             case 'cancelled':
                 return 'Đã hủy';

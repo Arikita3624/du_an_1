@@ -21,6 +21,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sql = "SELECT * FROM users WHERE username = ? AND role = 'admin' LIMIT 1";
         $user = $db->queryOne($sql, [$username]);
 
+        // Debug chi tiết
+        error_log("=== DEBUG LOGIN ===");
+        error_log("Username nhập vào: " . $username);
+        error_log("Password nhập vào: " . $password);
+        error_log("SQL Query: " . $sql);
+        
+        if ($user) {
+            error_log("Tìm thấy user trong database");
+            error_log("User data: " . print_r($user, true));
+            error_log("Password hash trong DB: " . $user['password']);
+            error_log("Kết quả verify password: " . (password_verify($password, $user['password']) ? "TRUE" : "FALSE"));
+        } else {
+            error_log("KHÔNG tìm thấy user trong database");
+        }
+
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['admin_id'] = $user['id'];
             $_SESSION['admin_username'] = $user['username'];

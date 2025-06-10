@@ -3,6 +3,9 @@ require_once __DIR__ . '/../commons/function.php';
 
 class CartModels
 {
+
+    private $db;
+
     public function getOrCreateCart($userId)
     {
         $db = connectDB();
@@ -14,7 +17,7 @@ class CartModels
             return $cart['id'];
         }
 
-        $stmt = $db->prepare("INSERT INTO carts (user_id) VALUES (?)");
+        $stmt = $db->prepare("INSERT INTO carts (user_id, total_price) VALUES (?, 0)");
         $stmt->execute([$userId]);
         return $db->lastInsertId();
     }
@@ -23,12 +26,12 @@ class CartModels
     {
         $db = connectDB();
         $stmt = $db->prepare("
-        SELECT ci.*, p.name, p.image
-        FROM cart_items ci
-        JOIN carts c ON ci.cart_id = c.id
-        JOIN products p ON ci.product_id = p.id
-        WHERE c.user_id = ?
-    ");
+            SELECT ci.*, p.name, p.image
+            FROM cart_items ci
+            JOIN carts c ON ci.cart_id = c.id
+            JOIN products p ON ci.product_id = p.id
+            WHERE c.user_id = ?
+        ");
         $stmt->execute([$userId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -68,5 +71,24 @@ class CartModels
 
         $stmt = $db->prepare("UPDATE cart_items SET quantity = ?, total_price = ? WHERE cart_id = ? AND product_id = ?");
         $stmt->execute([$quantity, $quantity * $price, $cartId, $productId]);
+    }
+
+    public function getCartItems($cartId)
+    {
+        $db = connectDB();
+        $stmt = $db->prepare("SELECT ci.*, p.name, p.image, p.price FROM cart_items ci JOIN products p ON ci.product_id = p.id WHERE ci.cart_id = ?");
+        $stmt->execute([$cartId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+     public function clearCart($cartId)
+    {
+        $db = connectDB();
+        $stmt = $db->prepare("DELETE FROM cart_items WHERE cart_id = ?");
+        $stmt->execute([$cartId]);
+    }
+     public function getCartItem($cartId, $productId)
+    {
+        $sql = "SELECT * FROM cart_items WHERE cart_id = ? AND product_id = ?";
+        return $this->db->queryOne($sql, [$cartId, $productId]);
     }
 }

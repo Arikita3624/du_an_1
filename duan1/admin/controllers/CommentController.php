@@ -1,71 +1,70 @@
 <?php
-require_once __DIR__ . '/../models/CommentModel.php';
+require_once __DIR__ . '/../../models/CommentModel.php';
 require_once __DIR__ . '/../models/ProductModel.php';
 
 class CommentController {
     private $commentModel;
     private $productModel;
 
-    public function __construct($db) {
-        $this->commentModel = new CommentModel($db);
-        $this->productModel = new ProductModel($db);
+    public function __construct() {
+        $this->commentModel = new CommentModel();
+        $this->productModel = new ProductModel();
     }
 
     public function index() {
-        $comments = $this->commentModel->getPendingComments();
+        $comments = $this->commentModel->getAllComments();
         require_once __DIR__ . '/../views/comment/index.php';
     }
 
     public function approve() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
-            $commentId = $_POST['id'];
-            if ($this->commentModel->updateCommentStatus($commentId, 'approved')) {
-                $_SESSION['success'] = 'Đã duyệt comment thành công!';
+        $comment_id = $_GET['id'] ?? 0;
+        if ($comment_id > 0) {
+            $result = $this->commentModel->updateCommentStatus($comment_id, 'approved');
+            if ($result) {
+                $_SESSION['success'] = 'Đã duyệt bình luận.';
             } else {
-                $_SESSION['error'] = 'Có lỗi xảy ra khi duyệt comment!';
+                $_SESSION['error'] = 'Có lỗi xảy ra khi duyệt bình luận.';
             }
         }
         header('Location: index.php?controller=comment');
-        exit();
+        exit;
     }
 
     public function reject() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
-            $commentId = $_POST['id'];
-            if ($this->commentModel->updateCommentStatus($commentId, 'rejected')) {
-                $_SESSION['success'] = 'Đã từ chối comment!';
+        $comment_id = $_GET['id'] ?? 0;
+        if ($comment_id > 0) {
+            $result = $this->commentModel->updateCommentStatus($comment_id, 'rejected');
+            if ($result) {
+                $_SESSION['success'] = 'Đã từ chối bình luận.';
             } else {
-                $_SESSION['error'] = 'Có lỗi xảy ra khi từ chối comment!';
+                $_SESSION['error'] = 'Có lỗi xảy ra khi từ chối bình luận.';
             }
         }
         header('Location: index.php?controller=comment');
-        exit();
+        exit;
     }
 
     public function delete() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
-            $commentId = $_POST['id'];
-            if ($this->commentModel->deleteComment($commentId)) {
-                $_SESSION['success'] = 'Đã xóa comment thành công!';
+        $comment_id = $_GET['id'] ?? 0;
+        if ($comment_id > 0) {
+            $result = $this->commentModel->deleteComment($comment_id);
+            if ($result) {
+                $_SESSION['success'] = 'Đã xóa bình luận.';
             } else {
-                $_SESSION['error'] = 'Có lỗi xảy ra khi xóa comment!';
+                $_SESSION['error'] = 'Có lỗi xảy ra khi xóa bình luận.';
             }
         }
         header('Location: index.php?controller=comment');
-        exit();
+        exit;
     }
 
     public function view() {
         if (isset($_GET['id'])) {
             $commentId = $_GET['id'];
-            $comment = $this->commentModel->getCommentById($commentId);
-            if ($comment) {
-                require_once __DIR__ . '/../views/comment/view.php';
-            } else {
-                $_SESSION['error'] = 'Không tìm thấy comment!';
-                header('Location: index.php?controller=comment');
-                exit();
-            }
+            // Cần thêm phương thức getCommentById trong CommentModel nếu muốn xem chi tiết
+             $_SESSION['error'] = 'Chức năng xem chi tiết bình luận chưa được triển khai đầy đủ.';
+             header('Location: index.php?controller=comment');
+             exit();
         } else {
             header('Location: index.php?controller=comment');
             exit();

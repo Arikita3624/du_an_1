@@ -39,6 +39,62 @@
         text-decoration: none;
         margin-left: 10px;
     }
+
+    .user-dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .user-dropdown .user-greeting {
+        color: #fff;
+        cursor: pointer;
+        font-weight: 500;
+        font-size: 14px;
+        padding: 6px 12px;
+        border-radius: 4px;
+        transition: background 0.2s;
+    }
+
+    .user-dropdown .user-greeting:hover {
+        background: #e53637;
+    }
+
+    .user-dropdown-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 120%;
+        background: #fff;
+        min-width: 180px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        border-radius: 6px;
+        z-index: 1001;
+        padding: 8px 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    .user-dropdown-menu li {
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .user-dropdown-menu li:last-child {
+        border-bottom: none;
+    }
+
+    .user-dropdown-menu a {
+        display: block;
+        color: #222;
+        padding: 10px 18px;
+        text-decoration: none;
+        font-size: 15px;
+        transition: background 0.2s;
+    }
+
+    .user-dropdown-menu a:hover {
+        background: #f6f6f6;
+        color: #e53637;
+    }
 </style>
 
 <header class="header">
@@ -47,18 +103,28 @@
             <div class="row">
                 <div class="col-lg-6 col-md-7">
                     <div class="header__top__left">
-                        <p>Free shipping, 30-day return or refund guarantee.</p>
+                        <p>Miễn phí giao hàng, trả hàng trong 30 ngày!</p>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-5">
                     <div class="header__top__right">
                         <div class="header__top__links">
                             <?php if (isset($_SESSION['user']) && is_array($_SESSION['user']) && !empty($_SESSION['user']['username'])): ?>
-                                <span class="user-greeting">Xin chào, <?= htmlspecialchars($_SESSION['user']['username'], ENT_QUOTES, 'UTF-8') ?>!</span>
-                                <a href="?act=logout" class="logout-link">Đăng xuất</a>
+                                <div class="user-dropdown">
+                                    <span class="user-greeting" id="userDropdownToggle">
+                                        <i class="fa fa-user"></i>
+                                        <?= htmlspecialchars($_SESSION['user']['username'], ENT_QUOTES, 'UTF-8') ?>
+                                        <i class="fa fa-caret-down"></i>
+                                    </span>
+                                    <ul class="user-dropdown-menu" id="userDropdownMenu">
+                                        <li><a href="?act=order-list">Danh sách đơn hàng</a></li>
+                                        <li><a href="#">Thông tin tài khoản</a></li>
+                                        <li><a href="#">Đổi mật khẩu</a></li>
+                                        <li><a href="?act=logout" class="logout-link">Đăng xuất</a></li>
+                                    </ul>
+                                </div>
                             <?php else: ?>
-                                <?php unset($_SESSION['user']); // Xóa session không hợp lệ
-                                ?>
+                                <?php unset($_SESSION['user']); ?>
                                 <a href="?act=login" class="logout-link">Đăng nhập</a>
                             <?php endif; ?>
                         </div>

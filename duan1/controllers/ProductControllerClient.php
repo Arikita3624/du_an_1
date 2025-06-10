@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../commons/env.php';
 require_once __DIR__ . '/../commons/function.php';
 require_once __DIR__ . '/../models/Client.php';
+require_once __DIR__ . '/../models/CommentModel.php';
 
 class ProductControllerClient
 {
@@ -59,6 +60,10 @@ class ProductControllerClient
 
         // Lấy sản phẩm tương tự cùng danh mục (trừ sản phẩm hiện tại)
         $relatedProducts = $productModel->getRelated($product['category_id'], $product['id']);
+
+        // Lấy bình luận cho sản phẩm (chỉ bình luận đã duyệt)
+        $commentModel = new CommentModel();
+        $comments = $commentModel->getCommentsByProductId($id);
 
         $categories = $categoryModel->getAll();
         require_once __DIR__ . '/../views/pages/ProductDetail.php';

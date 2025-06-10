@@ -93,16 +93,16 @@
                         <p><?= nl2br(htmlspecialchars($product['description'])) ?></p>
                         <form method="post" action="?act=add-to-cart" class="product__details__cart__option">
                             <div class="quantity-row">
-                                <label for="quantity">Số lượng:</label>
+                                <label for="quantity">Số lượng tồn kho: <?= htmlspecialchars($product['stock']) ?></label>
                                 <input type="number" id="quantity" name="quantity" value="1" min="1">
                             </div>
                             <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id']) ?>">
                             <button type="submit" class="primary-btn">Thêm vào giỏ hàng</button>
                         </form>
-                        <div class="product__details__btns__option">
+                        <!-- <div class="product__details__btns__option">
                             <a href="#"><i class="fa fa-heart"></i> Yêu thích</a>
                             <a href="#"><i class="fa fa-exchange"></i> So sánh</a>
-                        </div>
+                        </div> -->
                         <div class="product__details__last__option">
                             <ul>
                                 <li><span>Danh mục:</span> <?= htmlspecialchars($product['category_name']) ?></li>
@@ -116,6 +116,56 @@
     </div>
 </section>
 <!-- Shop Details Section End -->
+
+<!-- Comment Section Begin -->
+<section class="comment-section spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <h3 class="comment-title">Bình luận</h3>
+
+                <!-- Danh sách bình luận -->
+                <div class="comment-list">
+                    <?php if (!empty($comments)): ?>
+                        <?php foreach ($comments as $comment): ?>
+                            <div class="comment-item">
+                                <div class="comment-avatar">
+                                    <!-- Avatar người dùng (có thể thêm sau nếu có cột avatar trong bảng users) -->
+                                    <i class="fa fa-user-circle"></i>
+                                </div>
+                                <div class="comment-content">
+                                    <div class="comment-author"><strong><?= htmlspecialchars($comment['username']) ?></strong></div>
+                                    <div class="comment-date"><?= date('d/m/Y H:i', strtotime($comment['created_at'])) ?></div>
+                                    <div class="comment-text"><?= nl2br(htmlspecialchars($comment['comment_text'])) ?></div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>Chưa có bình luận nào cho sản phẩm này.</p>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Form gửi bình luận -->
+                <?php if (isset($_SESSION['user'])): // Chỉ hiển thị form nếu người dùng đã đăng nhập ?>
+                    <div class="comment-form mt-4">
+                        <h4>Viết bình luận của bạn</h4>
+                        <form action="?act=add-comment" method="POST">
+                            <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id']) ?>">
+                            <div class="form-group">
+                                <textarea name="comment_text" class="form-control" rows="4" placeholder="Nhập bình luận của bạn..." required></textarea>
+                            </div>
+                            <button type="submit" class="site-btn">Gửi bình luận</button>
+                        </form>
+                    </div>
+                <?php else: ?>
+                    <p class="mt-4">Vui lòng <a href="?act=login">đăng nhập</a> để bình luận.</p>
+                <?php endif; ?>
+
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Comment Section End -->
 
 <!-- Related Section Begin -->
 <section class="related spad">

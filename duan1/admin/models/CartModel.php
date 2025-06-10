@@ -1,86 +1,99 @@
 <?php
+require_once __DIR__ . '/../../commons/Database.php';
+
 class CartModel {
     private $db;
 
-    public function __construct($db) {
-        $this->db = $db;
+    public function __construct() {
+        $this->db = Database::getInstance();
     }
 
-    public function getCartByUserId($userId) {
-        $sql = "SELECT * FROM carts WHERE user_id = ?";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([$userId]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+    public function getAllCarts() {
+        $sql = "SELECT c.*, u.username, u.full_name, 
+                COUNT(ci.id) as total_items,
+                SUM(ci.quantity * p.price) as total_amount
+                FROM carts c
+                LEFT JOIN users u ON c.user_id = u.id
+                LEFT JOIN cart_items ci ON c.id = ci.cart_id
+                LEFT JOIN products p ON ci.product_id = p.id
+                GROUP BY c.id
+                ORDER BY c.created_at DESC";
+        return $this->db->query($sql);
     }
 
-    public function createCart($userId) {
-        $sql = "INSERT INTO carts (user_id) VALUES (?)";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([$userId]);
-        return $this->db->lastInsertId();
+    public function getCartById($cartId) {
+        $sql = "SELECT c.*, u.username, u.full_name
+                FROM carts c
+                LEFT JOIN users u ON c.user_id = u.id
+                WHERE c.id = ?";
+        return $this->db->queryOne($sql, [$cartId]);
     }
 
     public function getCartItems($cartId) {
         $sql = "SELECT ci.*, p.name, p.price, p.discount_price, p.image 
-                FROM cart_items ci 
-                JOIN products p ON ci.product_id = p.id 
+                FROM cart_items ci
+                JOIN products p ON ci.product_id = p.id
                 WHERE ci.cart_id = ?";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([$cartId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $this->db->query($sql, [$cartId]);
+    }
+
+    public function deleteCart($cartId) {
+        // Xóa các cart items trước
+        $sql = "DELETE FROM cart_items WHERE cart_id = ?";
+        $this->db->execute($sql, [$cartId]);
+        
+        // Sau đó xóa cart
+        $sql = "DELETE FROM carts WHERE id = ?";
+        return $this->db->execute($sql, [$cartId]);
+    }
+
+    public function getCartByUserId($userId) {
+        $sql = "SELECT * FROM carts WHERE user_id = ?";
+        return $this->db->queryOne($sql, [$userId]);
+    }
+
+    public function createCart($userId) {
+        $sql = "INSERT INTO carts (user_id) VALUES (?)";
+        return $this->db->execute($sql, [$userId]);
     }
 
     public function addToCart($cartId, $productId, $quantity = 1) {
-        // Kiểm tra sản phẩm đã có trong giỏ hàng chưa
+        // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
         $sql = "SELECT * FROM cart_items WHERE cart_id = ? AND product_id = ?";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([$cartId, $productId]);
-        $existingItem = $stmt->fetch(PDO::FETCH_ASSOC);
+        $existingItem = $this->db->queryOne($sql, [$cartId, $productId]);
 
         if ($existingItem) {
-            // Cập nhật số lượng nếu sản phẩm đã có
-            $sql = "UPDATE cart_items SET quantity = quantity + ? WHERE id = ?";
-            $stmt = $this->db->prepare($sql);
-            return $stmt->execute([$quantity, $existingItem['id']]);
+            // Cập nhật số lượng nếu sản phẩm đã tồn tại
+            $sql = "UPDATE cart_items SET quantity = quantity + ? WHERE cart_id = ? AND product_id = ?";
+            return $this->db->execute($sql, [$quantity, $cartId, $productId]);
         } else {
             // Thêm mới sản phẩm vào giỏ hàng
             $sql = "INSERT INTO cart_items (cart_id, product_id, quantity) VALUES (?, ?, ?)";
-            $stmt = $this->db->prepare($sql);
-            return $stmt->execute([$cartId, $productId, $quantity]);
+            return $this->db->execute($sql, [$cartId, $productId, $quantity]);
         }
     }
 
-    public function updateCartItemQuantity($cartItemId, $quantity) {
-        $sql = "UPDATE cart_items SET quantity = ? WHERE id = ?";
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$quantity, $cartItemId]);
+    public function updateCartItemQuantity($cartId, $productId, $quantity) {
+        $sql = "UPDATE cart_items SET quantity = ? WHERE cart_id = ? AND product_id = ?";
+        return $this->db->execute($sql, [$quantity, $cartId, $productId]);
     }
 
-    public function removeFromCart($cartItemId) {
-        $sql = "DELETE FROM cart_items WHERE id = ?";
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$cartItemId]);
+    public function removeFromCart($cartId, $productId) {
+        $sql = "DELETE FROM cart_items WHERE cart_id = ? AND product_id = ?";
+        return $this->db->execute($sql, [$cartId, $productId]);
     }
 
     public function clearCart($cartId) {
         $sql = "DELETE FROM cart_items WHERE cart_id = ?";
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$cartId]);
+        return $this->db->execute($sql, [$cartId]);
     }
 
     public function getCartTotal($cartId) {
-        $sql = "SELECT SUM(
-                    CASE 
-                        WHEN p.discount_price IS NOT NULL THEN p.discount_price * ci.quantity
-                        ELSE p.price * ci.quantity
-                    END
-                ) as total
+        $sql = "SELECT SUM(ci.quantity * COALESCE(p.discount_price, p.price)) as total 
                 FROM cart_items ci 
                 JOIN products p ON ci.product_id = p.id 
                 WHERE ci.cart_id = ?";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([$cartId]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $this->db->queryOne($sql, [$cartId]);
         return $result['total'] ?? 0;
     }
 } 

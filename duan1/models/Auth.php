@@ -9,6 +9,7 @@ class SignUpModel
         $conn = connectDB(); // lấy kết nối PDO
 
         $username = trim($data['username']);
+        $full_name = trim($data['full_name']);
         $email = trim($data['email']);
         $password = password_hash(trim($data['password']), PASSWORD_DEFAULT);
         $address = trim($data['address'] ?? '');
@@ -23,10 +24,11 @@ class SignUpModel
                 return ['success' => false, 'message' => 'Email hoặc username đã tồn tại.'];
             }
 
-            $sql = "INSERT INTO users (username, email, password, address, phone) VALUES (:username, :email, :password, :address, :phone)";
+            $sql = "INSERT INTO users (username, full_name, email, password, address, phone) VALUES (:username, :full_name, :email, :password, :address, :phone)";
             $stmt = $conn->prepare($sql);
             $stmt->execute([
                 ':username' => $username,
+                ':full_name' => $full_name,
                 ':email' => $email,
                 ':password' => $password,
                 ':address' => $address ?: null,
