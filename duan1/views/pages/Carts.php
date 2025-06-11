@@ -38,6 +38,8 @@
                                 foreach ($cartItems as $item):
                                     $itemTotal = $item['total_price'];
                                     $total += $itemTotal;
+                                    // Giả định stock là 30 nếu không có dữ liệu stock
+                                    $stock = 30; // Thay bằng $item['stock'] nếu có
                                 ?>
                                     <tr>
                                         <td class="product__cart__item">
@@ -50,13 +52,17 @@
                                             </div>
                                         </td>
                                         <td class="quantity__item">
-                                            <form method="post" action="?act=update-cart" style="display:inline;" class="update-form">
+                                            <form method="post" action="?act=update-cart" class="update-form d-flex align-items-center">
                                                 <input type="hidden" name="product_id" value="<?= $item['product_id'] ?? $item['id'] ?>">
-                                                
-                                                <button type="submit" class="btn btn-sm btn-primary">Cập Nhật</button>
+                                                <div class="quantity-controls">
+                                                    <button type="button" class="dec qty-btn">-</button>
+                                                    <input type="number" class="quantity-input" name="quantity" value="<?= $item['quantity'] ?>" min="1" data-price="<?= $item['price'] ?>" data-stock="<?= $stock ?>">
+                                                    <button type="button" class="inc qty-btn">+</button>
+                                                </div>
+                                                <button type="submit" class="btn btn-sm btn-primary ms-2">Cập Nhật</button>
                                             </form>
                                         </td>
-                                        <td class="cart__price item-total"><?= number_format($itemTotal, 0, ',', '.') ?>₫</td>
+                                        <td class="cart__price item-total" data-total="<?= $itemTotal ?>"><?= number_format($itemTotal, 0, ',', '.') ?>₫</td>
                                         <td class="cart__close">
                                             <form method="post" action="?act=remove-cart-item" style="display:inline;">
                                                 <input type="hidden" name="product_id" value="<?= $item['product_id'] ?? $item['id'] ?>">
@@ -99,104 +105,183 @@
 
 <style>
     .cart__close button,
-.cart__close .btn-danger {
-    background: #e53637 !important;
-    border: none !important;
-    border-radius: 12px !important;
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    transition: background 0.2s;
-    box-shadow: none !important;
-}
+    .cart__close .btn-danger {
+        background: #e53637 !important;
+        border: none !important;
+        border-radius: 12px !important;
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        transition: background 0.2s;
+        box-shadow: none !important;
+    }
 
-.cart__close button:hover,
-.cart__close .btn-danger:hover {
-    background: #b91c1c !important;
-}
+    .cart__close button:hover,
+    .cart__close .btn-danger:hover {
+        background: #b91c1c !important;
+    }
 
-.cart__close .fa-close {
-    color: #222;
-    font-size: 24px;
-    margin: 0;
-}
+    .cart__close .fa-close {
+        color: #222;
+        font-size: 24px;
+        margin: 0;
+    }
 
-/* Nút cập nhật style đơn giản, bo góc, nền đen */
-.btn-update-cart,
-.btn.btn-primary {
-    background: #111 !important;
-    color: #fff !important;
-    border: none !important;
-    border-radius: 6px !important;
-    padding: 6px 18px !important;
-    font-weight: 600;
-    transition: background 0.2s;
-}
+    /* Nút cập nhật style đơn giản, bo góc, nền đen */
+    .btn-update-cart,
+    .btn.btn-primary {
+        background: #111 !important;
+        color: #fff !important;
+        border: none !important;
+        border-radius: 6px !important;
+        padding: 6px 18px !important;
+        font-weight: 600;
+        transition: background 0.2s;
+    }
 
-.btn-update-cart:hover,
-.btn.btn-primary:hover {
-    background: #e53637 !important;
-    color: #fff !important;
-}
+    .btn-update-cart:hover,
+    .btn.btn-primary:hover {
+        background: #e53637 !important;
+        color: #fff !important;
+    }
+
+    .quantity-controls {
+        display: flex;
+        align-items: center;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        overflow: hidden;
+        height: 38px;
+    }
+
+    .quantity-controls .qty-btn {
+        background: #f5f5f5;
+        border: none;
+        width: 32px;
+        height: 100%;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .quantity-controls input.quantity-input {
+        width: 40px;
+        text-align: center;
+        border: none;
+        outline: none;
+        font-weight: 500;
+    }
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Hàm định dạng số tiền
-    function formatMoney(amount) {
-        return new Intl.NumberFormat('vi-VN').format(amount) + '₫';
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+        // Hàm định dạng số tiền
+        function formatMoney(amount) {
+            return new Intl.NumberFormat('vi-VN').format(amount) + '₫';
+        }
 
-    // Hàm cập nhật tổng tiền
-    function updateTotal() {
-        let total = 0;
-        document.querySelectorAll('.item-total').forEach(function(element) {
-            total += parseInt(element.getAttribute('data-total') || 0);
+        // Hàm cập nhật tổng tiền
+        function updateTotal() {
+            let total = 0;
+            document.querySelectorAll('.item-total').forEach(function(element) {
+                total += parseInt(element.getAttribute('data-total') || 0);
+            });
+            document.getElementById('cart-total').textContent = formatMoney(total);
+        }
+
+        // Xử lý sự kiện thay đổi số lượng
+        document.querySelectorAll('.quantity-input').forEach(function(input) {
+            input.addEventListener('change', function() {
+                let quantity = parseInt(this.value);
+                const price = parseInt(this.getAttribute('data-price'));
+                const stock = parseInt(this.getAttribute('data-stock'));
+
+                // Kiểm tra số lượng tồn kho
+                if (quantity > stock) {
+                    alert('Vượt quá số lượng tồn kho');
+                    this.value = stock; // Đặt lại số lượng tối đa
+                    quantity = stock;
+                }
+
+                if (quantity < 1) {
+                    this.value = 1; // Đảm bảo số lượng tối thiểu là 1
+                    quantity = 1;
+                }
+
+                const total = price * quantity;
+
+                // Cập nhật thành tiền của sản phẩm
+                const itemTotal = this.closest('tr').querySelector('.item-total');
+                itemTotal.textContent = formatMoney(total);
+                itemTotal.setAttribute('data-total', total);
+
+                // Cập nhật tổng tiền
+                updateTotal();
+            });
+
+            // Tăng/giảm số lượng
+            const decBtn = input.parentElement.querySelector('.dec');
+            const incBtn = input.parentElement.querySelector('.inc');
+
+            decBtn.addEventListener('click', function() {
+                let current = parseInt(input.value);
+                if (current > 1) {
+                    input.value = current - 1;
+                    input.dispatchEvent(new Event('change'));
+                }
+            });
+
+            incBtn.addEventListener('click', function() {
+                let current = parseInt(input.value);
+                const stock = parseInt(input.getAttribute('data-stock'));
+                if (current < stock) {
+                    input.value = current + 1;
+                    input.dispatchEvent(new Event('change'));
+                } else {
+                    alert('Vượt quá số lượng tồn kho');
+                }
+            });
         });
-        document.getElementById('cart-total').textContent = formatMoney(total);
-    }
 
-    // Xử lý sự kiện thay đổi số lượng
-    document.querySelectorAll('.quantity-input').forEach(function(input) {
-        input.addEventListener('change', function() {
-            const price = parseInt(this.getAttribute('data-price'));
-            const quantity = parseInt(this.value);
-            const total = price * quantity;
-            
-            // Cập nhật thành tiền của sản phẩm
-            const itemTotal = this.closest('tr').querySelector('.item-total');
-            itemTotal.textContent = formatMoney(total);
-            itemTotal.setAttribute('data-total', total);
-            
-            // Cập nhật tổng tiền
-            updateTotal();
-        });
-    });
+        // Xử lý submit form
+        document.querySelectorAll('.update-form').forEach(function(form) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const quantityInput = this.querySelector('.quantity-input');
+                const quantity = parseInt(quantityInput.value);
+                const stock = parseInt(quantityInput.getAttribute('data-stock'));
 
-    // Xử lý submit form
-    document.querySelectorAll('.update-form').forEach(function(form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            
-            // Gửi request cập nhật
-            fetch(this.action, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.text())
-            .then(() => {
-                // Reload trang sau khi cập nhật thành công
-                window.location.reload();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Có lỗi xảy ra khi cập nhật giỏ hàng!');
+                // Kiểm tra số lượng trước khi gửi form
+                if (quantity > stock) {
+                    alert('Vượt quá số lượng tồn kho');
+                    quantityInput.value = stock;
+                    return;
+                }
+
+                const formData = new FormData(this);
+
+                // Gửi request cập nhật
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(() => {
+                    // Reload trang sau khi cập nhật thành công
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Có lỗi xảy ra khi cập nhật giỏ hàng!');
+                });
             });
         });
     });
-});
 </script>
