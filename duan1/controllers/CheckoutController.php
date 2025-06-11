@@ -41,7 +41,7 @@ class CheckoutController
         $phone = $_POST['phone'] ?? '';
         $address = $_POST['address'] ?? '';
         $payment_method = $_POST['payment_method'] ?? 'cod';
-        $order_notes = $_POST['note'] ?? '';
+        $order_reason = $_POST['reason'] ?? '';
 
         $cartModel = new CartModels();
         $cart_id = $cartModel->getOrCreateCart($user_id);
@@ -68,7 +68,7 @@ class CheckoutController
                 $address,
                 $total_price,
                 $payment_method,
-                $order_notes
+                $order_reason,
             );
 
             $this->checkoutModel->saveOrderDetails($order_id, $cartItems);

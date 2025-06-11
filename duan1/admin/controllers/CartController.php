@@ -20,7 +20,7 @@ class CartController {
 
         $userId = $_SESSION['user_id'];
         $cart = $this->cartModel->getCartByUserId($userId);
-        
+
         if (!$cart) {
             $cartId = $this->cartModel->createCart($userId);
             $cart = ['id' => $cartId];
@@ -28,7 +28,7 @@ class CartController {
 
         $cartItems = $this->cartModel->getCartItems($cart['id']);
         $total = $this->cartModel->getCartTotal($cart['id']);
-        
+
         require_once __DIR__ . '/../views/cart/index.php';
     }
 
@@ -45,7 +45,7 @@ class CartController {
 
             $userId = $_SESSION['user_id'];
             $cart = $this->cartModel->getCartByUserId($userId);
-            
+
             if (!$cart) {
                 $cartId = $this->cartModel->createCart($userId);
             } else {
@@ -58,7 +58,7 @@ class CartController {
                 $_SESSION['error'] = 'Có lỗi xảy ra khi thêm vào giỏ hàng!';
             }
         }
-        
+
         header('Location: index.php?controller=cart');
         exit();
     }
@@ -67,28 +67,30 @@ class CartController {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $cartItemId = $_POST['cart_item_id'] ?? 0;
             $quantity = $_POST['quantity'] ?? 1;
+            $productId = $_POST['product_id'] ?? 0;
 
-            if ($this->cartModel->updateCartItemQuantity($cartItemId, $quantity)) {
+            if ($this->cartModel->updateCartItemQuantity($cartItemId, $quantity, $productId)) {
                 $_SESSION['success'] = 'Đã cập nhật số lượng sản phẩm!';
             } else {
                 $_SESSION['error'] = 'Có lỗi xảy ra khi cập nhật số lượng!';
             }
         }
-        
+
         header('Location: index.php?controller=cart');
         exit();
     }
 
     public function remove() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_item_id'])) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cart_item_id'], $_POST['product_id'])) {
             $cartItemId = $_POST['cart_item_id'];
-            if ($this->cartModel->removeFromCart($cartItemId)) {
+            $productId = $_POST['product_id'];
+            if ($this->cartModel->removeFromCart($cartItemId, $productId)) {
                 $_SESSION['success'] = 'Đã xóa sản phẩm khỏi giỏ hàng!';
             } else {
                 $_SESSION['error'] = 'Có lỗi xảy ra khi xóa sản phẩm!';
             }
         }
-        
+
         header('Location: index.php?controller=cart');
         exit();
     }
@@ -101,13 +103,13 @@ class CartController {
 
         $userId = $_SESSION['user_id'];
         $cart = $this->cartModel->getCartByUserId($userId);
-        
+
         if ($cart && $this->cartModel->clearCart($cart['id'])) {
             $_SESSION['success'] = 'Đã xóa toàn bộ giỏ hàng!';
         } else {
             $_SESSION['error'] = 'Có lỗi xảy ra khi xóa giỏ hàng!';
         }
-        
+
         header('Location: index.php?controller=cart');
         exit();
     }
@@ -142,4 +144,4 @@ class CartController {
         header('Location: index.php?controller=cart');
         exit();
     }
-} 
+}

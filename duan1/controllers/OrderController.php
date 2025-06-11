@@ -28,7 +28,7 @@ class OrderController
             exit;
         }
 
-        $order_id = $_GET['order_id'] ?? null;
+        $order_id = $_POST['order_id'] ?? ($_GET['order_id'] ?? null);
         if (!$order_id) {
             header('Location: ?act=order-list');
             exit;

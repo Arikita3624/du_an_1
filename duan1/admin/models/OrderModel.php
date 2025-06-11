@@ -1,14 +1,17 @@
 <?php
 require_once __DIR__ . '/../../commons/Database.php';
 
-class OrderModel {
+class OrderModel
+{
     private $db;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->db = Database::getInstance();
     }
 
-    public function getAllOrders() {
+    public function getAllOrders()
+    {
         $sql = "SELECT o.*, u.full_name as customer_name
                 FROM orders o
                 LEFT JOIN users u ON o.user_id = u.id
@@ -16,7 +19,8 @@ class OrderModel {
         return $this->db->query($sql);
     }
 
-    public function getTotalOrders($keyword = '', $status = '') {
+    public function getTotalOrders($keyword = '', $status = '')
+    {
         $sql = "SELECT COUNT(*) as total FROM orders WHERE 1=1";
         $params = [];
 
@@ -41,7 +45,8 @@ class OrderModel {
         }
     }
 
-    public function getOrders($keyword = '', $status = '', $page = 1, $limit = 10) {
+    public function getOrders($keyword = '', $status = '', $page = 1, $limit = 10)
+    {
         $offset = ($page - 1) * $limit;
         $sql = "SELECT o.*,
                 COALESCE(SUM(oi.quantity * oi.price), 0) as total_amount,
@@ -76,7 +81,8 @@ class OrderModel {
         }
     }
 
-    public function getOrderById($id) {
+    public function getOrderById($id)
+    {
         $sql = "SELECT o.*,
                 COALESCE(SUM(oi.quantity * oi.price), 0) as total_amount,
                 COALESCE(u.full_name, o.full_name) as full_name,
@@ -89,7 +95,8 @@ class OrderModel {
         return $this->db->queryOne($sql, ['id' => $id]);
     }
 
-    public function getOrderItems($orderId) {
+    public function getOrderItems($orderId)
+    {
         $sql = "SELECT oi.*, p.name as product_name, p.image
                 FROM order_items oi
                 LEFT JOIN products p ON oi.product_id = p.id
@@ -97,7 +104,8 @@ class OrderModel {
         return $this->db->query($sql, ['order_id' => $orderId]);
     }
 
-    public function updateOrderStatus($id, $status) {
+    public function updateOrderStatus($id, $status)
+    {
         $sql = "UPDATE orders SET status = :status, updated_at = NOW() WHERE id = :id";
         return $this->db->execute($sql, [
             'id' => $id,
@@ -105,7 +113,8 @@ class OrderModel {
         ]);
     }
 
-    public function deleteOrder($id) {
+    public function deleteOrder($id)
+    {
         // Xóa các order items trước
         $sql = "DELETE FROM order_items WHERE order_id = :id";
         $this->db->execute($sql, ['id' => $id]);
@@ -115,9 +124,10 @@ class OrderModel {
         return $this->db->execute($sql, ['id' => $id]);
     }
 
-    public function getOrderStatistics() {
+    public function getOrderStatistics()
+    {
         try {
-        $sql = "SELECT
+            $sql = "SELECT
                         COUNT(DISTINCT o.id) as total_orders,
                         COALESCE(SUM(oi.quantity * oi.price), 0) as total_revenue
                     FROM orders o
@@ -142,7 +152,8 @@ class OrderModel {
         }
     }
 
-    public function getLatestOrders($limit = 5) {
+    public function getLatestOrders($limit = 5)
+    {
         $sql = "SELECT o.*,
                        COALESCE(SUM(oi.quantity * oi.price), 0) as total_amount,
                        u.full_name
@@ -155,7 +166,8 @@ class OrderModel {
         return $this->db->query($sql);
     }
 
-    public function getOrderStatusCounts() {
+    public function getOrderStatusCounts()
+    {
         $sql = "SELECT status, COUNT(*) as count FROM orders GROUP BY status";
         try {
             $results = $this->db->query($sql);
@@ -175,5 +187,13 @@ class OrderModel {
             error_log("Lỗi khi lấy thống kê trạng thái đơn hàng: " . $e->getMessage());
             return [];
         }
+    }
+    public function updatePaymentStatus($id, $paymentStatus)
+    {
+        $sql = "UPDATE orders SET payment_status = :payment_status, updated_at = NOW() WHERE id = :id";
+        return $this->db->execute($sql, [
+            'id' => $id,
+            'payment_status' => $paymentStatus
+        ]);
     }
 }

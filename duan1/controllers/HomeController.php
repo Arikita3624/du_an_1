@@ -8,7 +8,7 @@ class HomeController
     public function index()
     {
         $productModel = new ProductModels();
-        $latestProducts = $productModel->getLatest(8); // Lấy 8 sản phẩm mới nhất
+        $latestProducts = $productModel->getLatest(8);
         require_once __DIR__ . '/../views/pages/HomePage.php';
     }
 }

@@ -8,11 +8,11 @@
 
     <?php if (isset($_SESSION['success'])): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <?php 
+            <?php
             echo $_SESSION['success'];
             unset($_SESSION['success']);
             ?>
-             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -20,11 +20,11 @@
 
     <?php if (isset($_SESSION['error'])): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <?php 
+            <?php
             echo $_SESSION['error'];
             unset($_SESSION['error']);
             ?>
-             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -86,19 +86,22 @@
                 </tr>
             </table>
             <div class="mt-3">
-
-                 <a href="index.php?controller=user&action=toggleStatus&id=<?php echo $user['id']; ?>" 
-                   class="btn btn-<?php echo $user['status'] === 'active' ? 'warning' : 'success'; ?>"
-                   onclick="return confirm('Bạn có chắc chắn muốn <?php echo $user['status'] === 'active' ? 'khóa' : 'mở khóa'; ?> người dùng này?')">
-                    <i class="fas fa-<?php echo $user['status'] === 'active' ? 'lock' : 'unlock'; ?>"></i> <?php echo $user['status'] === 'active' ? 'Khóa' : 'Mở khóa'; ?>
-                </a>
-                 <a href="index.php?controller=user&action=manageRole&id=<?php echo $user['id']; ?>" 
-                   class="btn btn-secondary">
-                    <i class="fas fa-user-tag"></i> Phân quyền
-                </a>
-
+                <?php if ($_SESSION['admin_id'] != $user['id']): ?>
+                    <a href="index.php?controller=user&action=toggleStatus&id=<?php echo $user['id']; ?>"
+                        class="btn btn-<?php echo $user['status'] === 'active' ? 'warning' : 'success'; ?>"
+                        onclick="return confirm('Bạn có chắc chắn muốn <?php echo $user['status'] === 'active' ? 'khóa' : 'mở khóa'; ?> người dùng này?')">
+                        <i class="fas fa-<?php echo $user['status'] === 'active' ? 'lock' : 'unlock'; ?>"></i> <?php echo $user['status'] === 'active' ? 'Khóa' : 'Mở khóa'; ?>
+                    </a>
+                    <a href="index.php?controller=user&action=manageRole&id=<?php echo $user['id']; ?>"
+                        class="btn btn-secondary">
+                        <i class="fas fa-user-tag"></i> Phân quyền
+                    </a>
+                <?php else: ?>
+                    <span class="text-muted"><i class="fas fa-lock"></i> Không thể khóa chính mình</span>
+                    <span class="text-muted"><i class="fas fa-user-tag"></i> Không thể phân quyền chính mình</span>
+                <?php endif; ?>
                 <a href="index.php?controller=user" class="btn btn-secondary">Quay lại</a>
             </div>
         </div>
     </div>
-</div> 
+</div>

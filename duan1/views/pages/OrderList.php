@@ -1,5 +1,43 @@
 <?php
 require_once __DIR__ . '/../../commons/helpers.php';
+
+function getOrderStatusClass($status)
+{
+    switch ($status) {
+        case 'pending':
+        case 'processing':
+        case 'delivering':
+            return 'badge-warning'; // vàng
+        case 'completed':
+        case 'finished':
+            return 'badge-success'; // xanh lá
+        case 'cancelled':
+            return 'badge-danger'; // đỏ
+        default:
+            return 'badge-secondary';
+    }
+}
+function getPaymentStatusClass($status)
+{
+    switch ($status) {
+        case 'pending':
+            return 'badge-info';      // xanh dương
+        case 'paid':
+            return 'badge-success';   // xanh lá
+        case 'failed':
+            return 'badge-danger';    // đỏ
+        default:
+            return 'badge-secondary';
+    }
+}
+
+$ordersPerPage = 5;
+$totalOrders = count($orders);
+$totalPages = ceil($totalOrders / $ordersPerPage);
+$page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+$start = ($page - 1) * $ordersPerPage;
+$ordersToShow = array_slice($orders, $start, $ordersPerPage);
+
 ?>
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-option">
@@ -35,10 +73,10 @@ if (isset($_SESSION['message']) && isset($_SESSION['message_type'])) {
     </script>';
     unset($_SESSION['message'], $_SESSION['message_type']);
 } else if (isset($_SESSION['success'])) {
-     echo '<div class="message success" id="globalMessage">';
-     echo htmlspecialchars($_SESSION['success'], ENT_QUOTES, 'UTF-8');
-     echo '</div>';
-     echo '<script>
+    echo '<div class="message success" id="globalMessage">';
+    echo htmlspecialchars($_SESSION['success'], ENT_QUOTES, 'UTF-8');
+    echo '</div>';
+    echo '<script>
          setTimeout(() => {
              const message = document.getElementById("globalMessage");
              if (message) {
@@ -46,7 +84,7 @@ if (isset($_SESSION['message']) && isset($_SESSION['message_type'])) {
              }
          }, 3000);
      </script>';
-     unset($_SESSION['success']);
+    unset($_SESSION['success']);
 }
 ?>
 
@@ -64,20 +102,28 @@ if (isset($_SESSION['message']) && isset($_SESSION['message_type'])) {
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($orders as $order): ?>
+        <?php foreach ($ordersToShow as $order): ?>
             <tr>
                 <td><?= htmlspecialchars($order['id']) ?></td>
                 <td><?= htmlspecialchars($order['created_at']) ?></td>
                 <td><?= number_format($order['total_price'], 0, ',', '.') ?>₫</td>
                 <td><?= $order['payment_method'] === 'cod' ? 'Thanh toán khi nhận hàng (COD)' : 'Chuyển khoản ngân hàng' ?></td>
                 <td>
-                    <span class="badge badge-<?= getStatusBadgeClass($order['status']) ?>">
+                    <span class="badge <?= getOrderStatusClass($order['status']) ?>">
                         <?= getStatusText($order['status']) ?>
                     </span>
                 </td>
                 <td>
-                    <span class="badge badge-<?= getPaymentStatusBadgeClass($order['payment_status']) ?>">
-                        <?= getPaymentStatusText($order['payment_status']) ?>
+                    <?php
+                    $paymentStatus = $order['payment_status'];
+                    if (in_array($order['status'], ['completed', 'finished'])) {
+                        $paymentStatus = 'paid';
+                    } elseif ($order['status'] === 'cancelled') {
+                        $paymentStatus = 'failed';
+                    }
+                    ?>
+                    <span class="badge <?= getPaymentStatusClass($paymentStatus) ?>">
+                        <?= $paymentStatus === 'paid' ? 'Đã thanh toán' : getPaymentStatusText($paymentStatus) ?>
                     </span>
                 </td>
                 <td><a href="?act=order-confirmation&order_id=<?= $order['id'] ?>">Xem</a></td>
@@ -85,6 +131,26 @@ if (isset($_SESSION['message']) && isset($_SESSION['message_type'])) {
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<?php if ($totalPages > 1): ?>
+    <nav class="order-pagination">
+        <ul>
+            <li>
+                <a href="?act=order-list&page=<?= max(1, $page - 1) ?>" class="<?= $page == 1 ? 'disabled' : '' ?>">Trước</a>
+            </li>
+            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <li>
+                    <a href="?act=order-list&page=<?= $i ?>" class="<?= $i == $page ? 'active' : '' ?>">
+                        <?= $i ?>
+                    </a>
+                </li>
+            <?php endfor; ?>
+            <li>
+                <a href="?act=order-list&page=<?= min($totalPages, $page + 1) ?>" class="<?= $page == $totalPages ? 'disabled' : '' ?>">Sau</a>
+            </li>
+        </ul>
+    </nav>
+<?php endif; ?>
 
 <style>
     .breadcrumb-option {
@@ -201,5 +267,48 @@ if (isset($_SESSION['message']) && isset($_SESSION['message_type'])) {
     .table a:hover {
         color: #0056b3;
         text-decoration: underline;
+    }
+
+    .order-pagination {
+        margin-bottom: 60px;
+        /* Tạo khoảng cách với footer */
+    }
+
+    .order-pagination ul {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 30px 0 0 0;
+        justify-content: center;
+    }
+
+    .order-pagination li {
+        margin: 0 4px;
+    }
+
+    .order-pagination a {
+        display: block;
+        padding: 6px 14px;
+        background: #f6f6f6;
+        color: #e53637;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 600;
+        border: 1px solid #e53637;
+        transition: background 0.2s, color 0.2s;
+    }
+
+    .order-pagination a.active,
+    .order-pagination a:hover {
+        background: #e53637;
+        color: #fff;
+    }
+
+    .order-pagination a.disabled {
+        pointer-events: none;
+        opacity: 0.5;
+        background: #eee;
+        color: #aaa;
+        border-color: #eee;
     }
 </style>

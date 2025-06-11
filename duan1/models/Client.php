@@ -84,8 +84,10 @@ class ProductModels
         $conn = connectDB();
         $stmt = $conn->prepare("SELECT * FROM products WHERE id = :id");
         $stmt->execute([':id' => $id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $product = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $product;
     }
+
 
     public function getRelated($category_id, $except_id, $limit = 4)
     {
@@ -106,15 +108,17 @@ class ProductModels
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getLatest($limit = 8) {
-    $db = connectDB();
-    $stmt = $db->prepare("SELECT * FROM products ORDER BY created_at DESC LIMIT ?");
-    $stmt->bindValue(1, $limit, PDO::PARAM_INT);
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+    public function getLatest($limit = 8)
+    {
+        $db = connectDB();
+        $stmt = $db->prepare("SELECT * FROM products ORDER BY created_at DESC LIMIT ?");
+        $stmt->bindValue(1, $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-    public function updateStock($productId, $newStock) {
+    public function updateStock($productId, $newStock)
+    {
         $conn = connectDB();
         $stmt = $conn->prepare("UPDATE products SET stock = ? WHERE id = ?");
         return $stmt->execute([$newStock, $productId]);

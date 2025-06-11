@@ -9,11 +9,11 @@ class CheckoutModel
         $this->conn = connectDB();
     }
 
-    public function saveOrder($user_id, $full_name, $email, $phone, $address, $total_price, $payment_method, $order_notes)
+    public function saveOrder($user_id, $full_name, $email, $phone, $address, $total_price, $payment_method, $order_reason)
     {
         $stmt = $this->conn->prepare(
-            "INSERT INTO orders (user_id, full_name, email, phone, address, total_price, status, payment_status, payment_method, note, created_at, updated_at)
-            VALUES (:user_id, :full_name, :email, :phone, :address, :total_price, 'pending', 'pending', :payment_method, :note, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
+            "INSERT INTO orders (user_id, full_name, email, phone, address, total_price, status, payment_status, payment_method, reason, created_at, updated_at)
+            VALUES (:user_id, :full_name, :email, :phone, :address, :total_price, 'pending', 'pending', :payment_method, :reason, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)"
         );
         $stmt->execute([
             ':user_id' => $user_id,
@@ -23,7 +23,7 @@ class CheckoutModel
             ':address' => $address,
             ':total_price' => $total_price,
             ':payment_method' => $payment_method,
-            ':note' => $order_notes
+            ':reason' => $order_reason
         ]);
         return $this->conn->lastInsertId();
     }
@@ -47,7 +47,7 @@ class CheckoutModel
     public function getOrderById($order_id)
     {
         $stmt = $this->conn->prepare("
-            SELECT o.*, 
+            SELECT o.*,
                    o.full_name,
                    o.email,
                    o.phone,
@@ -62,7 +62,7 @@ class CheckoutModel
     public function getOrderDetails($order_id)
     {
         $stmt = $this->conn->prepare("
-            SELECT oi.*, p.name, p.image 
+            SELECT oi.*, p.name, p.image
             FROM order_items oi
             LEFT JOIN products p ON oi.product_id = p.id
             WHERE oi.order_id = :order_id
@@ -77,19 +77,48 @@ class CheckoutModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function updateOrderStatus($order_id, $status)
+    public function updateOrderStatus($order_id, $status, $reason = null)
     {
         try {
-            $stmt = $this->conn->prepare("
-                UPDATE orders 
-                SET status = :status, 
-                    updated_at = CURRENT_TIMESTAMP 
+            if ($status === 'cancelled') {
+                $stmt = $this->conn->prepare("
+                UPDATE orders
+                SET status = :status,
+                    payment_status = 'failed',
+                    reason = :reason,
+                    updated_at = CURRENT_TIMESTAMP
                 WHERE id = :order_id
             ");
-            return $stmt->execute([
-                ':status' => $status,
-                ':order_id' => $order_id
-            ]);
+                return $stmt->execute([
+                    ':status' => $status,
+                    ':reason' => $reason,
+                    ':order_id' => $order_id
+                ]);
+            } elseif ($reason !== null) {
+                $stmt = $this->conn->prepare("
+                UPDATE orders
+                SET status = :status,
+                    reason = :reason,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = :order_id
+            ");
+                return $stmt->execute([
+                    ':status' => $status,
+                    ':reason' => $reason,
+                    ':order_id' => $order_id
+                ]);
+            } else {
+                $stmt = $this->conn->prepare("
+                UPDATE orders
+                SET status = :status,
+                    updated_at = CURRENT_TIMESTAMP
+                WHERE id = :order_id
+            ");
+                return $stmt->execute([
+                    ':status' => $status,
+                    ':order_id' => $order_id
+                ]);
+            }
         } catch (PDOException $e) {
             error_log("Error updating order status: " . $e->getMessage());
             return false;
