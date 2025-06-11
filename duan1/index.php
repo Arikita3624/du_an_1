@@ -74,32 +74,6 @@ if ($act === 'add-to-cart' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: ?act=login');
         exit;
     }
-
-    $product_id = intval($_POST['product_id']);
-    $quantity = max(1, intval($_POST['quantity']));
-
-    require_once __DIR__ . '/models/Client.php';
-    require_once __DIR__ . '/models/Carts.php';
-
-    $productModel = new ProductModels();
-    $product = $productModel->getById($product_id);
-
-    if (!$product) {
-        $_SESSION['message'] = 'Sản phẩm không tồn tại!';
-        $_SESSION['message_type'] = 'error';
-        header('Location: ?act=product-list');
-        exit;
-    }
-
-    // Đảm bảo chỉ thêm vào giỏ hàng theo user_id
-    $cartModel = new CartModels();
-    $cart_id = $cartModel->getOrCreateCart($_SESSION['user']['id']);
-    $cartModel->addToCart($cart_id, $product_id, $quantity, $product['price']);
-
-    $_SESSION['message'] = 'Đã thêm vào giỏ hàng!';
-    $_SESSION['message_type'] = 'success';
-    header('Location: ?act=carts');
-    exit;
 }
 
 // Require các file cần thiết

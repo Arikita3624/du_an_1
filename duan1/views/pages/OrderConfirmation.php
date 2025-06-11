@@ -1,5 +1,35 @@
 <?php
 require_once __DIR__ . '/../../commons/helpers.php';
+
+function getOrderStatusClass($status)
+{
+    switch ($status) {
+        case 'pending':
+        case 'processing':
+        case 'delivering':
+            return 'badge-warning'; // vàng
+        case 'completed':
+        case 'finished':
+            return 'badge-success'; // xanh lá
+        case 'cancelled':
+            return 'badge-danger'; // đỏ
+        default:
+            return 'badge-secondary';
+    }
+}
+function getPaymentStatusClass($status)
+{
+    switch ($status) {
+        case 'pending':
+            return 'badge-info';      // xanh dương
+        case 'paid':
+            return 'badge-success';   // xanh lá
+        case 'failed':
+            return 'badge-danger';    // đỏ
+        default:
+            return 'badge-secondary';
+    }
+}
 ?>
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-option">
@@ -53,18 +83,27 @@ require_once __DIR__ . '/../../commons/helpers.php';
                                 <h4>Đơn hàng #<?= htmlspecialchars($order['id']) ?></h4>
                                 <p class="text-muted">Ngày đặt: <?= date('d/m/Y H:i', strtotime($order['created_at'])) ?></p>
                             </div>
+
                             <div class="col-md-6 text-end">
                                 <div class="order-summary-status">
                                     <div class="status-item">
                                         <span class="status-label">Trạng thái đơn hàng:</span>
-                                        <span style="background:#28a745; color:#fff; padding:6px 14px; border-radius:6px; display:inline-block; font-weight:600;">
+                                        <span class="badge <?= getOrderStatusClass($order['status']) ?>">
                                             <?= getStatusText($order['status']) ?>
                                         </span>
                                     </div>
                                     <div class="status-item">
                                         <span class="status-label">Trạng thái thanh toán:</span>
-                                        <span style="background:#17a2b8; color:#fff; padding:6px 14px; border-radius:6px; display:inline-block; font-weight:600;">
-                                            <?= getPaymentStatusText($order['payment_status']) ?>
+                                        <?php
+                                        $paymentStatus = $order['payment_status'];
+                                        if ($order['status'] === 'finished') {
+                                            $paymentStatus = 'paid';
+                                        } elseif ($order['status'] === 'cancelled') {
+                                            $paymentStatus = 'failed';
+                                        }
+                                        ?>
+                                        <span class="badge <?= getPaymentStatusClass($paymentStatus) ?>">
+                                            <?= $paymentStatus === 'paid' ? 'Đã thanh toán' : getPaymentStatusText($paymentStatus) ?>
                                         </span>
                                     </div>
                                     <div class="payment-method-item">
@@ -74,6 +113,11 @@ require_once __DIR__ . '/../../commons/helpers.php';
                                 </div>
                             </div>
                         </div>
+                        <?php if ($order['status'] === 'cancelled' && !empty($order['reason'])): ?>
+                            <div class="alert alert-warning mt-3">
+                                <strong>Lý do huỷ đơn hàng:</strong> <?= htmlspecialchars($order['reason']) ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
 
                     <!-- Thông tin khách hàng -->
@@ -139,15 +183,12 @@ require_once __DIR__ . '/../../commons/helpers.php';
                             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelOrderModal">
                                 Hủy đơn hàng
                             </button>
-                        <?php endif; ?>
-
-                        <?php if ($order['status'] === 'completed'): ?>
-                            <form action="?act=mark-order-received" method="POST" onsubmit="return confirm('Xác nhận đã nhận được đơn hàng?');">
+                        <?php elseif (in_array($order['status'], ['delivering', 'completed'])): ?>
+                            <form action="?act=mark-order-received" method="POST" onsubmit="return confirm('Xác nhận đã nhận được đơn hàng?');" style="display:inline; margin:0; padding:0;">
                                 <input type="hidden" name="order_id" value="<?= $order['id'] ?>">
-                                <button type="submit" class="btn btn-success">Đã nhận hàng</button>
+                                <button type="submit" class="btn btn-success" style="display:inline-block;">Đã nhận hàng</button>
                             </form>
                         <?php endif; ?>
-
                         <a href="?act=product-list" class="btn btn-primary">Tiếp tục mua sắm</a>
                     </div>
                 </div>
@@ -161,27 +202,31 @@ require_once __DIR__ . '/../../commons/helpers.php';
 <div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="cancelOrderModalLabel">Xác nhận hủy đơn hàng</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Bạn có chắc chắn muốn hủy đơn hàng #<?= htmlspecialchars($order['id']) ?>?</p>
-                <p class="text-danger">Lưu ý: Hành động này không thể hoàn tác.</p>
-
-                <div class="form-group mt-3">
-                    <label for="cancel_reason">Lý do hủy (Không bắt buộc):</label>
-                    <textarea class="form-control" id="cancel_reason" name="cancel_reason" rows="3"></textarea>
+            <form action="<?= $_SERVER['REQUEST_URI'] ?>" method="POST">
+                <input type="hidden" name="action" value="cancel">
+                <input type="hidden" name="order_id" value="<?= $order['id'] ?>">
+                <div class="modal-header bg-warning bg-opacity-25">
+                    <h5 class="modal-title text-danger" id="cancelOrderModalLabel">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-exclamation-triangle me-2" viewBox="0 0 16 16">
+                            <path d="M7.938 2.016a.13.13 0 0 1 .125 0l6.857 11.856c.06.104-.015.228-.125.228H1.205a.145.145 0 0 1-.125-.228L7.938 2.016zm.862-1.49c-.457-.778-1.603-.778-2.06 0L.082 12.382C-.375 13.16.217 14.1 1.205 14.1h13.59c.988 0 1.58-.94 1.123-1.718L8.8.526zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1-2.002 0 1 1 0 0 1 2.002 0z" />
+                        </svg>
+                        Xác nhận hủy đơn hàng
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
                 </div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                <form action="<?= $_SERVER['REQUEST_URI'] ?>" method="POST">
-                    <input type="hidden" name="action" value="cancel">
+                <div class="modal-body">
+                    <p class="mb-2">Bạn có chắc chắn muốn <span class="text-danger fw-bold">hủy đơn hàng #<?= htmlspecialchars($order['id']) ?></span>?</p>
+                    <p class="text-danger small mb-3">Lưu ý: Hành động này không thể hoàn tác.</p>
+                    <div class="form-group">
+                        <label for="cancel_reason" class="form-label fw-semibold">Lý do hủy (không bắt buộc):</label>
+                        <textarea class="form-control" id="cancel_reason" name="cancel_reason" rows="4" placeholder="Nhập lý do hủy đơn hàng..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                     <button type="submit" class="btn btn-danger">Xác nhận hủy</button>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -431,6 +476,13 @@ require_once __DIR__ . '/../../commons/helpers.php';
         .btn {
             padding: 8px 16px;
             font-size: 14px;
+        }
+
+        .badge-payment-status {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 500;
         }
     }
 </style>

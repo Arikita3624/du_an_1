@@ -7,6 +7,7 @@
         object-fit: cover;
         border-radius: 10px;
     }
+
     /* Ảnh nhỏ */
     .product__thumb__pic img {
         width: 120px !important;
@@ -14,6 +15,7 @@
         object-fit: cover;
         border-radius: 8px;
     }
+
     /* Ảnh sản phẩm tương tự */
     .related .product__item__pic img {
         height: 260px !important;
@@ -21,6 +23,7 @@
         object-fit: cover;
         border-radius: 8px;
     }
+
     /* Số lượng */
     .product__details__cart__option .quantity-row {
         display: flex;
@@ -28,6 +31,7 @@
         gap: 12px;
         margin-bottom: 10px;
     }
+
     .product__details__cart__option label {
         font-weight: 500;
         margin-bottom: 0;
@@ -36,6 +40,7 @@
         text-align: left;
         font-size: 18px;
     }
+
     .product__details__cart__option input[type="number"] {
         width: 70px;
         text-align: center;
@@ -55,6 +60,12 @@
                         <a href="?act=product-list">Shop</a>
                         <span><?= htmlspecialchars($product['name']) ?></span>
                     </div>
+                    <?php if (isset($_SESSION['message'])): ?>
+                        <div class="custom-alert <?= $_SESSION['message_type'] == 'error' ? 'alert-error' : 'alert-success' ?>">
+                            <?= htmlspecialchars($_SESSION['message']) ?>
+                        </div>
+                        <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
+                    <?php endif; ?>
                 </div>
             </div>
             <div class="row">
@@ -94,7 +105,7 @@
                         <form method="post" action="?act=add-to-cart" class="product__details__cart__option">
                             <div class="quantity-row">
                                 <label for="quantity">Số lượng tồn kho: <?= htmlspecialchars($product['stock']) ?></label>
-                                <input type="number" id="quantity" name="quantity" value="1" min="1">
+                                <input type="number" id="quantity" name="quantity" value="1">
                             </div>
                             <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id']) ?>">
                             <button type="submit" class="primary-btn">Thêm vào giỏ hàng</button>
@@ -146,7 +157,8 @@
                 </div>
 
                 <!-- Form gửi bình luận -->
-                <?php if (isset($_SESSION['user'])): // Chỉ hiển thị form nếu người dùng đã đăng nhập ?>
+                <?php if (isset($_SESSION['user'])): // Chỉ hiển thị form nếu người dùng đã đăng nhập
+                ?>
                     <div class="comment-form mt-4">
                         <h4>Viết bình luận của bạn</h4>
                         <form action="?act=add-comment" method="POST">

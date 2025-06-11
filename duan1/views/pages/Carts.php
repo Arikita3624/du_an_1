@@ -22,6 +22,18 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8">
+                <?php if (isset($_SESSION['message']) && isset($_SESSION['message_type'])): ?>
+                    <div class="message <?= htmlspecialchars($_SESSION['message_type']) ?>" id="cartMessage">
+                        <?= htmlspecialchars($_SESSION['message']) ?>
+                    </div>
+                    <script>
+                        setTimeout(() => {
+                            const msg = document.getElementById('cartMessage');
+                            if (msg) msg.style.display = 'none';
+                        }, 3000);
+                    </script>
+                    <?php unset($_SESSION['message'], $_SESSION['message_type']); ?>
+                <?php endif; ?>
                 <div class="shopping__cart__table">
                     <?php if (!empty($cartItems)): ?>
                         <table>
@@ -99,104 +111,83 @@
 
 <style>
     .cart__close button,
-.cart__close .btn-danger {
-    background: #e53637 !important;
-    border: none !important;
-    border-radius: 12px !important;
-    width: 48px;
-    height: 48px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    transition: background 0.2s;
-    box-shadow: none !important;
-}
+    .cart__close .btn-danger {
+        background: #e53637 !important;
+        border: none !important;
+        border-radius: 12px !important;
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        transition: background 0.2s;
+        box-shadow: none !important;
+    }
 
-.cart__close button:hover,
-.cart__close .btn-danger:hover {
-    background: #b91c1c !important;
-}
+    .cart__close button:hover,
+    .cart__close .btn-danger:hover {
+        background: #b91c1c !important;
+    }
 
-.cart__close .fa-close {
-    color: #222;
-    font-size: 24px;
-    margin: 0;
-}
+    .cart__close .fa-close {
+        color: #222;
+        font-size: 24px;
+        margin: 0;
+    }
 
-/* Nút cập nhật style đơn giản, bo góc, nền đen */
-.btn-update-cart,
-.btn.btn-primary {
-    background: #111 !important;
-    color: #fff !important;
-    border: none !important;
-    border-radius: 6px !important;
-    padding: 6px 18px !important;
-    font-weight: 600;
-    transition: background 0.2s;
-}
+    /* Nút cập nhật style đơn giản, bo góc, nền đen */
+    .btn-update-cart,
+    .btn.btn-primary {
+        background: #111 !important;
+        color: #fff !important;
+        border: none !important;
+        border-radius: 6px !important;
+        padding: 6px 18px !important;
+        font-weight: 600;
+        transition: background 0.2s;
+    }
 
-.btn-update-cart:hover,
-.btn.btn-primary:hover {
-    background: #e53637 !important;
-    color: #fff !important;
-}
+    .btn-update-cart:hover,
+    .btn.btn-primary:hover {
+        background: #e53637 !important;
+        color: #fff !important;
+    }
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Hàm định dạng số tiền
-    function formatMoney(amount) {
-        return new Intl.NumberFormat('vi-VN').format(amount) + '₫';
-    }
+    document.addEventListener('DOMContentLoaded', function() {
+        // Hàm định dạng số tiền
+        function formatMoney(amount) {
+            return new Intl.NumberFormat('vi-VN').format(amount) + '₫';
+        }
 
-    // Hàm cập nhật tổng tiền
-    function updateTotal() {
-        let total = 0;
-        document.querySelectorAll('.item-total').forEach(function(element) {
-            total += parseInt(element.getAttribute('data-total') || 0);
-        });
-        document.getElementById('cart-total').textContent = formatMoney(total);
-    }
+        // Hàm cập nhật tổng tiền
+        function updateTotal() {
+            let total = 0;
+            document.querySelectorAll('.item-total').forEach(function(element) {
+                total += parseInt(element.getAttribute('data-total') || 0);
+            });
+            document.getElementById('cart-total').textContent = formatMoney(total);
+        }
 
-    // Xử lý sự kiện thay đổi số lượng
-    document.querySelectorAll('.quantity-input').forEach(function(input) {
-        input.addEventListener('change', function() {
-            const price = parseInt(this.getAttribute('data-price'));
-            const quantity = parseInt(this.value);
-            const total = price * quantity;
-            
-            // Cập nhật thành tiền của sản phẩm
-            const itemTotal = this.closest('tr').querySelector('.item-total');
-            itemTotal.textContent = formatMoney(total);
-            itemTotal.setAttribute('data-total', total);
-            
-            // Cập nhật tổng tiền
-            updateTotal();
-        });
-    });
+        // Xử lý sự kiện thay đổi số lượng
+        document.querySelectorAll('.quantity-input').forEach(function(input) {
+            input.addEventListener('change', function() {
+                const price = parseInt(this.getAttribute('data-price'));
+                const quantity = parseInt(this.value);
+                const total = price * quantity;
 
-    // Xử lý submit form
-    document.querySelectorAll('.update-form').forEach(function(form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-            
-            // Gửi request cập nhật
-            fetch(this.action, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.text())
-            .then(() => {
-                // Reload trang sau khi cập nhật thành công
-                window.location.reload();
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Có lỗi xảy ra khi cập nhật giỏ hàng!');
+                // Cập nhật thành tiền của sản phẩm
+                const itemTotal = this.closest('tr').querySelector('.item-total');
+                itemTotal.textContent = formatMoney(total);
+                itemTotal.setAttribute('data-total', total);
+
+                // Cập nhật tổng tiền
+                updateTotal();
             });
         });
+
+        // Xử lý submit form
     });
-});
 </script>

@@ -39,18 +39,18 @@ $title = "Chi tiết đơn hàng #" . $order['id'];
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                    <table class="table">
-                        <tr>
-                            <th>Mã đơn hàng:</th>
-                            <td>#<?php echo $order['id']; ?></td>
-                        </tr>
-                        <tr>
-                            <th>Ngày đặt:</th>
-                            <td><?php echo date('d/m/Y H:i', strtotime($order['created_at'])); ?></td>
-                        </tr>
-                        <tr>
-                            <th>Trạng thái:</th>
-                            <td>
+                        <table class="table">
+                            <tr>
+                                <th>Mã đơn hàng:</th>
+                                <td>#<?php echo $order['id']; ?></td>
+                            </tr>
+                            <tr>
+                                <th>Ngày đặt:</th>
+                                <td><?php echo date('d/m/Y H:i', strtotime($order['created_at'])); ?></td>
+                            </tr>
+                            <tr>
+                                <th>Trạng thái:</th>
+                                <td>
                                     <span class="badge badge-<?php echo getStatusBadgeClass($order['status']); ?>">
                                         <?php echo getStatusText($order['status']); ?>
                                     </span>
@@ -63,28 +63,30 @@ $title = "Chi tiết đơn hàng #" . $order['id'];
                             <tr>
                                 <th>Trạng thái thanh toán:</th>
                                 <td>
-                                    <span class="badge badge-<?php
-                                        if ($order['payment_status'] === 'pending') {
-                                            echo 'info';
-                                        } else {
-                                            echo getPaymentStatusBadgeClass($order['payment_status']);
-                                        }
-                                     ?>">
-                                        <?php echo getPaymentStatusText($order['payment_status']); ?>
+                                    <?php
+                                    $paymentStatus = $order['payment_status'];
+                                    if ($order['status'] === 'finished') {
+                                        $paymentStatus = 'paid';
+                                    } elseif ($order['status'] === 'cancelled') {
+                                        $paymentStatus = 'failed';
+                                    }
+                                    ?>
+                                    <span class="badge badge-<?php echo getPaymentStatusBadgeClass($paymentStatus); ?>">
+                                        <?php echo $paymentStatus === 'paid' ? 'Đã thanh toán' : getPaymentStatusText($paymentStatus); ?>
                                     </span>
-                            </td>
-                        </tr>
+                                </td>
+                            </tr>
                             <tr>
                                 <th>Tổng tiền:</th>
                                 <td class="font-weight-bold"><?php echo number_format($order['total_amount']); ?> VNĐ</td>
                             </tr>
                             <?php if ($order['status'] === 'cancelled' && !empty($order['cancel_reason'])): ?>
-                            <tr>
-                                <th>Lý do hủy:</th>
-                                <td class="text-danger"><?php echo htmlspecialchars($order['cancel_reason']); ?></td>
-                            </tr>
+                                <tr>
+                                    <th>Lý do hủy:</th>
+                                    <td class="text-danger"><?php echo htmlspecialchars($order['cancel_reason']); ?></td>
+                                </tr>
                             <?php endif; ?>
-                    </table>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -98,30 +100,30 @@ $title = "Chi tiết đơn hàng #" . $order['id'];
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                    <table class="table">
-                        <tr>
+                        <table class="table">
+                            <tr>
                                 <th>Họ tên:</th>
                                 <td><?php echo htmlspecialchars($order['full_name']); ?></td>
-                        </tr>
-                        <tr>
+                            </tr>
+                            <tr>
                                 <th>Email:</th>
                                 <td><?php echo htmlspecialchars($order['email']); ?></td>
-                        </tr>
-                        <tr>
+                            </tr>
+                            <tr>
                                 <th>Số điện thoại:</th>
                                 <td><?php echo htmlspecialchars($order['phone']); ?></td>
-                        </tr>
+                            </tr>
                             <tr>
                                 <th>Địa chỉ:</th>
                                 <td><?php echo htmlspecialchars($order['address']); ?></td>
                             </tr>
                             <?php if (!empty($order['note'])): ?>
-                        <tr>
-                            <th>Ghi chú:</th>
-                                <td><?php echo htmlspecialchars($order['note']); ?></td>
-                        </tr>
+                                <tr>
+                                    <th>Ghi chú:</th>
+                                    <td><?php echo htmlspecialchars($order['note']); ?></td>
+                                </tr>
                             <?php endif; ?>
-                    </table>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -149,18 +151,18 @@ $title = "Chi tiết đơn hàng #" . $order['id'];
                     <tbody>
                         <?php if (!empty($orderItems)): ?>
                             <?php $stt = 1; ?>
-                        <?php foreach ($orderItems as $item): ?>
-                            <tr>
+                            <?php foreach ($orderItems as $item): ?>
+                                <tr>
                                     <td><?php echo $stt++; ?></td>
-                                <td><?php echo htmlspecialchars($item['product_name']); ?></td>
-                                <td>
+                                    <td><?php echo htmlspecialchars($item['product_name']); ?></td>
+                                    <td>
                                         <?php if (!empty($item['image'])): ?>
                                             <img src="<?php echo $item['image']; ?>" alt="<?php echo htmlspecialchars($item['product_name']); ?>"
-                                                 style="max-width: 50px; max-height: 50px;">
-                                    <?php endif; ?>
-                                </td>
+                                                style="max-width: 50px; max-height: 50px;">
+                                        <?php endif; ?>
+                                    </td>
                                     <td><?php echo number_format($item['price']); ?> VNĐ</td>
-                                <td><?php echo $item['quantity']; ?></td>
+                                    <td><?php echo $item['quantity']; ?></td>
                                     <td><?php echo number_format($item['price'] * $item['quantity']); ?> VNĐ</td>
                                 </tr>
                             <?php endforeach; ?>
@@ -182,28 +184,26 @@ $title = "Chi tiết đơn hàng #" . $order['id'];
     </div>
 
     <!-- Cập nhật trạng thái -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Cập nhật trạng thái</h6>
+    <?php if ($order['status'] !== 'cancelled' && $order['status'] !== 'finished'): ?>
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">Cập nhật trạng thái</h6>
+            </div>
+            <div class="card-body">
+                <form action="index.php?controller=order&action=updateStatus" method="POST">
+                    <input type="hidden" name="id" value="<?php echo $order['id']; ?>">
+                    <div class="form-group">
+                        <label>Trạng thái</label>
+                        <select name="status" class="form-control">
+                            <option value="pending" <?php echo $order['status'] == 'pending' ? 'selected' : ''; ?>>Chờ xử lý</option>
+                            <option value="processing" <?php echo $order['status'] == 'processing' ? 'selected' : ''; ?>>Đang xử lý</option>
+                            <option value="delivering" <?php echo $order['status'] == 'delivering' ? 'selected' : ''; ?>>Đang giao hàng</option>
+                            <option value="completed" <?php echo $order['status'] == 'completed' ? 'selected' : ''; ?>>Đã giao hàng</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                </form>
+            </div>
         </div>
-        <div class="card-body">
-            <form action="index.php?controller=order&action=updateStatus" method="POST">
-                <input type="hidden" name="id" value="<?php echo $order['id']; ?>">
-                <div class="form-group">
-                    <label>Trạng thái</label>
-                    <select name="status" class="form-control">
-                        <option value="pending" <?php echo $order['status'] == 'pending' ? 'selected' : ''; ?>>Chờ xử lý</option>
-                        <option value="processing" <?php echo $order['status'] == 'processing' ? 'selected' : ''; ?>>Đang xử lý</option>
-                        <option value="delivering" <?php echo $order['status'] == 'delivering' ? 'selected' : ''; ?>>Đang giao hàng</option>
-                        <option value="completed" <?php echo $order['status'] == 'completed' ? 'selected' : ''; ?>>Đã giao hàng</option>
-                        <option value="finished" <?php echo $order['status'] == 'finished' ? 'selected' : ''; ?>>Hoàn thành</option>
-                        <option value="cancelled" <?php echo $order['status'] == 'cancelled' ? 'selected' : ''; ?>
-                                 <?php echo in_array($order['status'], ['delivering', 'completed', 'finished']) ? 'disabled' : ''; ?>
-                                 >Đã hủy</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary">Cập nhật</button>
-            </form>
-        </div>
-    </div>
+    <?php endif; ?>
 </div>

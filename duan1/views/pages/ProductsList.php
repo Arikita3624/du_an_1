@@ -122,13 +122,20 @@ echo "<!-- Debug: Total Products = $totalProducts, Total Pages = $totalPages, Cu
                         <?php foreach ($products as $product): ?>
                             <div class="col-lg-4 col-md-6 col-sm-6">
                                 <div class="product__item">
-                                    <div class="product__item__pic">
-                                        <a href="?act=product-detail&id=<?= $product['id'] ?>"><img src="<?= !empty($product['image']) ? 'admin/' . htmlspecialchars($product['image']) : 'assets/img/no-image.jpg' ?>"
+                                    <div class="product__item__pic" style="position:relative;overflow:hidden;">
+                                        <a href="?act=product-detail&id=<?= $product['id'] ?>">
+                                            <img src="<?= !empty($product['image']) ? 'admin/' . htmlspecialchars($product['image']) : 'assets/img/no-image.jpg' ?>"
                                                 alt="<?= htmlspecialchars($product['name']) ?>"
-                                                style="width:100%;height:250px;object-fit:cover;border-radius:8px;"></a>
+                                                style="width:100%;height:250px;object-fit:cover;border-radius:8px;">
+                                            <span class="product__item__view-detail"
+                                                style="position:absolute;left:0;right:0;bottom:0;padding:10px 0;background:rgba(229,54,55,0.95);color:#fff;text-align:center;font-weight:600;opacity:0;transition:opacity 0.3s;">
+                                                Xem chi tiết
+                                            </span>
+                                        </a>
                                     </div>
-                                    <div class="product__item__text">
-                                        <h6><?= htmlspecialchars($product['name']) ?></h6>
+                                    <div class="product__item__text" style="position:relative;">
+                                        <h6 class="product-name"><?= htmlspecialchars($product['name']) ?></h6>
+                                        <a href="?act=product-detail&id=<?= $product['id'] ?>" class="product-view-detail">Xem chi tiết</a>
                                         <h5><?= number_format($product['price'], 0, ',', '.') ?>₫</h5>
                                     </div>
                                 </div>
@@ -184,6 +191,27 @@ echo "<!-- Debug: Total Products = $totalProducts, Total Pages = $totalPages, Cu
                         border-color: #eee;
                         cursor: not-allowed;
                         pointer-events: none;
+                    }
+
+                    .product__item__pic:hover .product__item__view-detail {
+                        opacity: 1;
+                    }
+
+                    .product__item__pic .product__item__view-detail {
+                        opacity: 0;
+                        transition: opacity 0.3s;
+                    }
+
+                    .product__item__text .product-view-detail {
+                        display: none;
+                        color: #e53637;
+                        font-weight: 600;
+                        margin-top: 4px;
+                        transition: all 0.3s;
+                    }
+
+                    .product__item:hover .product-view-detail {
+                        display: block;
                     }
 
                     select.form-control,

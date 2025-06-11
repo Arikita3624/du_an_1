@@ -3,6 +3,7 @@ require_once __DIR__ . '/../../../commons/helpers.php';
 $title = "Quản lý đơn hàng";
 ?>
 
+
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0 text-gray-800">Quản lý đơn hàng</h1>
@@ -14,7 +15,7 @@ $title = "Quản lý đơn hàng";
             echo $_SESSION['success'];
             unset($_SESSION['success']);
             ?>
-             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -26,7 +27,7 @@ $title = "Quản lý đơn hàng";
             echo $_SESSION['error'];
             unset($_SESSION['error']);
             ?>
-             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
@@ -41,13 +42,13 @@ $title = "Quản lý đơn hàng";
                 </div>
                 <div class="form-group mr-2">
                     <select name="status" class="form-control">
-                        <option value="">-- Chọn trạng thái --</option>
-                        <option value="pending" <?php echo ($status == 'pending') ? 'selected' : ''; ?>>Chờ xử lý</option>
-                        <option value="processing" <?php echo ($status == 'processing') ? 'selected' : ''; ?>>Đang xử lý</option>
-                        <option value="delivering" <?php echo ($status == 'delivering') ? 'selected' : ''; ?>>Đang giao hàng</option>
-                        <option value="completed" <?php echo ($status == 'completed') ? 'selected' : ''; ?>>Đã giao hàng</option>
-                        <option value="finished" <?php echo ($status == 'finished') ? 'selected' : ''; ?>>Hoàn thành</option>
-                        <option value="cancelled" <?php echo ($status == 'cancelled') ? 'selected' : ''; ?>>Đã hủy</option>
+                        <option value="pending" <?php echo (isset($status) && $status == 'pending') ? 'selected' : ''; ?>>Chờ xử lý</option>
+                        <option value="processing" <?php echo (isset($status) && $status == 'processing') ? 'selected' : ''; ?>>Đang xử lý</option>
+                        <option value="delivering" <?php echo (isset($status) && $status == 'delivering') ? 'selected' : ''; ?>>Đang giao hàng</option>
+                        <option value="completed" <?php echo (isset($status) && $status == 'completed') ? 'selected' : ''; ?>>Đã giao hàng</option>
+                        <option value="finished" <?php echo (isset($status) && $status == 'finished') ? 'selected' : ''; ?>>Hoàn thành</option>
+                        <!-- Không cho phép admin chọn "Đã hủy" -->
+                        <!-- <option value="cancelled" <?php echo (isset($status) && $status == 'cancelled') ? 'selected' : ''; ?>>Đã hủy</option> -->
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary mr-2"><i class="fas fa-search"></i> Tìm kiếm</button>
@@ -58,101 +59,67 @@ $title = "Quản lý đơn hàng";
                 <table class="table table-bordered" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Khách hàng</th>
-                            <th>Số điện thoại</th>
+                            <th>STT</th>
+                            <th>Tên KH</th>
+                            <th>SĐT</th>
                             <th>Tổng tiền</th>
-                            <th>Phương thức thanh toán</th>
-                            <th>Trạng thái thanh toán</th>
-                            <th>Trạng thái đơn hàng</th>
+                            <th>Phương thức TT</th>
+                            <th>TT Thanh toán</th>
+                            <th>TT Đơn</th>
                             <th>Ngày đặt</th>
                             <th>Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if (!empty($orders)): ?>
-                        <?php foreach ($orders as $order): ?>
-                            <tr>
-                                <td><?php echo $order['id']; ?></td>
-                                <td><?php echo htmlspecialchars($order['customer_name'] ?? 'N/A'); ?></td>
-                                <td><?php echo htmlspecialchars($order['phone']); ?></td>
-                                <td><?php echo number_format($order['total_amount']); ?> VNĐ</td>
-                                <td><?php
-                                    switch ($order['payment_method']) {
-                                        case 'cod':
-                                            echo 'Thanh toán khi nhận hàng (COD)';
-                                            break;
-                                        case 'bank_transfer':
-                                            echo 'Chuyển khoản ngân hàng';
-                                            break;
-                                        default:
-                                            echo 'Không xác định';
-                                            break;
-                                    }
-                                ?></td>
-                                <td>
-                                    <span class="badge badge-<?php echo getPaymentStatusBadgeClass($order['payment_status']); ?>">
-                                        <?php echo getPaymentStatusText($order['payment_status']); ?>
-                                    </span>
-                                </td>
-                                <td>
+                            <?php foreach ($orders as $order): ?>
+                                <tr>
+                                    <td><?php echo $order['id']; ?></td>
+                                    <td><?php echo htmlspecialchars($order['customer_name'] ?? 'N/A'); ?></td>
+                                    <td><?php echo htmlspecialchars($order['phone']); ?></td>
+                                    <td><?php echo number_format($order['total_amount']); ?> VNĐ</td>
+                                    <td><?php
+                                        switch ($order['payment_method']) {
+                                            case 'cod':
+                                                echo 'COD';
+                                                break;
+                                        }
+                                        ?></td>
+                                    <td>
+                                        <?php
+                                        $paymentStatus = $order['payment_status'];
+                                        if ($order['status'] === 'finished') {
+                                            $paymentStatus = 'paid';
+                                        } elseif ($order['status'] === 'cancelled') {
+                                            $paymentStatus = 'failed';
+                                        }
+                                        ?>
+                                        <span class="badge badge-<?php echo getPaymentStatusBadgeClass($paymentStatus); ?>">
+                                            <?php echo $paymentStatus === 'paid'
+                                                ? 'Đã thanh toán'
+                                                : ($paymentStatus === 'failed'
+                                                    ? 'Thanh toán thất bại'
+                                                    : getPaymentStatusText($paymentStatus)); ?>
+                                        </span>
+                                    </td>
+                                    <td>
                                         <span class="badge badge-<?php echo getStatusBadgeClass($order['status']); ?>">
                                             <?php echo getStatusText($order['status']); ?>
-                                    </span>
-                                </td>
-                                <td><?php echo date('d/m/Y H:i', strtotime($order['created_at'])); ?></td>
-                                <td>
-                                    <a href="index.php?controller=order&action=view&id=<?php echo $order['id']; ?>"
-                                       class="btn btn-info btn-sm">
+                                        </span>
+                                    </td>
+                                    <td><?php echo date('d/m/Y H:i', strtotime($order['created_at'])); ?></td>
+                                    <td>
+                                        <a href="index.php?controller=order&action=view&id=<?php echo $order['id']; ?>"
+                                            class="btn btn-info btn-sm">
                                             <i class="fas fa-eye"></i>
-                                    </a>
-                                        <button type="button"
-                                                class="btn btn-primary btn-sm"
-                                                data-toggle="modal"
-                                                data-target="#updateStatusModal<?php echo $order['id']; ?>">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                    <a href="index.php?controller=order&action=delete&id=<?php echo $order['id']; ?>"
-                                       class="btn btn-danger btn-sm"
-                                       onclick="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')">
+                                        </a>
+                                        <a href="index.php?controller=order&action=delete&id=<?php echo $order['id']; ?>"
+                                            class="btn btn-danger btn-sm"
+                                            onclick="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')">
                                             <i class="fas fa-trash"></i>
-                                    </a>
-                                </td>
+                                        </a>
+                                    </td>
                                 </tr>
-
-                                <!-- Modal cập nhật trạng thái -->
-                                <div class="modal fade" id="updateStatusModal<?php echo $order['id']; ?>" tabindex="-1" role="dialog">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Cập nhật trạng thái đơn hàng #<?php echo $order['id']; ?></h5>
-                                                <button type="button" class="close" data-dismiss="modal">
-                                                    <span>&times;</span>
-                                                </button>
-                                            </div>
-                                            <form action="index.php?controller=order&action=updateStatus" method="POST">
-                                                <div class="modal-body">
-                                                    <input type="hidden" name="id" value="<?php echo $order['id']; ?>">
-                                                    <div class="form-group">
-                                                        <label>Trạng thái</label>
-                                                        <select name="status" class="form-control">
-                                                            <option value="pending" <?php echo $order['status'] == 'pending' ? 'selected' : ''; ?>>Chờ xử lý</option>
-                                                            <option value="processing" <?php echo $order['status'] == 'processing' ? 'selected' : ''; ?>>Đang xử lý</option>
-                                                            <option value="delivering" <?php echo $order['status'] == 'delivering' ? 'selected' : ''; ?>>Đang giao hàng</option>
-                                                            <option value="completed" <?php echo $order['status'] == 'completed' ? 'selected' : ''; ?>>Đã giao hàng</option>
-                                                            <option value="finished" <?php echo $order['status'] == 'finished' ? 'selected' : ''; ?>>Hoàn thành</option>
-                                                            <option value="cancelled" <?php echo $order['status'] == 'cancelled' ? 'selected' : ''; ?>>Đã hủy</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                                                    <button type="submit" class="btn btn-primary">Cập nhật</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>

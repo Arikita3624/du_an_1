@@ -88,11 +88,6 @@
                                         class="btn btn-sm btn-primary">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="index.php?controller=product&action=delete&id=<?php echo $product['id']; ?>"
-                                        class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

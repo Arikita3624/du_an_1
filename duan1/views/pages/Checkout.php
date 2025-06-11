@@ -45,7 +45,7 @@
                                 ?>
                                         <li>
                                             <img src="<?= !empty($item['image']) ? 'admin/' . htmlspecialchars($item['image']) : 'assets/img/no-image.jpg' ?>" alt="" style="width: 50px;">
-                                            <?= sprintf("%02d", $index + 1) ?>. <?= htmlspecialchars($item['name']) ?>
+                                            <?= htmlspecialchars($item['name']) ?>
                                             <span class="quantity">(<?= $item['quantity'] ?>)</span>
                                             <span><?= number_format($itemTotal, 0, ',', '.') ?>₫</span>
                                         </li>
