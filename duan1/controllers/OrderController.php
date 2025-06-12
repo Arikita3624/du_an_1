@@ -108,8 +108,8 @@ class OrderController
 
             // Kiểm tra đơn hàng tồn tại, thuộc về user và ở trạng thái 'completed'
             if ($order && $order['user_id'] == $user_id && $order['status'] === 'completed') {
-                // Cập nhật trạng thái sang 'finished'
-                $result = $this->checkoutModel->updateOrderStatus($order_id, 'finished');
+                // Cập nhật cả status và payment_status
+                $result = $this->checkoutModel->updateOrderStatusAndPayment($order_id, 'finished', 'paid');
 
                 if ($result) {
                     $_SESSION['success'] = "Đã xác nhận nhận hàng!";
