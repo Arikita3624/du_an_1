@@ -124,4 +124,11 @@ class CheckoutModel
             return false;
         }
     }
+
+    public function updateOrderStatusAndPayment($order_id, $status, $payment_status)
+    {
+        $sql = "UPDATE orders SET status = ?, payment_status = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([$status, $payment_status, $order_id]);
+    }
 }
