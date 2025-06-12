@@ -193,6 +193,25 @@ echo "<!-- Debug: Total Products = $totalProducts, Total Pages = $totalPages, Cu
                         pointer-events: none;
                     }
 
+                    .product__item {
+                        background: #fff;
+                        border: 1px solid #eee;
+                        border-radius: 14px;
+                        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+                        padding: 18px 12px 16px 12px;
+                        margin-bottom: 28px;
+                        transition: box-shadow 0.2s, border-color 0.2s;
+                    }
+
+                    .product__item:hover {
+                        box-shadow: 0 6px 24px rgba(229, 54, 55, 0.13);
+                        border-color: #e53637;
+                    }
+
+                    .product__item__pic img {
+                        border-radius: 8px;
+                    }
+
                     .product__item__pic:hover .product__item__view-detail {
                         opacity: 1;
                     }
