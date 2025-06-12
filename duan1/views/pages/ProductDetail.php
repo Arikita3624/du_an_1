@@ -192,15 +192,16 @@
                 <?php foreach ($relatedProducts as $item): ?>
                     <div class="col-lg-3 col-md-6 col-sm-6">
                         <div class="product__item">
-                            <div class="product__item__pic">
+                            <div class="product__item__pic" style="position:relative;overflow:hidden;">
                                 <a href="?act=product-detail&id=<?= $item['id'] ?>">
                                     <img src="<?= !empty($item['image']) ? 'admin/' . htmlspecialchars($item['image']) : 'assets/img/no-image.jpg' ?>"
                                         alt="<?= htmlspecialchars($item['name']) ?>"
                                         style="width:100%;height:260px;object-fit:cover;border-radius:8px;">
+                                    <span class="product__item__view-detail">Xem chi tiết</span>
                                 </a>
                             </div>
                             <div class="product__item__text">
-                                <h6><?= htmlspecialchars($item['name']) ?></h6>
+                                <h6 class="product-name"><?= htmlspecialchars($item['name']) ?></h6>
                                 <h5><?= number_format($item['price'], 0, ',', '.') ?>₫</h5>
                             </div>
                         </div>
@@ -215,3 +216,145 @@
     </div>
 </section>
 <!-- Related Product Section End -->
+
+<style>
+    .related .product__item__pic {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .related .product__item__view-detail {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 10px 0;
+        background: rgba(229, 54, 55, 0.95);
+        color: #fff;
+        text-align: center;
+        font-weight: 600;
+        opacity: 0;
+        transition: opacity 0.3s;
+        z-index: 2;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    .related .product__item__pic:hover .product__item__view-detail {
+        opacity: 1;
+    }
+
+    .related .product__item__text {
+        min-height: 60px;
+        padding-top: 8px;
+    }
+
+    .related .product__item__text h6 {
+        margin: 0 0 4px 0;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .related .product__item__text h5 {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .related .product__item {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 14px;
+        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+        padding: 18px 12px 16px 12px;
+        margin-bottom: 28px;
+        transition: box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .related .product__item:hover {
+        box-shadow: 0 6px 24px rgba(229, 54, 55, 0.13);
+        border-color: #e53637;
+    }
+
+    .comment-list {
+        margin-top: 24px;
+    }
+
+    .comment-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        background: #fafbfc;
+        border-radius: 10px;
+        padding: 18px 20px 14px 20px;
+        margin-bottom: 18px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .comment-avatar {
+        font-size: 38px;
+        color: #e53637;
+        margin-top: 2px;
+    }
+
+    .comment-content {
+        flex: 1;
+    }
+
+    .comment-author {
+        font-weight: 600;
+        font-size: 17px;
+        margin-bottom: 2px;
+    }
+
+    .comment-date {
+        font-size: 13px;
+        color: #888;
+        margin-bottom: 6px;
+    }
+
+    .comment-text {
+        font-size: 15px;
+        color: #222;
+        line-height: 1.6;
+    }
+
+    /* Form bình luận */
+    .comment-form {
+        background: #f7f7f7;
+        border-radius: 10px;
+        padding: 22px 24px 18px 24px;
+        margin-top: 32px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    }
+
+    .comment-form h4 {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 14px;
+    }
+
+    .comment-form textarea.form-control {
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        font-size: 15px;
+        padding: 10px 12px;
+        resize: vertical;
+        margin-bottom: 12px;
+    }
+
+    .comment-form .site-btn {
+        background: #e53637;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 10px 28px;
+        font-size: 16px;
+        font-weight: 600;
+        transition: background 0.2s;
+    }
+
+    .comment-form .site-btn:hover {
+        background: #b91c1c;
+    }
+</style>
