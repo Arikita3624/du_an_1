@@ -190,19 +190,26 @@ $title = "Chi tiết đơn hàng #" . $order['id'];
                 <h6 class="m-0 font-weight-bold text-primary">Cập nhật trạng thái</h6>
             </div>
             <div class="card-body">
-                <form action="index.php?controller=order&action=updateStatus" method="POST">
+                <form action="index.php?controller=order&action=updateStatus" method="POST" style="display:inline-block;">
                     <input type="hidden" name="id" value="<?php echo $order['id']; ?>">
                     <div class="form-group">
                         <label>Trạng thái</label>
                         <select name="status" class="form-control">
                             <option value="pending" <?php echo $order['status'] == 'pending' ? 'selected' : ''; ?>>Chờ xử lý</option>
                             <option value="processing" <?php echo $order['status'] == 'processing' ? 'selected' : ''; ?>>Đang xử lý</option>
+                            <option value="confirmed" <?php echo $order['status'] == 'confirmed' ? 'selected' : ''; ?>>Đã xác nhận</option>
                             <option value="delivering" <?php echo $order['status'] == 'delivering' ? 'selected' : ''; ?>>Đang giao hàng</option>
                             <option value="completed" <?php echo $order['status'] == 'completed' ? 'selected' : ''; ?>>Đã giao hàng</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Cập nhật</button>
                 </form>
+                <?php if ($order['status'] === 'pending' || $order['status'] === 'processing' || $order['status'] === 'confirmed') : ?>
+                    <form action="index.php?controller=order&action=cancel" method="POST" style="display:inline-block; margin-left:10px;">
+                        <input type="hidden" name="id" value="<?php echo $order['id']; ?>">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn chắc chắn muốn huỷ đơn hàng này?');">Huỷ đơn hàng</button>
+                    </form>
+                <?php endif; ?>
             </div>
         </div>
     <?php endif; ?>

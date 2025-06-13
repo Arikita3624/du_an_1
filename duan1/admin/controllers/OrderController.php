@@ -63,7 +63,7 @@ class OrderController
             $currentStatus = $order['status'];
 
             // Định nghĩa thứ tự các trạng thái
-            $statusOrder = ['pending', 'processing', 'delivering', 'completed'];
+            $statusOrder = ['pending', 'processing', 'confirmed', 'delivering', 'completed'];
 
             // Kiểm tra xem trạng thái mới có hợp lệ theo thứ tự không
             $isUpdateAllowed = false;
@@ -131,5 +131,31 @@ class OrderController
             header('Location: index.php?controller=order');
             exit;
         }
+    }
+    public function cancel()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = $_POST['id'] ?? 0;
+            $order = $this->orderModel->getOrderById($id);
+
+            if (!$order) {
+                $_SESSION['error'] = "Không tìm thấy đơn hàng!";
+                header('Location: index.php?controller=order');
+                exit;
+            }
+
+            // Chỉ cho phép huỷ khi trạng thái là pending hoặc delivering
+            if ($order['status'] === 'pending' || $order['status'] === 'delivering') {
+                $this->orderModel->updateOrderStatus($id, 'cancelled');
+                $this->orderModel->updatePaymentStatus($id, 'failed');
+                $_SESSION['success'] = "Đơn hàng đã được huỷ!";
+            } else {
+                $_SESSION['error'] = "Chỉ có thể huỷ đơn hàng khi đang chờ xử lý hoặc đang giao hàng!";
+            }
+            header('Location: index.php?controller=order&action=view&id=' . $id);
+            exit;
+        }
+        header('Location: index.php?controller=order');
+        exit;
     }
 }

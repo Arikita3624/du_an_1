@@ -1,11 +1,14 @@
 <?php
 
-function getStatusText($status) {
+function getStatusText($status)
+{
     switch ($status) {
         case 'pending':
             return 'Chờ xử lý';
         case 'processing':
             return 'Đang xử lý';
+        case 'confirmed':
+            return 'Đã xác nhận';
         case 'delivering':
             return 'Đang giao hàng';
         case 'completed':
@@ -19,14 +22,17 @@ function getStatusText($status) {
     }
 }
 
-function getStatusBadgeClass($status) {
+function getStatusBadgeClass($status)
+{
     switch ($status) {
         case 'pending':
-            return 'warning';
+            return 'secondary'; // màu xám cho Chờ thanh toán
         case 'processing':
-            return 'info';
+            return 'warning';   // màu vàng cho Đang xử lý
         case 'delivering':
-            return 'primary';
+            return 'info';
+        case 'confirmed':
+            return 'success';
         case 'completed':
             return 'success';
         case 'finished':
@@ -38,7 +44,8 @@ function getStatusBadgeClass($status) {
     }
 }
 
-function getPaymentMethodText($method) {
+function getPaymentMethodText($method)
+{
     switch ($method) {
         case 'cod':
             return 'Thanh toán khi nhận hàng';
@@ -53,7 +60,8 @@ function getPaymentMethodText($method) {
     }
 }
 
-function getPaymentStatusText($status) {
+function getPaymentStatusText($status)
+{
     switch ($status) {
         case 'pending':
             return 'Chờ thanh toán';
@@ -66,10 +74,11 @@ function getPaymentStatusText($status) {
     }
 }
 
-function getPaymentStatusBadgeClass($status) {
+function getPaymentStatusBadgeClass($status)
+{
     switch ($status) {
         case 'pending':
-            return 'warning';
+            return 'secondary'; // màu xám cho Chờ thanh toán
         case 'paid':
             return 'success';
         case 'failed':
@@ -77,4 +86,4 @@ function getPaymentStatusBadgeClass($status) {
         default:
             return 'secondary';
     }
-} 
+}

@@ -64,8 +64,8 @@ $title = "Quản lý đơn hàng";
                             <th>SĐT</th>
                             <th>Tổng tiền</th>
                             <th>Phương thức TT</th>
+                            <th>TT Đơn</th> <!-- Đưa TT Đơn lên trước -->
                             <th>TT Thanh toán</th>
-                            <th>TT Đơn</th>
                             <th>Ngày đặt</th>
                             <th>Thao tác</th>
                         </tr>
@@ -78,13 +78,20 @@ $title = "Quản lý đơn hàng";
                                     <td><?php echo htmlspecialchars($order['customer_name'] ?? 'N/A'); ?></td>
                                     <td><?php echo htmlspecialchars($order['phone']); ?></td>
                                     <td><?php echo number_format($order['total_amount']); ?> VNĐ</td>
-                                    <td><?php
+                                    <td>
+                                        <?php
                                         switch ($order['payment_method']) {
                                             case 'cod':
                                                 echo 'COD';
                                                 break;
                                         }
-                                        ?></td>
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <span class="badge badge-<?php echo getStatusBadgeClass($order['status']); ?>">
+                                            <?php echo getStatusText($order['status']); ?>
+                                        </span>
+                                    </td>
                                     <td>
                                         <?php
                                         $paymentStatus = $order['payment_status'];
@@ -100,11 +107,6 @@ $title = "Quản lý đơn hàng";
                                                 : ($paymentStatus === 'failed'
                                                     ? 'Thanh toán thất bại'
                                                     : getPaymentStatusText($paymentStatus)); ?>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span class="badge badge-<?php echo getStatusBadgeClass($order['status']); ?>">
-                                            <?php echo getStatusText($order['status']); ?>
                                         </span>
                                     </td>
                                     <td><?php echo date('d/m/Y H:i', strtotime($order['created_at'])); ?></td>
