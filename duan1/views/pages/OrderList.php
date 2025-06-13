@@ -5,14 +5,17 @@ function getOrderStatusClass($status)
 {
     switch ($status) {
         case 'pending':
+            return 'badge-secondary'; // màu xám cho Chờ thanh toán
         case 'processing':
+            return 'badge-warning';   // màu vàng cho Đang xử lý
         case 'delivering':
-            return 'badge-warning'; // vàng
+            return 'badge-info';
+        case 'confirmed':
         case 'completed':
         case 'finished':
-            return 'badge-success'; // xanh lá
+            return 'badge-success';
         case 'cancelled':
-            return 'badge-danger'; // đỏ
+            return 'badge-danger';
         default:
             return 'badge-secondary';
     }
@@ -21,7 +24,7 @@ function getPaymentStatusClass($status)
 {
     switch ($status) {
         case 'pending':
-            return 'badge-info';      // xanh dương
+            return 'badge-secondary';      // xanh dương
         case 'paid':
             return 'badge-success';   // xanh lá
         case 'failed':
@@ -244,11 +247,6 @@ if (isset($_SESSION['message']) && isset($_SESSION['message_type'])) {
 
     .badge-success {
         background-color: #28a745;
-        color: #fff;
-    }
-
-    .badge-danger {
-        background-color: #dc3545;
         color: #fff;
     }
 

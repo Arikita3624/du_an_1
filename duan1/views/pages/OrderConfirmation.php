@@ -5,14 +5,17 @@ function getOrderStatusClass($status)
 {
     switch ($status) {
         case 'pending':
+            return 'badge-secondary'; // màu xám cho Chờ thanh toán
         case 'processing':
+            return 'badge-warning';   // màu vàng cho Đang xử lý
         case 'delivering':
-            return 'badge-warning'; // vàng
+            return 'badge-info';
+        case 'confirmed':
         case 'completed':
         case 'finished':
-            return 'badge-success'; // xanh lá
+            return 'badge-success';
         case 'cancelled':
-            return 'badge-danger'; // đỏ
+            return 'badge-danger';
         default:
             return 'badge-secondary';
     }
@@ -21,7 +24,7 @@ function getPaymentStatusClass($status)
 {
     switch ($status) {
         case 'pending':
-            return 'badge-info';      // xanh dương
+            return 'badge-secondary';
         case 'paid':
             return 'badge-success';   // xanh lá
         case 'failed':
@@ -88,7 +91,7 @@ function getPaymentStatusClass($status)
                                 <div class="order-summary-status">
                                     <div class="status-item">
                                         <span class="status-label">Trạng thái đơn hàng:</span>
-                                        <span class="badge <?= getOrderStatusClass($order['status']) ?>">
+                                        <span class="badge badge-<?= getStatusBadgeClass($order['status']) ?>">
                                             <?= getStatusText($order['status']) ?>
                                         </span>
                                     </div>
@@ -179,7 +182,7 @@ function getPaymentStatusClass($status)
 
                     <div class="order-details__actions">
                         <a href="?act=order-list" class="btn btn-secondary">Quay lại</a>
-                        <?php if (in_array($order['status'], ['pending', 'processing'])): ?>
+                        <?php if (in_array($order['status'], ['pending', 'processing', 'confirmed'])): ?>
                             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelOrderModal">
                                 Hủy đơn hàng
                             </button>
@@ -425,13 +428,8 @@ function getPaymentStatusClass($status)
         transition: all 0.2s;
     }
 
-    .btn-secondary {
-        background: #6c757d;
-        color: #fff;
-    }
-
-    .btn-secondary:hover {
-        background: #5a6268;
+    .badge-secondary {
+        background-color: #6c757d;
         color: #fff;
     }
 
