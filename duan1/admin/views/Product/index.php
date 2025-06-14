@@ -33,7 +33,7 @@
     <div class="card shadow mb-4">
         <div class="card-body">
 
-            <form action="index.php" method="GET" class="form-inline mb-4">
+            <form action="index.php" method="GET" class="form-inline mb-2">
                 <input type="hidden" name="controller" value="product">
                 <div class="form-group mr-2">
                     <input type="text" name="keyword" class="form-control" placeholder="Tìm kiếm theo tên..." value="<?php echo htmlspecialchars($keyword ?? ''); ?>">

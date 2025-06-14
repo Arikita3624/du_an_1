@@ -54,7 +54,7 @@ class OrderController
             error_log("Processing cancel order request");
 
             // Kiểm tra trạng thái đơn hàng
-            if (!in_array($order['status'], ['pending', 'processing', 'confirmed'])) {
+            if (!in_array($order['status'], ['pending', 'confirmed'])) {
                 $_SESSION['error'] = "Không thể hủy đơn hàng ở trạng thái này";
                 header("Location: index.php?act=order-confirmation&order_id=$order_id");
                 exit;

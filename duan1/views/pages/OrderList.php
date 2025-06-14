@@ -5,9 +5,7 @@ function getOrderStatusClass($status)
 {
     switch ($status) {
         case 'pending':
-            return 'badge-secondary'; // màu xám cho Chờ thanh toán
-        case 'processing':
-            return 'badge-warning';   // màu vàng cho Đang xử lý
+            return 'badge-warning';
         case 'delivering':
             return 'badge-info';
         case 'confirmed':

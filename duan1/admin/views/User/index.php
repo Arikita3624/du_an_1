@@ -28,7 +28,7 @@
                 </div>
             <?php endif; ?>
             <!-- Form tìm kiếm -->
-            <form action="index.php" method="GET" class="mb-4">
+            <form action="index.php" method="GET" class="mb-2">
                 <input type="hidden" name="controller" value="user">
                 <div class="input-group">
                     <input type="text" class="form-control" name="keyword"

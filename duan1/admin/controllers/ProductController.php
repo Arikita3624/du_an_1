@@ -148,6 +148,12 @@ class ProductController {
         header('Location: index.php?controller=product');
         exit;
     }
+
+    public function detail() {
+    $id = $_GET['id'] ?? 0;
+    $product = $this->productModel->getProductById($id);
+    require_once __DIR__ . '/../views/Product/detail.php';
+}
 }
 
 

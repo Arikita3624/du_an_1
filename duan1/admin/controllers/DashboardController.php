@@ -18,19 +18,36 @@ class DashboardController
 
     public function index()
     {
-        $orderStats = $this->orderModel->getOrderStatistics();
+        // Lấy tham số lọc thời gian
+        $startDate = $_GET['start_date'] ?? null;
+        $endDate = $_GET['end_date'] ?? null;
+
+        // Nếu chưa chọn, mặc định lấy 30 ngày gần nhất
+        if (empty($startDate) || empty($endDate)) {
+            $endDate = date('Y-m-d');
+            $startDate = date('Y-m-d', strtotime('-30 days'));
+        }
+
+        // Thống kê tổng quan (nếu muốn lọc theo thời gian thì truyền $startDate, $endDate vào các hàm)
+        $orderStats = $this->orderModel->getOrderStatistics(); // tổng đơn hàng, tổng doanh thu (có thể thêm lọc nếu muốn)
         $orderStatusCounts = $this->orderModel->getOrderStatusCounts();
         $productCount = $this->productModel->getProductCount();
         $userCount = $this->userModel->getUserCount();
-        $latestOrders = $this->orderModel->getLatestOrders(5);
-        $bestSellingProducts = $this->productModel->getBestSellingProducts(5);
-        $topStockProducts = $this->productModel->getTopStockProducts(5);
-        $topBuyers = $this->userModel->getTopBuyers(5);
 
-        // Lấy tổng doanh thu
-        $totalRevenue = isset($orderStats['total_revenue']) ? $orderStats['total_revenue'] : 0;
+        // Dữ liệu theo thời gian
+        $latestOrders = $this->orderModel->getLatestOrdersByDate($startDate, $endDate, 5);
+        $bestSellingProducts = $this->productModel->getBestSellingProductsByDate($startDate, $endDate, 5);
+        $topStockProducts = $this->productModel->getTopStockProducts(5); // tồn kho không lọc thời gian
+        $topBuyers = $this->userModel->getTopBuyersByDate($startDate, $endDate, 5);
 
-        // Truyền biến sang view
+        // Biểu đồ doanh thu/ngày (nếu cần)
+        $revenueByDate = $this->orderModel->getRevenueByDateRange($startDate, $endDate);
+        $revenueLabels = array_column($revenueByDate, 'date');
+        $revenueData = array_map('floatval', array_column($revenueByDate, 'revenue'));
+
+        // Tổng doanh thu trong khoảng thời gian
+        $totalRevenue = array_sum($revenueData);
+
         require_once __DIR__ . '/../views/dashboard.php';
     }
 

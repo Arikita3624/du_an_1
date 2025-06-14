@@ -176,7 +176,7 @@ class OrderModel
                 $counts[$row['status']] = $row['count'];
             }
             // Ensure all expected statuses are present, even if count is 0
-            $allStatuses = ['pending', 'processing', 'delivering', 'completed', 'finished', 'cancelled'];
+            $allStatuses = ['pending', 'confirmed', 'delivering', 'completed', 'finished', 'cancelled'];
             foreach ($allStatuses as $status) {
                 if (!isset($counts[$status])) {
                     $counts[$status] = 0;
@@ -205,6 +205,18 @@ class OrderModel
               AND o.created_at BETWEEN :start AND :end
             GROUP BY DATE(o.created_at)
             ORDER BY date ASC";
+        return $this->db->query($sql, ['start' => $startDate, 'end' => $endDate]);
+    }
+    public function getLatestOrdersByDate($startDate, $endDate, $limit = 5)
+    {
+        $sql = "SELECT o.*, COALESCE(SUM(oi.quantity * oi.price), 0) as total_price, u.full_name
+            FROM orders o
+            LEFT JOIN order_items oi ON o.id = oi.order_id
+            LEFT JOIN users u ON o.user_id = u.id
+            WHERE o.created_at BETWEEN :start AND :end
+            GROUP BY o.id
+            ORDER BY o.created_at DESC
+            LIMIT " . (int)$limit;
         return $this->db->query($sql, ['start' => $startDate, 'end' => $endDate]);
     }
 }
