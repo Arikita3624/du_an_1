@@ -127,4 +127,27 @@ class ProductModel
             LIMIT $limit";
         return $this->db->query($sql);
     }
+
+    public function getBestSellingProductsByDate($startDate, $endDate, $limit = 5)
+    {
+        $sql = "SELECT p.id, p.name, SUM(oi.quantity) AS total_sold
+        FROM order_items oi
+        JOIN products p ON oi.product_id = p.id
+        JOIN orders o ON oi.order_id = o.id
+        WHERE o.status IN ('finished', 'completed')
+          AND o.created_at BETWEEN :start AND :end
+        GROUP BY p.id, p.name
+        ORDER BY total_sold DESC
+        LIMIT $limit";
+        return $this->db->query($sql, ['start' => $startDate, 'end' => $endDate]);
+    }
+
+    public function getTopStockProducts($limit = 5)
+    {
+        $sql = "SELECT id, name, stock FROM products
+            WHERE status = 'active'
+            ORDER BY stock DESC
+            LIMIT $limit";
+        return $this->db->query($sql);
+    }
 }

@@ -24,7 +24,11 @@ class DashboardController
         $userCount = $this->userModel->getUserCount();
         $latestOrders = $this->orderModel->getLatestOrders(5);
         $bestSellingProducts = $this->productModel->getBestSellingProducts(5);
+        $topStockProducts = $this->productModel->getTopStockProducts(5);
         $topBuyers = $this->userModel->getTopBuyers(5);
+
+        // Lấy tổng doanh thu
+        $totalRevenue = isset($orderStats['total_revenue']) ? $orderStats['total_revenue'] : 0;
 
         // Truyền biến sang view
         require_once __DIR__ . '/../views/dashboard.php';

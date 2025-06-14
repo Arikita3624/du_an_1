@@ -196,4 +196,15 @@ class OrderModel
             'payment_status' => $paymentStatus
         ]);
     }
+    public function getRevenueByDateRange($startDate, $endDate)
+    {
+        $sql = "SELECT DATE(o.created_at) as date, SUM(oi.quantity * oi.price) as revenue
+            FROM orders o
+            LEFT JOIN order_items oi ON o.id = oi.order_id
+            WHERE o.status IN ('completed', 'finished')
+              AND o.created_at BETWEEN :start AND :end
+            GROUP BY DATE(o.created_at)
+            ORDER BY date ASC";
+        return $this->db->query($sql, ['start' => $startDate, 'end' => $endDate]);
+    }
 }

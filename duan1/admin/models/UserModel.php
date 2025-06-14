@@ -165,4 +165,17 @@ class UserModel
             LIMIT $limit";
         return $this->db->query($sql);
     }
+
+    public function getTopBuyersByDate($startDate, $endDate, $limit = 5)
+    {
+        $sql = "SELECT u.id, u.full_name, u.email, COUNT(o.id) AS total_orders, SUM(o.total_price) AS total_spent
+        FROM users u
+        JOIN orders o ON u.id = o.user_id
+        WHERE o.status IN ('finished', 'completed')
+          AND o.created_at BETWEEN :start AND :end
+        GROUP BY u.id, u.full_name, u.email
+        ORDER BY total_orders DESC, total_spent DESC
+        LIMIT $limit";
+        return $this->db->query($sql, ['start' => $startDate, 'end' => $endDate]);
+    }
 }
