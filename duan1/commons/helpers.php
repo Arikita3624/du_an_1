@@ -26,15 +26,12 @@ function getStatusBadgeClass($status)
 {
     switch ($status) {
         case 'pending':
-            return 'secondary'; // màu xám cho Chờ thanh toán
-        case 'processing':
-            return 'warning';   // màu vàng cho Đang xử lý
-        case 'delivering':
-            return 'info';
+            return 'warning';
         case 'confirmed':
             return 'success';
+        case 'delivering':
+            return 'info';
         case 'completed':
-            return 'success';
         case 'finished':
             return 'success';
         case 'cancelled':

@@ -35,13 +35,14 @@ $title = "Quản lý đơn hàng";
 
     <div class="card shadow mb-4">
         <div class="card-body">
-            <form action="index.php" method="GET" class="form-inline mb-4">
+            <form action="index.php" method="GET" class="form-inline mb-1">
                 <input type="hidden" name="controller" value="order">
                 <div class="form-group mr-2">
                     <input type="text" name="keyword" class="form-control" placeholder="Tìm kiếm theo tên khách hàng..." value="<?php echo htmlspecialchars($keyword ?? ''); ?>">
                 </div>
                 <div class="form-group mr-2">
                     <select name="status" class="form-control">
+                        <option value="">Tất cả</option>
                         <option value="pending" <?php echo (isset($status) && $status == 'pending') ? 'selected' : ''; ?>>Chờ xử lý</option>
                         <option value="processing" <?php echo (isset($status) && $status == 'processing') ? 'selected' : ''; ?>>Đang xử lý</option>
                         <option value="delivering" <?php echo (isset($status) && $status == 'delivering') ? 'selected' : ''; ?>>Đang giao hàng</option>

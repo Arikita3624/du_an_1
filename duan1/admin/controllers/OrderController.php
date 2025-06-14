@@ -63,7 +63,7 @@ class OrderController
             $currentStatus = $order['status'];
 
             // Định nghĩa thứ tự các trạng thái
-            $statusOrder = ['pending', 'processing', 'confirmed', 'delivering', 'completed'];
+            $statusOrder = ['pending', 'confirmed', 'delivering', 'completed'];
 
             // Kiểm tra xem trạng thái mới có hợp lệ theo thứ tự không
             $isUpdateAllowed = false;

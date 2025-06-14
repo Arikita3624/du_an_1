@@ -8,7 +8,7 @@
 
     <?php if (isset($_SESSION['success'])): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <?php 
+        <?php
         echo $_SESSION['success'];
         unset($_SESSION['success']);
         ?>
@@ -20,7 +20,7 @@
 
     <?php if (isset($_SESSION['error'])): ?>
     <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
-        <?php 
+        <?php
         echo $_SESSION['error'];
         unset($_SESSION['error']);
         ?>
@@ -44,11 +44,11 @@
 
     <div class="card shadow mb-4">
         <div class="card-body">
-            <form action="index.php?controller=category" method="GET" class="mb-4">
+            <form action="index.php?controller=category" method="GET" class="mb-2">
                 <input type="hidden" name="controller" value="category">
                 <div class="input-group">
-                    <input type="text" class="form-control" name="keyword" 
-                           placeholder="Nhập tên hoặc mô tả danh mục..." 
+                    <input type="text" class="form-control" name="keyword"
+                           placeholder="Nhập tên hoặc mô tả danh mục..."
                            value="<?php echo isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : ''; ?>">
                     <div class="input-group-append">
                         <button class="btn btn-primary" type="submit">
@@ -82,11 +82,11 @@
                             <td><?php echo htmlspecialchars($category['description']); ?></td>
                             <td><?php echo date('d/m/Y H:i', strtotime($category['created_at'])); ?></td>
                             <td>
-                                <a href="index.php?controller=category&action=edit&id=<?php echo $category['id']; ?>" 
+                                <a href="index.php?controller=category&action=edit&id=<?php echo $category['id']; ?>"
                                    class="btn btn-sm btn-primary">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a href="index.php?controller=category&action=delete&id=<?php echo $category['id']; ?>" 
+                                <a href="index.php?controller=category&action=delete&id=<?php echo $category['id']; ?>"
                                    class="btn btn-sm btn-danger"
                                    onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?')">
                                     <i class="fas fa-trash"></i>
@@ -99,4 +99,4 @@
             </div>
         </div>
     </div>
-</div> 
+</div>

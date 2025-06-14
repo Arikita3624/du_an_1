@@ -5,9 +5,7 @@ function getOrderStatusClass($status)
 {
     switch ($status) {
         case 'pending':
-            return 'badge-secondary'; // màu xám cho Chờ thanh toán
-        case 'processing':
-            return 'badge-warning';   // màu vàng cho Đang xử lý
+            return 'badge-warning'; // màu xám cho Chờ thanh toán
         case 'delivering':
             return 'badge-info';
         case 'confirmed':
@@ -28,7 +26,7 @@ function getPaymentStatusClass($status)
         case 'paid':
             return 'badge-success';   // xanh lá
         case 'failed':
-            return 'badge-danger';    // đỏ
+            return 'badge-danger';
         default:
             return 'badge-secondary';
     }
@@ -186,10 +184,15 @@ function getPaymentStatusClass($status)
                             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelOrderModal">
                                 Hủy đơn hàng
                             </button>
-                        <?php elseif (in_array($order['status'], ['delivering', 'completed'])): ?>
+                        <?php elseif (in_array($order['status'], ['completed'])): ?>
                             <form action="?act=mark-order-received" method="POST" onsubmit="return confirm('Xác nhận đã nhận được đơn hàng?');" style="display:inline; margin:0; padding:0;">
                                 <input type="hidden" name="order_id" value="<?= $order['id'] ?>">
                                 <button type="submit" class="btn btn-success" style="display:inline-block;">Đã nhận hàng</button>
+                            </form>
+                        <?php elseif ($order['status'] === 'delivered'): ?>
+                            <form action="?act=mark-order-received" method="POST" onsubmit="return confirm('Xác nhận đã nhận được đơn hàng?');" style="display:inline; margin:0; padding:0;">
+                                <input type="hidden" name="order_id" value="<?= $order['id'] ?>">
+                                <button type="submit" class="btn btn-success disabled" style="display:inline-block;">Đã nhận hàng</button>
                             </form>
                         <?php endif; ?>
                         <a href="?act=product-list" class="btn btn-primary">Tiếp tục mua sắm</a>

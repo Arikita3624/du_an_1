@@ -154,7 +154,10 @@ $title = "Chi tiết đơn hàng #" . $order['id'];
                             <?php foreach ($orderItems as $item): ?>
                                 <tr>
                                     <td><?php echo $stt++; ?></td>
-                                    <td><?php echo htmlspecialchars($item['product_name']); ?></td>
+                                    <td><a href="index.php?controller=product&action=detail&id=<?= $item['product_id'] ?>">
+                                            <?= htmlspecialchars($item['product_name']) ?>
+                                        </a>
+                                    </td>
                                     <td>
                                         <?php if (!empty($item['image'])): ?>
                                             <img src="<?php echo $item['image']; ?>" alt="<?php echo htmlspecialchars($item['product_name']); ?>"
@@ -196,7 +199,6 @@ $title = "Chi tiết đơn hàng #" . $order['id'];
                         <label>Trạng thái</label>
                         <select name="status" class="form-control">
                             <option value="pending" <?php echo $order['status'] == 'pending' ? 'selected' : ''; ?>>Chờ xử lý</option>
-                            <option value="processing" <?php echo $order['status'] == 'processing' ? 'selected' : ''; ?>>Đang xử lý</option>
                             <option value="confirmed" <?php echo $order['status'] == 'confirmed' ? 'selected' : ''; ?>>Đã xác nhận</option>
                             <option value="delivering" <?php echo $order['status'] == 'delivering' ? 'selected' : ''; ?>>Đang giao hàng</option>
                             <option value="completed" <?php echo $order['status'] == 'completed' ? 'selected' : ''; ?>>Đã giao hàng</option>
@@ -204,7 +206,7 @@ $title = "Chi tiết đơn hàng #" . $order['id'];
                     </div>
                     <button type="submit" class="btn btn-primary">Cập nhật</button>
                 </form>
-                <?php if ($order['status'] === 'pending' || $order['status'] === 'processing' || $order['status'] === 'confirmed') : ?>
+                <?php if ($order['status'] === 'pending' || $order['status'] === 'confirmed') : ?>
                     <form action="index.php?controller=order&action=cancel" method="POST" style="display:inline-block; margin-left:10px;">
                         <input type="hidden" name="id" value="<?php echo $order['id']; ?>">
                         <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn chắc chắn muốn huỷ đơn hàng này?');">Huỷ đơn hàng</button>
