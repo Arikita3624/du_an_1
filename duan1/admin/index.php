@@ -1,6 +1,7 @@
 <?php
 session_start();
 
+
 require_once __DIR__ . '/../commons/Database.php';
 require_once __DIR__ . '/middleware/AuthMiddleware.php';
 require_once __DIR__ . '/controllers/CommentController.php';
