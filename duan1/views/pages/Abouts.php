@@ -158,11 +158,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="team__item">
-                        <img src="assets/img/about/team-4.jpg" alt="">
-                        <h4>Lucy Myers</h4>
-                        <span>Delivery</span>
-                    </div>
+                    
                 </div>
             </div>
         </div>
