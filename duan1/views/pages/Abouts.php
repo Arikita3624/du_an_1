@@ -60,8 +60,7 @@
                 <div class="col-lg-6 p-0">
                     <div class="testimonial__text">
                         <span class="icon_quotations"></span>
-                        <p>“Going out after work? Take your butane curling iron with you to the office, heat it up,
-                            style your hair before you leave the office and you won’t have to make a trip back home.”
+                        <p>"Đừng bao giờ từ bỏ, vì bạn không bao giờ biết điều tuyệt vời đang chờ đợi bạn ở phía trước."
                         </p>
                         <div class="testimonial__author">
                             <div class="testimonial__author__pic">
@@ -138,23 +137,23 @@
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="team__item">
-                        <img src="assets/img/about/team-1.jpg" alt="">
-                        <h4>John Smith</h4>
-                        <span>Fashion Design</span>
+                        <img src="assets/img/about/team-1.png" alt="">
+                        <h4>Nguyễn Duy Hưng</h4>
+                        <span>Nhóm Trưởng</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="team__item">
-                        <img src="assets/img/about/team-2.jpg" alt="">
-                        <h4>Christine Wise</h4>
-                        <span>C.E.O</span>
+                        <img src="assets/img/about/team-2.png" alt="">
+                        <h4>Nguyễn Đức Quân</h4>
+                        <span>Thành viên</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="team__item">
-                        <img src="assets/img/about/team-3.jpg" alt="">
-                        <h4>Sean Robbins</h4>
-                        <span>Manager</span>
+                        <img src="assets/img/about/team-3.png" alt="">
+                        <h4>Vi Hoài Nam</h4>
+                        <span>Thành Viên</span>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6">
