@@ -111,15 +111,10 @@ $title = "Quản lý đơn hàng";
                                         </span>
                                     </td>
                                     <td><?php echo date('d/m/Y H:i', strtotime($order['created_at'])); ?></td>
-                                    <td>
+                                    <td class="text-center">
                                         <a href="index.php?controller=order&action=view&id=<?php echo $order['id']; ?>"
                                             class="btn btn-info btn-sm">
                                             <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="index.php?controller=order&action=delete&id=<?php echo $order['id']; ?>"
-                                            class="btn btn-danger btn-sm"
-                                            onclick="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?')">
-                                            <i class="fas fa-trash"></i>
                                         </a>
                                     </td>
                                 </tr>
