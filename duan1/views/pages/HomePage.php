@@ -324,3 +324,15 @@ foreach ($latestProducts as $key => $product) {
 </section>
 <!-- Latest Blog Section End -->
 </body>
+
+<style>
+    .section-title {
+        margin-top: 20px !important;
+        margin-bottom: 20px !important;
+    }
+
+    section.spad {
+        padding-top: 20px !important;
+        padding-bottom: 20px !important;
+    }
+</style>

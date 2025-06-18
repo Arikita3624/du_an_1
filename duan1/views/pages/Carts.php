@@ -185,9 +185,13 @@
 
                 // Cập nhật tổng tiền
                 updateTotal();
+
+                // Nếu số lượng <= 0 thì submit form để server xử lý và hiển thị thông báo session
+                if (quantity <= 0) {
+                    this.value = 0; // Đảm bảo giá trị gửi lên là 0
+                    this.form.submit();
+                }
             });
         });
-
-        // Xử lý submit form
     });
 </script>

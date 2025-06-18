@@ -155,6 +155,21 @@
                         <p>Chưa có bình luận nào cho sản phẩm này.</p>
                     <?php endif; ?>
                 </div>
+                <!-- PHÂN TRANG BÌNH LUẬN -->
+                <?php if (($totalCommentPages ?? 1) > 1): ?>
+                    <nav class="mt-3">
+                        <ul class="pagination justify-content-center">
+                            <?php for ($i = 1; $i <= $totalCommentPages; $i++): ?>
+                                <li class="page-item <?= ($i == ($commentPage ?? 1)) ? 'active' : '' ?>">
+                                    <a class="page-link"
+                                        href="?act=product-detail&id=<?= $product['id'] ?>&comment_page=<?= $i ?>">
+                                        <?= $i ?>
+                                    </a>
+                                </li>
+                            <?php endfor; ?>
+                        </ul>
+                    </nav>
+                <?php endif; ?>
 
                 <!-- Form gửi bình luận -->
                 <?php if (isset($_SESSION['user'])): // Chỉ hiển thị form nếu người dùng đã đăng nhập
@@ -356,5 +371,21 @@
 
     .comment-form .site-btn:hover {
         background: #b91c1c;
+    }
+
+    .pagination .page-item .page-link {
+        color: #e74c3c;
+        background-color: #f5f5f5;
+        border: 1px solid #e0e0e0;
+        margin: 0 2px;
+        border-radius: 8px;
+        transition: background 0.2s, color 0.2s;
+    }
+
+    .pagination .page-item.active .page-link,
+    .pagination .page-item .page-link:hover {
+        background-color: #e74c3c;
+        color: #fff;
+        border-color: #e74c3c;
     }
 </style>

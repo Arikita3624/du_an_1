@@ -33,16 +33,16 @@ function getPaymentStatusClass($status)
 }
 ?>
 <!-- Breadcrumb Section Begin -->
-<section class="breadcrumb-option">
+<section class="breadcrumb-option" style="background: #faf9f6; padding: 18px 0 10px 0; border-radius: 0; margin-bottom: 0;">
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <div class="breadcrumb__text">
-                    <h4>Chi tiết đơn hàng</h4>
+                <div class="breadcrumb__text" style="padding-left:0;">
+                    <h4 style="font-size: 28px; font-weight: 600; color: #222; margin-bottom: 6px;">Chi tiết đơn hàng</h4>
                     <div class="breadcrumb__links">
-                        <a href="?act=/">Trang chủ</a>
+                        <a href="?act=/">Home</a>
                         <a href="?act=order-list">Danh sách đơn hàng</a>
-                        <span>Chi tiết đơn hàng</span>
+                        <span class="active">Chi tiết đơn hàng</span>
                     </div>
                 </div>
             </div>
@@ -259,18 +259,23 @@ function getPaymentStatusClass($status)
     }
 
     .breadcrumb__links {
-        padding-left: 2px;
-        font-size: 18px;
+        font-size: 16px;
     }
 
     .breadcrumb__links a {
         color: #111;
         font-weight: 500;
-        margin-right: 8px;
         text-decoration: none;
     }
 
-    .breadcrumb__links span {
+    .breadcrumb-separator {
+        margin: 0 6px;
+        color: #bdbdbd;
+        font-size: 16px;
+        font-weight: 400;
+    }
+
+    .breadcrumb__links .active {
         color: #e53637;
         font-weight: 600;
     }
@@ -282,7 +287,7 @@ function getPaymentStatusClass($status)
     .order-details__wrapper {
         background: #fff;
         border-radius: 10px;
-        box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+        box-shadow: none !important;
         padding: 30px;
     }
 
@@ -485,6 +490,15 @@ function getPaymentStatusClass($status)
             border-radius: 4px;
             font-weight: 500;
         }
+    }
+
+    .breadcrumb-option {
+        background: #fff !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        margin-bottom: 0 !important;
+        padding-top: 18px !important;
+        padding-bottom: 10px !important;
     }
 </style>
 
