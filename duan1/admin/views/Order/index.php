@@ -73,9 +73,11 @@ $title = "Quản lý đơn hàng";
                     </thead>
                     <tbody>
                         <?php if (!empty($orders)): ?>
+                            <?php $stt = ($page - 1) * $this->itemsPerPage + 1; ?>
                             <?php foreach ($orders as $order): ?>
                                 <tr>
-                                    <td><?php echo $order['id']; ?></td>
+                                    <td><?php echo $stt++; ?></td>
+                                    <!-- Các cột khác giữ nguyên -->
                                     <td><?php echo htmlspecialchars($order['customer_name'] ?? 'N/A'); ?></td>
                                     <td><?php echo htmlspecialchars($order['phone']); ?></td>
                                     <td><?php echo number_format($order['total_amount']); ?> VNĐ</td>

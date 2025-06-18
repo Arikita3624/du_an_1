@@ -8,20 +8,37 @@
 
     <div class="card shadow mb-4">
         <div class="card-body">
+            <?php if (!empty($errors['general'])): ?>
+                <div class="alert alert-danger" role="alert">
+                    <?php echo htmlspecialchars($errors['general']); ?>
+                </div>
+            <?php endif; ?>
+            <?php if (!empty($success)): ?>
+                <div class="alert alert-success" role="alert">
+                    <?php echo htmlspecialchars($success); ?>
+                </div>
+            <?php endif; ?>
+
             <form action="index.php?controller=product&action=create" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="name">Tên sản phẩm</label>
-                    <input type="text" class="form-control" id="name" name="name" required>
+                    <input type="text" class="form-control" id="name" name="name" value="<?php echo htmlspecialchars($_POST['name'] ?? ''); ?>">
+                    <?php if (!empty($errors['name'])): ?>
+                        <div class="text-danger"><?php echo $errors['name']; ?></div>
+                    <?php endif; ?>
                 </div>
 
                 <div class="form-group">
                     <label for="description">Mô tả</label>
-                    <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                    <textarea class="form-control" id="description" name="description" rows="3"><?php echo htmlspecialchars($_POST['description'] ?? ''); ?></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="price">Giá</label>
-                    <input type="number" class="form-control" id="price" name="price" required min="0">
+                    <input type="number" class="form-control" id="price" name="price" value="<?php echo htmlspecialchars($_POST['price'] ?? ''); ?>">
+                    <?php if (!empty($errors['price'])): ?>
+                        <div class="text-danger"><?php echo $errors['price']; ?></div>
+                    <?php endif; ?>
                 </div>
 
                 <div class="form-group">
@@ -29,29 +46,32 @@
                     <select class="form-control" id="category_id" name="category_id">
                         <option value="">Chọn danh mục</option>
                         <?php foreach ($categories as $category): ?>
-                        <option value="<?php echo $category['id']; ?>">
-                            <?php echo htmlspecialchars($category['name']); ?>
-                        </option>
+                            <option value="<?php echo $category['id']; ?>"
+                                <?php if (isset($_POST['category_id']) && $_POST['category_id'] == $category['id']) echo 'selected'; ?>>
+                                <?php echo htmlspecialchars($category['name']); ?>
+                            </option>
                         <?php endforeach; ?>
                     </select>
+                    <?php if (!empty($errors['category_id'])): ?>
+                        <div class="text-danger"><?php echo $errors['category_id']; ?></div>
+                    <?php endif; ?>
                 </div>
 
                 <div class="form-group">
                     <label for="image">Hình ảnh</label>
-                    <?php if (!empty($product['image'])): ?>
-                    <div class="mb-2">
-                        <img src="<?php echo htmlspecialchars($product['image']); ?>"
-                             alt="<?php echo htmlspecialchars($product['name']); ?>"
-                             style="max-width: 200px;">
-                    </div>
-                    <?php endif; ?>
                     <input type="file" class="form-control-file" id="image" name="image" accept="image/*">
                     <small class="form-text text-muted">Để trống nếu không muốn thay đổi hình ảnh</small>
+                    <?php if (!empty($errors['image'])): ?>
+                        <div class="text-danger"><?php echo $errors['image']; ?></div>
+                    <?php endif; ?>
                 </div>
 
                 <div class="form-group">
                     <label for="stock">Tồn kho</label>
-                    <input type="number" class="form-control" id="stock" name="stock" required min="0">
+                    <input type="number" class="form-control" id="stock" name="stock" value="<?php echo htmlspecialchars($_POST['stock'] ?? ''); ?>">
+                    <?php if (!empty($errors['stock'])): ?>
+                        <div class="text-danger"><?php echo $errors['stock']; ?></div>
+                    <?php endif; ?>
                 </div>
 
                 <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>

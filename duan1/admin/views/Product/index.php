@@ -56,7 +56,7 @@
                 <table class="table table-bordered" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>STT</th>
                             <th>Hình ảnh</th>
                             <th>Tên sản phẩm</th>
                             <th>Danh mục</th>
@@ -66,32 +66,35 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($products as $product): ?>
-                            <tr>
-                                <td><?php echo $product['id']; ?></td>
-                                <td>
-                                    <?php if (!empty($product['image'])): ?>
-                                        <img src="<?php echo htmlspecialchars($product['image']); ?>"
-                                            alt="<?php echo htmlspecialchars($product['name']); ?>"
-                                            style="width: 50px; height: 50px; object-fit: cover;">
-                                    <?php else: ?>
-                                        <img src="assets/img/no-image.jpg" alt="No image"
-                                            style="width: 50px; height: 50px; object-fit: cover;">
-                                    <?php endif; ?>
-                                </td>
-                                <td><?php echo htmlspecialchars($product['name']); ?></td>
-                                <td><?php echo htmlspecialchars($product['category_name'] ?? 'Chưa phân loại'); ?></td>
-                                <td><?php echo number_format($product['price']); ?> VNĐ</td>
-                                <td><?php echo number_format($product['stock']); ?></td>
-                                <td>
-                                    <a href="index.php?controller=product&action=edit&id=<?php echo $product['id']; ?>"
-                                        class="btn btn-sm btn-primary">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                        <?php if (empty($products)): ?>
+                        <?php
+                        $stt = $offset + 1;
+                        if (!empty($products)):
+                            foreach ($products as $product): ?>
+                                <tr>
+                                    <td><?php echo $stt++; ?></td>
+                                    <td>
+                                        <?php if (!empty($product['image'])): ?>
+                                            <img src="<?php echo htmlspecialchars($product['image']); ?>"
+                                                alt="<?php echo htmlspecialchars($product['name']); ?>"
+                                                style="width: 50px; height: 50px; object-fit: cover;">
+                                        <?php else: ?>
+                                            <img src="assets/img/no-image.jpg" alt="No image"
+                                                style="width: 50px; height: 50px; object-fit: cover;">
+                                        <?php endif; ?>
+                                    </td>
+                                    <td><?php echo htmlspecialchars($product['name']); ?></td>
+                                    <td><?php echo htmlspecialchars($product['category_name'] ?? 'Chưa phân loại'); ?></td>
+                                    <td><?php echo number_format($product['price']); ?> VNĐ</td>
+                                    <td><?php echo number_format($product['stock']); ?></td>
+                                    <td>
+                                        <a href="index.php?controller=product&action=edit&id=<?php echo $product['id']; ?>"
+                                            class="btn btn-sm btn-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach;
+                        else: ?>
                             <tr>
                                 <td colspan="7" class="text-center">Không tìm thấy sản phẩm nào.</td>
                             </tr>

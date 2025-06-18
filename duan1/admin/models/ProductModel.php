@@ -31,8 +31,15 @@ class ProductModel
     public function createProduct($data)
     {
         $sql = "INSERT INTO products (name, description, price, category_id, image, stock, created_at)
-                VALUES (:name, :description, :price, :category_id, :image, :stock, NOW())";
-        return $this->db->execute($sql, $data);
+            VALUES (:name, :description, :price, :category_id, :image, :stock, NOW())";
+        return $this->db->execute($sql, [
+            'name' => $data['name'],
+            'description' => $data['description'],
+            'price' => $data['price'],
+            'category_id' => $data['category_id'],
+            'image' => $data['image'],
+            'stock' => $data['stock']
+        ]);
     }
 
     public function updateProduct($id, $data)
@@ -91,12 +98,12 @@ class ProductModel
         return $result['count'];
     }
 
-    public function getProductsWithPagination($limit, $offset, $keyword = null, $categoryId = null)
+    public function getProductsWithPagination($limit, $offset, $keyword = null, $categoryId = null, $order = 'ASC')
     {
         $sql = "SELECT p.*, c.name as category_name
-                FROM products p
-                LEFT JOIN categories c ON p.category_id = c.id
-                WHERE 1=1";
+            FROM products p
+            LEFT JOIN categories c ON p.category_id = c.id
+            WHERE 1=1";
         $params = [];
 
         if ($keyword) {
@@ -109,7 +116,7 @@ class ProductModel
             $params[':category_id'] = $categoryId;
         }
 
-        $sql .= " ORDER BY p.id DESC LIMIT " . (int)$limit . " OFFSET " . (int)$offset;
+        $sql .= " ORDER BY p.created_at $order LIMIT " . (int)$limit . " OFFSET " . (int)$offset;
 
         return $this->db->query($sql, $params);
     }

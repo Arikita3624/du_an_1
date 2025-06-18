@@ -3,7 +3,7 @@
 
     <?php if (isset($_SESSION['success'])): ?>
         <div class="alert alert-success">
-            <?php 
+            <?php
             echo $_SESSION['success'];
             unset($_SESSION['success']);
             ?>
@@ -12,7 +12,7 @@
 
     <?php if (isset($_SESSION['error'])): ?>
         <div class="alert alert-danger">
-            <?php 
+            <?php
             echo $_SESSION['error'];
             unset($_SESSION['error']);
             ?>
@@ -25,7 +25,7 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>STT</th>
                             <th>Người dùng</th>
                             <th>Số sản phẩm</th>
                             <th>Tổng tiền</th>
@@ -43,11 +43,11 @@
                                     <td><?php echo number_format($cart['total_amount'], 0, ',', '.'); ?> VNĐ</td>
                                     <td><?php echo date('d/m/Y H:i', strtotime($cart['created_at'])); ?></td>
                                     <td>
-                                        <a href="index.php?controller=cart&action=view&id=<?php echo $cart['id']; ?>" 
+                                        <a href="index.php?controller=cart&action=view&id=<?php echo $cart['id']; ?>"
                                            class="btn btn-info btn-sm">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <form method="POST" action="index.php?controller=cart&action=delete" 
+                                        <form method="POST" action="index.php?controller=cart&action=delete"
                                               class="d-inline" onsubmit="return confirm('Bạn có chắc muốn xóa giỏ hàng này?');">
                                             <input type="hidden" name="id" value="<?php echo $cart['id']; ?>">
                                             <button type="submit" class="btn btn-danger btn-sm">
@@ -67,4 +67,4 @@
             </div>
         </div>
     </div>
-</div> 
+</div>
