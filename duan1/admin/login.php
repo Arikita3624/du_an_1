@@ -18,40 +18,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Vui lòng nhập đầy đủ thông tin!';
     } else {
         $db = new Database();
-        $sql = "SELECT * FROM users WHERE username = ? AND role = 'admin' LIMIT 1";
+        // Chỉ kiểm tra username, không kiểm tra role ở đây
+        $sql = "SELECT * FROM users WHERE username = ? LIMIT 1";
         $user = $db->queryOne($sql, [$username]);
 
-        // Debug chi tiết
-        error_log("=== DEBUG LOGIN ===");
-        error_log("Username nhập vào: " . $username);
-        error_log("Password nhập vào: " . $password);
-        error_log("SQL Query: " . $sql);
-        
-        if ($user) {
-            error_log("Tìm thấy user trong database");
-            error_log("User data: " . print_r($user, true));
-            error_log("Password hash trong DB: " . $user['password']);
-            error_log("Kết quả verify password: " . (password_verify($password, $user['password']) ? "TRUE" : "FALSE"));
+        if (!$user) {
+            $error = 'Tài khoản không tồn tại!';
+        } elseif (!password_verify($password, $user['password'])) {
+            $error = 'Mật khẩu không đúng!';
+        } elseif ($user['role'] !== 'admin') {
+            $error = 'Bạn không có quyền truy cập trang quản trị!';
         } else {
-            error_log("KHÔNG tìm thấy user trong database");
-        }
-
-        if ($user && password_verify($password, $user['password'])) {
+            // Đăng nhập thành công
             $_SESSION['admin_id'] = $user['id'];
             $_SESSION['admin_username'] = $user['username'];
             $_SESSION['admin_name'] = $user['full_name'];
 
             header('Location: index.php');
             exit;
-        } else {
-            $error = 'Tên đăng nhập hoặc mật khẩu không đúng!';
         }
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,15 +53,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         body {
             background-color: #f8f9fa;
         }
+
         .login-container {
             max-width: 400px;
             margin: 100px auto;
         }
+
         .card {
             border: none;
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
+
         .card-header {
             background-color: #343a40;
             color: white;
@@ -78,12 +72,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 10px 10px 0 0 !important;
             padding: 20px;
         }
+
         .card-body {
             padding: 30px;
         }
+
         .form-group {
             margin-bottom: 20px;
         }
+
         .btn-login {
             background-color: #343a40;
             border-color: #343a40;
@@ -91,10 +88,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 10px;
             font-size: 16px;
         }
+
         .btn-login:hover {
             background-color: #23272b;
             border-color: #23272b;
         }
+
         .error-message {
             color: #dc3545;
             margin-bottom: 20px;
@@ -102,6 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="login-container">
@@ -126,8 +126,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     </span>
                                 </div>
                                 <input type="text" class="form-control" id="username" name="username"
-                                       value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>"
-                                       placeholder="Nhập tên đăng nhập" required>
+                                    value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>"
+                                    placeholder="Nhập tên đăng nhập" required>
                             </div>
                         </div>
 
@@ -140,7 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     </span>
                                 </div>
                                 <input type="password" class="form-control" id="password" name="password"
-                                       placeholder="Nhập mật khẩu" required>
+                                    placeholder="Nhập mật khẩu" required>
                             </div>
                         </div>
 
@@ -157,4 +157,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
+
 </html>

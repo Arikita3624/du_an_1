@@ -170,3 +170,23 @@
         <div class="canvas__open"><i class="fa fa-bars"></i></div>
     </div>
 </header>
+
+<!-- Hiển thị thông báo toàn cục -->
+<?php if (isset($_SESSION['success'])): ?>
+    <div class="alert alert-success alert-dismissible fade show mt-2 container" role="alert" style="max-width: 700px;">
+        <i class="fa fa-check-circle"></i> <?= htmlspecialchars($_SESSION['success']) ?>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Đóng">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <?php unset($_SESSION['success']); ?>
+<?php endif; ?>
+<?php if (isset($_SESSION['error'])): ?>
+    <div class="alert alert-danger alert-dismissible fade show mt-2 container" role="alert" style="max-width: 700px;">
+        <i class="fa fa-exclamation-circle"></i> <?= htmlspecialchars($_SESSION['error']) ?>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Đóng">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <?php unset($_SESSION['error']); ?>
+<?php endif; ?>

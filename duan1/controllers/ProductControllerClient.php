@@ -61,11 +61,16 @@ class ProductControllerClient
         // Lấy sản phẩm tương tự cùng danh mục (trừ sản phẩm hiện tại)
         $relatedProducts = $productModel->getRelated($product['category_id'], $product['id']);
 
-        // Lấy bình luận cho sản phẩm (chỉ bình luận đã duyệt)
+        // Lấy bình luận cho sản phẩm (phân trang)
         $commentModel = new CommentModel();
-        $comments = $commentModel->getCommentsByProductId($id);
+        $commentPage = isset($_GET['comment_page']) ? max(1, intval($_GET['comment_page'])) : 1;
+        $commentLimit = 3;
+        $commentOffset = ($commentPage - 1) * $commentLimit;
 
-        $categories = $categoryModel->getAll();
+        $totalComments = $commentModel->countCommentsByProductId($id);
+        $totalCommentPages = ceil($totalComments / $commentLimit);
+
+        $comments = $commentModel->getCommentsByProductIdPaging($id, $commentLimit, $commentOffset);
         require_once __DIR__ . '/../views/pages/ProductDetail.php';
     }
 }

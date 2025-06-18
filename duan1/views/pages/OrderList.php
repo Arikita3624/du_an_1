@@ -161,6 +161,7 @@ if (isset($_SESSION['message']) && isset($_SESSION['message_type'])) {
         margin-bottom: 32px;
     }
 
+
     .breadcrumb__text h4 {
         font-size: 22px;
         font-weight: 700;
@@ -168,16 +169,14 @@ if (isset($_SESSION['message']) && isset($_SESSION['message_type'])) {
         margin-bottom: 6px;
     }
 
-    .breadcrumb__links a {
-        color: #111;
-        font-weight: 500;
-        margin-right: 8px;
-        text-decoration: none;
-    }
-
     .breadcrumb__links span {
+        margin: 0 8px 0 4px;
         color: #e53637;
         font-weight: 600;
+    }
+
+    .breadcrumb__links span:first-child {
+        margin-left: 0;
     }
 
     h3 {
