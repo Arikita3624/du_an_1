@@ -7,39 +7,39 @@
     </div>
 
     <?php if (isset($_SESSION['success'])): ?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <?php
-        echo $_SESSION['success'];
-        unset($_SESSION['success']);
-        ?>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <?php
+            echo $_SESSION['success'];
+            unset($_SESSION['success']);
+            ?>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     <?php endif; ?>
 
     <?php if (isset($_SESSION['error'])): ?>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
-        <?php
-        echo $_SESSION['error'];
-        unset($_SESSION['error']);
-        ?>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <script>
-        setTimeout(function() {
-            var alert = document.getElementById('errorAlert');
-            if (alert) {
-                alert.style.transition = 'opacity 0.5s';
-                alert.style.opacity = '0';
-                setTimeout(function() {
-                    alert.remove();
-                }, 500);
-            }
-        }, 2000);
-    </script>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert" id="errorAlert">
+            <?php
+            echo $_SESSION['error'];
+            unset($_SESSION['error']);
+            ?>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <script>
+            setTimeout(function() {
+                var alert = document.getElementById('errorAlert');
+                if (alert) {
+                    alert.style.transition = 'opacity 0.5s';
+                    alert.style.opacity = '0';
+                    setTimeout(function() {
+                        alert.remove();
+                    }, 500);
+                }
+            }, 2000);
+        </script>
     <?php endif; ?>
 
     <div class="card shadow mb-4">
@@ -48,8 +48,8 @@
                 <input type="hidden" name="controller" value="category">
                 <div class="input-group">
                     <input type="text" class="form-control" name="keyword"
-                           placeholder="Nhập tên hoặc mô tả danh mục..."
-                           value="<?php echo isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : ''; ?>">
+                        placeholder="Nhập tên hoặc mô tả danh mục..."
+                        value="<?php echo isset($_GET['keyword']) ? htmlspecialchars($_GET['keyword']) : ''; ?>">
                     <div class="input-group-append">
                         <button class="btn btn-primary" type="submit">
                             <i class="fas fa-search"></i> Tìm kiếm
@@ -67,7 +67,7 @@
                 <table class="table table-bordered" width="100%" cellspacing="0">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>STT</th>
                             <th>Tên danh mục</th>
                             <th>Mô tả</th>
                             <th>Ngày tạo</th>
@@ -75,24 +75,25 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($categories as $category): ?>
-                        <tr>
-                            <td><?php echo $category['id']; ?></td>
-                            <td><?php echo htmlspecialchars($category['name']); ?></td>
-                            <td><?php echo htmlspecialchars($category['description']); ?></td>
-                            <td><?php echo date('d/m/Y H:i', strtotime($category['created_at'])); ?></td>
-                            <td>
-                                <a href="index.php?controller=category&action=edit&id=<?php echo $category['id']; ?>"
-                                   class="btn btn-sm btn-primary">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <a href="index.php?controller=category&action=delete&id=<?php echo $category['id']; ?>"
-                                   class="btn btn-sm btn-danger"
-                                   onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?')">
-                                    <i class="fas fa-trash"></i>
-                                </a>
-                            </td>
-                        </tr>
+                        <?php $stt = 1;
+                        foreach ($categories as $category): ?>
+                            <tr>
+                                <td><?php echo $stt++; ?></td>
+                                <td><?php echo htmlspecialchars($category['name']); ?></td>
+                                <td><?php echo htmlspecialchars($category['description']); ?></td>
+                                <td><?php echo date('d/m/Y H:i', strtotime($category['created_at'])); ?></td>
+                                <td>
+                                    <a href="index.php?controller=category&action=edit&id=<?php echo $category['id']; ?>"
+                                        class="btn btn-sm btn-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="index.php?controller=category&action=delete&id=<?php echo $category['id']; ?>"
+                                        class="btn btn-sm btn-danger"
+                                        onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>

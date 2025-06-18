@@ -8,7 +8,7 @@
 
     <?php if (isset($_SESSION['error'])): ?>
         <div class="alert alert-danger">
-            <?php 
+            <?php
             echo $_SESSION['error'];
             unset($_SESSION['error']);
             ?>
@@ -33,14 +33,14 @@
                             <i class="fas fa-star <?php echo $i <= $comment['rating'] ? 'text-warning' : 'text-muted'; ?>"></i>
                         <?php endfor; ?>
                     </p>
-                    <p><strong>Trạng thái:</strong> 
-                        <span class="badge badge-<?php 
-                            echo $comment['status'] === 'approved' ? 'success' : 
-                                ($comment['status'] === 'rejected' ? 'danger' : 'warning'); 
+                    <p><strong>Trạng thái:</strong>
+                        <span class="badge badge-<?php
+                            echo $comment['status'] === 'approved' ? 'success' :
+                                ($comment['status'] === 'rejected' ? 'danger' : 'warning');
                         ?>">
-                            <?php 
-                            echo $comment['status'] === 'approved' ? 'Đã duyệt' : 
-                                ($comment['status'] === 'rejected' ? 'Đã từ chối' : 'Chờ duyệt'); 
+                            <?php
+                            echo $comment['status'] === 'approved' ? 'Đã duyệt' :
+                                ($comment['status'] === 'rejected' ? 'Đã từ chối' : 'Chờ duyệt');
                             ?>
                         </span>
                     </p>
@@ -95,4 +95,4 @@
     });
 </script>
 </body>
-</html> 
+</html>

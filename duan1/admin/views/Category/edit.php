@@ -8,11 +8,17 @@
 
     <div class="card shadow mb-4">
         <div class="card-body">
+            <?php if (!empty($errors['general'])): ?>
+                <div class="alert alert-danger"><?php echo $errors['general']; ?></div>
+            <?php endif; ?>
             <form action="index.php?controller=category&action=edit&id=<?php echo $category['id']; ?>" method="POST">
                 <div class="form-group">
                     <label for="name">Tên danh mục</label>
-                    <input type="text" class="form-control" id="name" name="name" 
-                           value="<?php echo htmlspecialchars($category['name']); ?>" required>
+                    <input type="text" class="form-control" id="name" name="name"
+                        value="<?php echo htmlspecialchars($category['name']); ?>">
+                    <?php if (!empty($errors['name'])): ?>
+                        <div class="text-danger"><?php echo $errors['name']; ?></div>
+                    <?php endif; ?>
                 </div>
                 <div class="form-group">
                     <label for="description">Mô tả</label>
@@ -22,4 +28,4 @@
             </form>
         </div>
     </div>
-</div> 
+</div>
