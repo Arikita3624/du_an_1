@@ -15,7 +15,7 @@ class ProductControllerClient
         $price = $_GET['price'] ?? '';
         $category_id = $_GET['category_id'] ?? '';
         $page = max(1, intval($_GET['page'] ?? 1));
-        $limit = 12;
+        $limit = 6;
         $offset = ($page - 1) * $limit;
 
         $products = $productModel->getFiltered($search, $price, $category_id, $limit, $offset);

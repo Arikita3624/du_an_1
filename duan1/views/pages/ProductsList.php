@@ -18,7 +18,7 @@
 
 <?php
 $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
-$limit = 12;
+$limit = 6;
 
 // Debug thông tin phân trang
 echo "<!-- Debug: Total Products = $totalProducts, Total Pages = $totalPages, Current Page = $page -->";
