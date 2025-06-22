@@ -15,16 +15,6 @@
             </ul>
         </div>
     </div>
-    <div class="offcanvas__nav__option">
-        <a href="#" class="search-switch"><img src="assets/img/icon/search.png" alt=""></a>
-        <a href="#"><img src="assets/img/icon/heart.png" alt=""></a>
-        <a href="#"><img src="assets/img/icon/cart.png" alt=""> <span>0</span></a>
-        <div class="price">$0.00</div>
-    </div>
-    <div id="mobile-menu-wrap"></div>
-    <div class="offcanvas__text">
-        <p>Free shipping, 30-day return or refund guarantee.</p>
-    </div>
 </div>
 <!-- Offcanvas Menu End -->
 
@@ -41,7 +31,7 @@
                             <p>Một nhãn hiệu chuyên nghiệp tạo ra những sản phẩm thiết yếu sang trọng.
                                 Được chế tác có đạo đức với cam kết không ngừng
                                 về chất lượng vượt trội.</p>
-                            <a href="#" class="primary-btn">Mua ngay<span class="arrow_right"></span></a>
+                            <a href="?act=product-list" class="primary-btn">Mua ngay<span class="arrow_right"></span></a>
                         </div>
                     </div>
                 </div>
@@ -57,7 +47,7 @@
                             <p>Một nhãn hiệu chuyên nghiệp tạo ra những sản phẩm thiết yếu sang trọng.
                                 Được chế tác có đạo đức với cam kết không ngừng
                                 về chất lượng vượt trội.</p>
-                            <a href="#" class="primary-btn">Mua ngay <span class="arrow_right"></span></a>
+                            <a href="?act=product-list" class="primary-btn">Mua ngay <span class="arrow_right"></span></a>
                         </div>
                     </div>
                 </div>

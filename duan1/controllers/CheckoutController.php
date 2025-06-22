@@ -32,16 +32,28 @@ class CheckoutController
             exit;
         }
 
+        $errors = [];
         $user_id = $_SESSION['user']['id'];
-        $full_name = $_POST['full_name'] ?? '';
-        if (empty($full_name)) {
-            $full_name = $_SESSION['user']['full_name'] ?? $_SESSION['user']['username'] ?? '';
-        }
-        $email = $_POST['email'] ?? '';
-        $phone = $_POST['phone'] ?? '';
-        $address = $_POST['address'] ?? '';
+        $full_name = trim($_POST['first_name'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $phone = trim($_POST['phone'] ?? '');
+        $address = trim($_POST['address'] ?? '');
         $payment_method = $_POST['payment_method'] ?? 'cod';
         $order_reason = $_POST['reason'] ?? '';
+
+        // Validate từng trường
+        if ($full_name === '') {
+            $errors['first_name'] = 'Vui lòng nhập họ tên!';
+        }
+        if ($phone === '' || !preg_match('/^[0-9]{9,15}$/', $phone)) {
+            $errors['phone'] = 'Vui lòng nhập số điện thoại hợp lệ!';
+        }
+        if ($address === '') {
+            $errors['address'] = 'Vui lòng nhập địa chỉ!';
+        }
+        if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $errors['email'] = 'Vui lòng nhập email hợp lệ!';
+        }
 
         $cartModel = new CartModels();
         $cart_id = $cartModel->getOrCreateCart($user_id);
@@ -51,6 +63,13 @@ class CheckoutController
             $_SESSION['message'] = 'Giỏ hàng của bạn đang trống.';
             $_SESSION['message_type'] = 'error';
             header('Location: ?act=carts');
+            exit;
+        }
+
+        if (!empty($errors)) {
+            $_SESSION['checkout_errors'] = $errors;
+            $_SESSION['checkout_old'] = $_POST;
+            header('Location: ?act=checkout');
             exit;
         }
 
