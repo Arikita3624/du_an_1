@@ -2,6 +2,12 @@
 <section class="checkout spad">
     <div class="container">
         <div class="checkout__form">
+            <?php
+            // Lấy lỗi và dữ liệu cũ từ session (nếu có)
+            $errors = $_SESSION['checkout_errors'] ?? [];
+            $old = $_SESSION['checkout_old'] ?? [];
+            unset($_SESSION['checkout_errors'], $_SESSION['checkout_old']);
+            ?>
             <form action="?act=process-checkout" method="POST" id="checkoutForm">
                 <div class="row">
                     <div class="col-lg-8 col-md-6">
@@ -10,23 +16,39 @@
                             <div class="col-lg-6">
                                 <div class="checkout__input">
                                     <p>Họ tên<span>*</span></p>
-                                    <input type="text" name="first_name" value="<?= isset($_SESSION['user']['username']) ? htmlspecialchars($_SESSION['user']['username']) : '' ?>" required>
+                                    <input type="text" name="first_name"
+                                        value="<?= htmlspecialchars($old['first_name'] ?? ($_SESSION['user']['username'] ?? '')) ?>">
+                                    <?php if (!empty($errors['first_name'])): ?>
+                                        <div class="text-danger"><?= $errors['first_name'] ?></div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="checkout__input">
                                     <p>Số điện thoại<span>*</span></p>
-                                    <input type="text" name="phone" value="<?= isset($_SESSION['user']['phone']) ? htmlspecialchars($_SESSION['user']['phone']) : '' ?>" required pattern="[0-9]+" title="Vui lòng nhập số điện thoại hợp lệ">
+                                    <input type="text" name="phone"
+                                        value="<?= htmlspecialchars($old['phone'] ?? ($_SESSION['user']['phone'] ?? '')) ?>">
+                                    <?php if (!empty($errors['phone'])): ?>
+                                        <div class="text-danger"><?= $errors['phone'] ?></div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
                         <div class="checkout__input">
                             <p>Địa chỉ<span>*</span></p>
-                            <input type="text" placeholder="Địa chỉ nhận hàng" class="checkout__input__add" name="address" value="<?= isset($_SESSION['user']['address']) ? htmlspecialchars($_SESSION['user']['address']) : '' ?>" required>
+                            <input type="text" placeholder="Địa chỉ nhận hàng" class="checkout__input__add" name="address"
+                                value="<?= htmlspecialchars($old['address'] ?? ($_SESSION['user']['address'] ?? '')) ?>">
+                            <?php if (!empty($errors['address'])): ?>
+                                <div class="text-danger"><?= $errors['address'] ?></div>
+                            <?php endif; ?>
                         </div>
                         <div class="checkout__input">
                             <p>Email<span>*</span></p>
-                            <input type="email" name="email" value="<?= isset($_SESSION['user']['email']) ? htmlspecialchars($_SESSION['user']['email']) : '' ?>" required>
+                            <input type="email" name="email"
+                                value="<?= htmlspecialchars($old['email'] ?? ($_SESSION['user']['email'] ?? '')) ?>">
+                            <?php if (!empty($errors['email'])): ?>
+                                <div class="text-danger"><?= $errors['email'] ?></div>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div class="col-lg-4 col-md-6">

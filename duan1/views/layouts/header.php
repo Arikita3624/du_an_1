@@ -161,9 +161,7 @@
             </div>
             <div class="col-lg-3 col-md-3">
                 <div class="header__nav__option">
-                    <a href="#" class="search-switch"><img src="assets/img/icon/search.png" alt="Search"></a>
-                    <a href="#"><img src="assets/img/icon/heart.png" alt="Wishlist"></a>
-                    <a href="?act=carts"><img src="assets/img/icon/cart.png" alt="Cart"></a>
+                    <a href="?act=carts"><img src="assets/img/icon/cart.png" style="width: 25px;" alt="Cart"></a>
                 </div>
             </div>
         </div>
