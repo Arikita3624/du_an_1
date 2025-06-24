@@ -36,7 +36,7 @@
             <form action="index.php" method="GET" class="form-inline mb-2">
                 <input type="hidden" name="controller" value="product">
                 <div class="form-group mr-2">
-                    <input type="text" name="keyword" class="form-control" placeholder="Tìm kiếm theo tên..." value="<?php echo htmlspecialchars($keyword ?? ''); ?>">
+                    <input type="text" name="keyword" class="form-control mr-2" placeholder="Tìm kiếm theo tên..." value="<?php echo htmlspecialchars($keyword ?? ''); ?>">
                 </div>
                 <div class="form-group mr-2">
                     <select name="category_id" class="form-control">

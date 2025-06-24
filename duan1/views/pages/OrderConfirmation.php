@@ -159,7 +159,11 @@ function getPaymentStatusClass($status)
                                                             alt="<?= htmlspecialchars($item['name']) ?>"
                                                             class="product-image">
                                                     <?php endif; ?>
-                                                    <span class="ms-3"><?= htmlspecialchars($item['name']) ?></span>
+                                                    <span class="ms-3">
+                                                        <a href="?act=product-detail&id=<?= $item['product_id'] ?>" style="text-decoration:underline; color:#007bff;">
+                                                            <?= htmlspecialchars($item['name']) ?>
+                                                        </a>
+                                                    </span>
                                                 </div>
                                             </td>
                                             <td class="text-center"><?= $item['quantity'] ?></td>
@@ -180,7 +184,7 @@ function getPaymentStatusClass($status)
 
                     <div class="order-details__actions">
                         <a href="?act=order-list" class="btn btn-secondary">Quay lại</a>
-                        <?php if (in_array($order['status'], ['pending', 'processing', 'confirmed'])): ?>
+                        <?php if (in_array($order['status'], ['pending'])): ?>
                             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelOrderModal">
                                 Hủy đơn hàng
                             </button>

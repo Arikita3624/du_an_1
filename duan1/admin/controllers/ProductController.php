@@ -27,7 +27,7 @@ class ProductController
         $totalPages = ceil($totalProducts / $limit);
 
         // Lấy danh sách sản phẩm cho trang hiện tại (có filter)
-        $products = $this->productModel->getProductsWithPagination($limit, $offset, $keyword, $categoryId, 'ASC');
+        $products = $this->productModel->getProductsWithPagination($limit, $offset, $keyword, $categoryId, 'DESC');
 
         // Lấy danh sách danh mục cho bộ lọc
         $categories = $this->categoryModel->getAllCategories();

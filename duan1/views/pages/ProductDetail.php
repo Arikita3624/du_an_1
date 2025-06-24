@@ -172,18 +172,31 @@
                 <?php endif; ?>
 
                 <!-- Form gửi bình luận -->
-                <?php if (isset($_SESSION['user'])): // Chỉ hiển thị form nếu người dùng đã đăng nhập
+                <?php
+                $canComment = false;
+                if (isset($_SESSION['user'])) {
+                    require_once __DIR__ . '/../../models/Checkout.php';
+                    $checkoutModel = new CheckoutModel();
+                    $canComment = $checkoutModel->hasUserPurchasedProduct($_SESSION['user']['id'], $product['id']);
+                }
                 ?>
-                    <div class="comment-form mt-4">
-                        <h4>Viết bình luận của bạn</h4>
-                        <form action="?act=add-comment" method="POST">
-                            <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id']) ?>">
-                            <div class="form-group">
-                                <textarea name="comment_text" class="form-control" rows="4" placeholder="Nhập bình luận của bạn..." required></textarea>
-                            </div>
-                            <button type="submit" class="site-btn">Gửi bình luận</button>
-                        </form>
-                    </div>
+
+                <?php if (isset($_SESSION['user'])): ?>
+                    <?php if ($canComment): ?>
+                        <!-- Hiển thị form bình luận -->
+                        <div class="comment-form mt-4">
+                            <h4>Viết bình luận của bạn</h4>
+                            <form action="?act=add-comment" method="POST">
+                                <input type="hidden" name="product_id" value="<?= htmlspecialchars($product['id']) ?>">
+                                <div class="form-group">
+                                    <textarea name="comment_text" class="form-control" rows="4" placeholder="Nhập bình luận của bạn..."></textarea>
+                                </div>
+                                <button type="submit" class="site-btn">Gửi bình luận</button>
+                            </form>
+                        </div>
+                    <?php else: ?>
+                        <p class="mt-4 text-warning">Bạn cần mua sản phẩm này mới có thể bình luận.</p>
+                    <?php endif; ?>
                 <?php else: ?>
                     <p class="mt-4">Vui lòng <a href="?act=login">đăng nhập</a> để bình luận.</p>
                 <?php endif; ?>
