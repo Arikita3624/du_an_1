@@ -131,4 +131,21 @@ class CheckoutModel
         $stmt = $this->conn->prepare($sql);
         return $stmt->execute([$status, $payment_status, $order_id]);
     }
+    public function hasUserPurchasedProduct($user_id, $product_id)
+    {
+        $stmt = $this->conn->prepare("
+        SELECT COUNT(*) as total
+        FROM order_items oi
+        JOIN orders o ON oi.order_id = o.id
+        WHERE o.user_id = :user_id
+          AND oi.product_id = :product_id
+          AND o.status IN ('finished')
+    ");
+        $stmt->execute([
+            ':user_id' => $user_id,
+            ':product_id' => $product_id
+        ]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return ($row && $row['total'] > 0);
+    }
 }

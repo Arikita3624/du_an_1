@@ -98,7 +98,7 @@ class ProductModel
         return $result['count'];
     }
 
-    public function getProductsWithPagination($limit, $offset, $keyword = null, $categoryId = null, $order = 'ASC')
+    public function getProductsWithPagination($limit, $offset, $keyword = null, $categoryId = null, $order = 'DESC')
     {
         $sql = "SELECT p.*, c.name as category_name
             FROM products p
@@ -116,7 +116,7 @@ class ProductModel
             $params[':category_id'] = $categoryId;
         }
 
-        $sql .= " ORDER BY p.created_at $order LIMIT " . (int)$limit . " OFFSET " . (int)$offset;
+        $sql .= " ORDER BY p.id $order LIMIT " . (int)$limit . " OFFSET " . (int)$offset;
 
         return $this->db->query($sql, $params);
     }

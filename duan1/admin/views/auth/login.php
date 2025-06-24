@@ -23,10 +23,10 @@
     <div class="container">
         <div class="login-container">
             <h2 class="text-center mb-4">Đăng nhập Admin</h2>
-            
+
             <?php if (isset($_SESSION['error'])): ?>
                 <div class="alert alert-danger">
-                    <?php 
+                    <?php
                     echo $_SESSION['error'];
                     unset($_SESSION['error']);
                     ?>
@@ -36,15 +36,15 @@
             <form method="POST" action="index.php?controller=auth&action=login">
                 <div class="mb-3">
                     <label for="username" class="form-label">Tên đăng nhập</label>
-                    <input type="text" class="form-control" id="username" name="username" required>
+                    <input type="text" class="form-control" id="username" name="username">
                 </div>
                 <div class="mb-3">
                     <label for="password" class="form-label">Mật khẩu</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
+                    <input type="password" class="form-control" id="password" name="password">
                 </div>
                 <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
             </form>
         </div>
     </div>
 </body>
-</html> 
+</html>

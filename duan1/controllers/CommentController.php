@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../models/CommentModel.php';
+require_once __DIR__ . '/../models/Checkout.php';
 
 class CommentController {
     private $commentModel;
@@ -15,15 +16,22 @@ class CommentController {
             // Kiểm tra người dùng đã đăng nhập chưa
             if (!isset($_SESSION['user'])) {
                 $_SESSION['error'] = 'Vui lòng đăng nhập để bình luận.';
-                 // Chuyển hướng về trang chi tiết sản phẩm
                 $product_id = $_POST['product_id'] ?? '';
-                 header('Location: ?act=product-detail&id=' . $product_id);
+                header('Location: ?act=product-detail&id=' . $product_id);
                 exit;
             }
 
             $product_id = intval($_POST['product_id'] ?? 0);
             $user_id = $_SESSION['user']['id'];
             $comment_text = trim($_POST['comment_text'] ?? '');
+
+            // Kiểm tra đã mua hàng chưa
+            $checkoutModel = new CheckoutModel();
+            if (!$checkoutModel->hasUserPurchasedProduct($user_id, $product_id)) {
+                $_SESSION['error'] = 'Bạn chỉ có thể bình luận khi đã mua sản phẩm này.';
+                header('Location: ?act=product-detail&id=' . $product_id);
+                exit;
+            }
 
             if ($product_id > 0 && !empty($comment_text)) {
                 $result = $this->commentModel->addComment($product_id, $user_id, $comment_text);
@@ -46,4 +54,4 @@ class CommentController {
         header('Location: ?act=/');
         exit;
     }
-} 
+}

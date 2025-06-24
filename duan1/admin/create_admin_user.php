@@ -13,14 +13,14 @@ if ($admin) {
     echo "Email: " . $admin['email'] . "<br>";
     echo "Role: " . $admin['role'] . "<br>";
     echo "Status: " . $admin['status'] . "<br>";
-    
+
     // Reset mật khẩu
     $password = 'password';
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    
+
     $update_sql = "UPDATE users SET password = ? WHERE id = ?";
     $result = $db->execute($update_sql, [$hashed_password, $admin['id']]);
-    
+
     if ($result) {
         echo "<br>Đã reset mật khẩu thành công!<br>";
         echo "Mật khẩu mới: password";
@@ -31,11 +31,11 @@ if ($admin) {
     // Tạo tài khoản admin mới
     $password = 'password';
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    
-    $insert_sql = "INSERT INTO users (username, password, full_name, email, role, status) 
+
+    $insert_sql = "INSERT INTO users (username, password, full_name, email, role, status)
                    VALUES (?, ?, ?, ?, 'admin', 'active')";
     $result = $db->execute($insert_sql, ['admin', $hashed_password, 'Administrator', 'admin@example.com']);
-    
+
     if ($result) {
         echo "Đã tạo tài khoản admin thành công!<br>";
         echo "Username: admin<br>";
@@ -57,4 +57,4 @@ if ($all_admins) {
 } else {
     echo "Không có tài khoản admin nào!";
 }
-?> 
+?>
