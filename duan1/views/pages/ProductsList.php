@@ -49,11 +49,16 @@ echo "<!-- Debug: Total Products = $totalProducts, Total Pages = $totalPages, Cu
                                     <div class="card-body">
                                         <div class="shop__sidebar__categories">
                                             <ul class="nice-scroll">
-                                                <li><a href="?<?= http_build_query(array_merge($_GET, ['category_id' => ''])) ?>">Tất cả</a></li>
+                                                <li>
+                                                    <a href="?act=product-list"
+                                                        class="<?= empty($_GET['category_id']) ? 'active' : '' ?>">
+                                                        Tất cả
+                                                    </a>
+                                                </li>
                                                 <?php foreach ($categories as $cat): ?>
                                                     <li>
-                                                        <a href="?<?= http_build_query(array_merge($_GET, ['category_id' => $cat['id']])) ?>"
-                                                            <?= (($_GET['category_id'] ?? '') == $cat['id']) ? 'style="font-weight:bold;"' : '' ?>>
+                                                        <a href="?act=product-list&category_id=<?= $cat['id'] ?>"
+                                                            class="<?= (($_GET['category_id'] ?? '') == $cat['id']) ? 'active' : '' ?>">
                                                             <?= htmlspecialchars($cat['name']) ?>
                                                         </a>
                                                     </li>
@@ -280,3 +285,11 @@ echo "<!-- Debug: Total Products = $totalProducts, Total Pages = $totalPages, Cu
     </div>
 </section>
 <!-- Shop Section End -->
+
+<style>
+    .shop__sidebar__categories ul li a.active,
+    .shop__sidebar__categories ul li a.selected {
+        color: #000 !important;
+        font-weight: 900 !important;
+    }
+</style>

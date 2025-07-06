@@ -78,7 +78,7 @@ $title = "Quản lý đơn hàng";
                                 <tr>
                                     <td><?php echo $stt++; ?></td>
                                     <!-- Các cột khác giữ nguyên -->
-                                    <td><?php echo htmlspecialchars($order['customer_name'] ?? 'N/A'); ?></td>
+                                    <td><?php echo htmlspecialchars($order['full_name'] ?? 'N/A'); ?></td>
                                     <td><?php echo htmlspecialchars($order['phone']); ?></td>
                                     <td><?php echo number_format($order['total_amount']); ?> VNĐ</td>
                                     <td>

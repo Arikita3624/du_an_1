@@ -152,10 +152,18 @@
             <div class="col-lg-6 col-md-6">
                 <nav class="header__menu mobile-menu">
                     <ul>
-                        <li class="active"><a href="?act=/">Trang chủ</a></li>
-                        <li><a href="?act=product-list">Sản phẩm</a></li>
-                        <li><a href="?act=about">Về chúng tôi</a></li>
-                        <li><a href="contact.html">Liên Hệ</a></li>
+                        <li class="<?= ($act == '/' || $act == '') ? 'active' : '' ?>">
+                            <a href="?act=/">Trang chủ</a>
+                        </li>
+                        <li class="<?= ($act == 'product-list') ? 'active' : '' ?>">
+                            <a href="?act=product-list">Sản phẩm</a>
+                        </li>
+                        <li class="<?= ($act == 'about') ? 'active' : '' ?>">
+                            <a href="?act=about">Về chúng tôi</a>
+                        </li>
+                        <li class="<?= ($act == 'contact') ? 'active' : '' ?>">
+                            <a href="?act=contact">Liên Hệ</a>
+                        </li>
                     </ul>
                 </nav>
             </div>
