@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th6 20, 2025 lúc 04:11 PM
+-- Thời gian đã tạo: Th7 06, 2025 lúc 09:25 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -151,7 +151,9 @@ INSERT INTO `comments` (`id`, `product_id`, `user_id`, `comment_text`, `status`,
 (9, 3, 5, 'áo xấu :(', 'approved', '2025-06-16 21:09:50', '2025-06-16 21:09:50'),
 (10, 14, 5, 'Mua cái khác đi', 'approved', '2025-06-16 21:39:54', '2025-06-16 21:39:54'),
 (11, 14, 5, 'HIHI', 'approved', '2025-06-16 21:41:06', '2025-06-16 21:41:06'),
-(12, 3, 5, 'Đẹp', 'approved', '2025-06-18 19:52:47', '2025-06-18 19:52:47');
+(12, 3, 5, 'Đẹp', 'approved', '2025-06-18 19:52:47', '2025-06-18 19:52:47'),
+(13, 4, 5, 'hmm', 'approved', '2025-06-24 12:26:42', '2025-06-24 12:26:42'),
+(14, 7, 5, 'alo', 'approved', '2025-06-24 12:43:38', '2025-06-24 12:43:38');
 
 -- --------------------------------------------------------
 
@@ -221,7 +223,17 @@ INSERT INTO `orders` (`id`, `user_id`, `full_name`, `email`, `phone`, `address`,
 (53, 5, 'hung123', 'hung123@gmail.com', '0394879813', 'Hà Nội', 1000000.00, 'pending', 'pending', 'cod', '', '2025-06-17 16:11:44', '2025-06-17 16:11:44'),
 (54, 5, 'hung123', 'bgird538@gmail.com', '0394879813', 'Hà Nội', 500000.00, 'cancelled', 'failed', 'cod', 'thích thì huỷ\r\n', '2025-06-18 14:57:18', '2025-06-18 14:59:26'),
 (55, 5, 'hung123', 'hung123@gmail.com', '0394879813', 'Hà Nội', 350000.00, 'pending', 'pending', 'cod', '', '2025-06-18 15:46:27', '2025-06-18 15:46:27'),
-(56, 5, 'hung123', 'hung123@gmail.com', '0394879813', 'Hà Nội', 650000.00, 'pending', 'pending', 'cod', '', '2025-06-19 12:16:54', '2025-06-19 12:16:54');
+(56, 5, 'hung123', 'hung123@gmail.com', '0394879813', 'Hà Nội', 650000.00, 'pending', 'pending', 'cod', '', '2025-06-19 12:16:54', '2025-06-19 12:16:54'),
+(57, 5, 'hung123', 'bgird538@gmail.com', '0394879813', 'Hà Nội', 250000.00, 'pending', 'pending', 'cod', '', '2025-06-21 14:27:07', '2025-06-21 14:27:07'),
+(58, 5, 'hung123', 'hung123@gmail.com', '0394879813', 'Hà Nội', 250000.00, 'finished', 'paid', 'cod', '', '2025-06-22 09:27:53', '2025-06-24 12:52:20'),
+(59, 5, 'hung123', 'hung123@gmail.com', '0394879813', 'Hà Nội', 1250000.00, 'finished', 'paid', 'cod', '', '2025-06-26 11:01:06', '2025-06-26 11:04:05'),
+(60, 5, 'hung123', 'hung123@gmail.com', '0394879813', 'Hà Nội', 1100000.00, 'cancelled', 'failed', 'cod', '', '2025-06-26 11:01:49', '2025-06-26 11:02:52'),
+(61, 5, 'hung123', 'hung123@gmail.com', '0394879813', 'Hà Nội', 1050000.00, 'confirmed', 'pending', 'cod', '', '2025-06-26 11:18:38', '2025-06-26 11:32:59'),
+(62, 5, 'hung123', 'hung123@gmail.com', '0394879813', 'Hà Nội', 1200000.00, 'finished', 'paid', 'cod', '', '2025-06-26 11:18:58', '2025-06-26 11:32:34'),
+(63, 5, 'dinhtv7', 'hung123@gmail.com', '0394879813', 'Hà Nội', 1150000.00, 'cancelled', 'failed', 'cod', '', '2025-06-26 11:28:56', '2025-06-26 11:30:13'),
+(64, 5, 'hung123', 'hung123@gmail.com', '0394879813', 'Hà Nội', 250000.00, 'cancelled', 'failed', 'cod', '', '2025-06-26 11:42:24', '2025-06-26 11:42:40'),
+(65, 5, 'hungnguyen1', 'hung123@gmail.com', '0394879813', 'Hà Nội', 350000.00, 'cancelled', 'failed', 'cod', '', '2025-07-06 06:58:51', '2025-07-06 06:59:29'),
+(66, 5, 'hung1', 'dinhtv@gmail.com', '0394879834', 'Hồ Chí Minh', 650000.00, 'pending', 'pending', 'cod', '', '2025-07-06 07:02:36', '2025-07-06 07:02:36');
 
 -- --------------------------------------------------------
 
@@ -296,7 +308,21 @@ INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price`, 
 (72, 53, 6, 1, 350000.00, 350000.00, NULL, '2025-06-17 16:11:44'),
 (73, 54, 3, 1, 500000.00, 500000.00, NULL, '2025-06-18 14:57:18'),
 (74, 55, 6, 1, 350000.00, 350000.00, NULL, '2025-06-18 15:46:27'),
-(75, 56, 4, 1, 650000.00, 650000.00, NULL, '2025-06-19 12:16:54');
+(75, 56, 4, 1, 650000.00, 650000.00, NULL, '2025-06-19 12:16:54'),
+(76, 57, 2, 1, 250000.00, 250000.00, NULL, '2025-06-21 14:27:07'),
+(77, 58, 2, 1, 250000.00, 250000.00, NULL, '2025-06-22 09:27:53'),
+(78, 59, 2, 1, 250000.00, 250000.00, NULL, '2025-06-26 11:01:06'),
+(79, 59, 3, 2, 500000.00, 1000000.00, NULL, '2025-06-26 11:01:06'),
+(80, 60, 4, 1, 650000.00, 650000.00, NULL, '2025-06-26 11:01:49'),
+(81, 60, 8, 1, 450000.00, 450000.00, NULL, '2025-06-26 11:01:49'),
+(82, 61, 6, 2, 350000.00, 700000.00, NULL, '2025-06-26 11:18:38'),
+(83, 61, 7, 1, 350000.00, 350000.00, NULL, '2025-06-26 11:18:38'),
+(84, 62, 9, 1, 1200000.00, 1200000.00, NULL, '2025-06-26 11:18:58'),
+(85, 63, 2, 2, 250000.00, 500000.00, NULL, '2025-06-26 11:28:56'),
+(86, 63, 4, 1, 650000.00, 650000.00, NULL, '2025-06-26 11:28:56'),
+(87, 64, 17, 1, 250000.00, 250000.00, NULL, '2025-06-26 11:42:24'),
+(88, 65, 6, 1, 350000.00, 350000.00, NULL, '2025-07-06 06:58:51'),
+(89, 66, 4, 1, 650000.00, 650000.00, NULL, '2025-07-06 07:02:36');
 
 -- --------------------------------------------------------
 
@@ -324,21 +350,21 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `description`, `price`, `discount_price`, `image`, `category_id`, `stock`, `views`, `status`, `created_at`, `updated_at`) VALUES
-(2, 'Áo thun nam basic', 'Áo thun nam basic, chất liệu cotton 100%', 250000.00, 199000.00, 'uploads/products/pro13.webp', 1, 3, 800, 'active', '2025-05-25 07:20:36', '2025-06-17 05:33:37'),
-(3, 'Áo polo nam', 'Áo polo nam, chất liệu cotton pique', 500000.00, 399000.00, 'uploads/products/pro12.jpg', 1, 71, 13, 'active', '2025-05-25 07:20:36', '2025-06-18 14:59:26'),
-(4, 'Quần jean nam slim', 'Quần jean nam slim fit, chất liệu denim', 650000.00, 550000.00, 'uploads/products/pro12.webp', 2, 31, 230000, 'active', '2025-05-25 07:20:36', '2025-06-19 12:16:54'),
+(2, 'Áo thun nam basic', 'Áo thun nam basic, chất liệu cotton 100%', 250000.00, 199000.00, 'uploads/products/pro13.webp', 1, 38, 800, 'active', '2025-05-25 07:20:36', '2025-06-26 11:30:13'),
+(3, 'Áo polo nam', 'Áo polo nam, chất liệu cotton pique', 500000.00, 399000.00, 'uploads/products/pro12.jpg', 1, 69, 13, 'active', '2025-05-25 07:20:36', '2025-06-26 11:01:06'),
+(4, 'Quần jean nam slim', 'Quần jean nam slim fit, chất liệu denim', 650000.00, 550000.00, 'uploads/products/pro12.webp', 2, 30, 230000, 'active', '2025-05-25 07:20:36', '2025-07-06 07:02:36'),
 (5, 'Quần khaki nam', 'Quần khaki nam, chất liệu cotton', 450000.00, 399000.00, 'uploads/products/pro11.jpg', 2, 48, 241, 'active', '2025-05-25 07:20:36', '2025-06-17 05:30:46'),
-(6, 'Quần short nam', 'Quần short nam, chất liệu cotton thoáng mát', 350000.00, 299000.00, 'uploads/products/pro10.jpg', 2, 169, 1555, 'active', '2025-05-25 07:20:36', '2025-06-18 15:46:27'),
-(7, 'Thắt lưng da nam', 'Thắt lưng da nam, chất liệu da thật', 350000.00, 299000.00, 'uploads/products/pro9.jpg', 3, 28, 1211, 'active', '2025-05-25 07:20:36', '2025-06-11 19:32:20'),
-(8, 'Ví da nam', 'Ví da nam, nhiều ngăn tiện dụng', 450000.00, 399000.00, 'uploads/products/pro8.jpg', 3, 34, 1211, 'active', '2025-05-25 07:20:36', '2025-06-13 05:19:07'),
-(9, 'Đồng hồ nam dây da', 'Đồng hồ nam dây da, thiết kế thanh lịch', 1200000.00, 999000.00, 'uploads/products/pro7.jpg', 3, 25, 10000, 'active', '2025-05-25 07:20:36', '2025-06-02 09:52:18'),
+(6, 'Quần short nam', 'Quần short nam, chất liệu cotton thoáng mát', 350000.00, 299000.00, 'uploads/products/pro10.jpg', 2, 167, 1555, 'active', '2025-05-25 07:20:36', '2025-07-06 06:59:29'),
+(7, 'Thắt lưng da nam', 'Thắt lưng da nam, chất liệu da thật', 350000.00, 299000.00, 'uploads/products/pro9.jpg', 3, 27, 1211, 'active', '2025-05-25 07:20:36', '2025-06-26 11:18:38'),
+(8, 'Ví da nam', 'Ví da nam, nhiều ngăn tiện dụng', 450000.00, 399000.00, 'uploads/products/pro8.jpg', 3, 34, 1211, 'active', '2025-05-25 07:20:36', '2025-06-26 11:02:52'),
+(9, 'Đồng hồ nam dây da', 'Đồng hồ nam dây da, thiết kế thanh lịch', 1200000.00, 999000.00, 'uploads/products/pro7.jpg', 3, 24, 10000, 'active', '2025-05-25 07:20:36', '2025-06-26 11:18:58'),
 (10, 'Giày lười nam da', 'Giày lười nam da thật, thiết kế tối giản', 850000.00, 750000.00, 'uploads/products/pro6.jpg', 4, 43, 2500, 'active', '2025-05-25 07:20:36', '2025-06-12 06:15:57'),
 (11, 'Giày thể thao nam', 'Giày thể thao nam, đế cao su bền bỉ', 1200000.00, 999000.00, 'uploads/products/pro5.jpg', 4, 100, 2000, 'active', '2025-05-25 07:20:36', '2025-06-12 06:17:27'),
 (12, 'Dép quai ngang nam', 'Dép quai ngang nam, chất liệu cao su', 250000.00, 199000.00, 'uploads/products/pro4.jpg', 4, 80, 1990, 'active', '2025-05-25 07:20:36', '2025-06-11 19:37:19'),
 (13, 'Túi đeo chéo nam', 'Túi đeo chéo nam, thiết kế đơn giản', 550000.00, 499000.00, 'uploads/products/pro3.jpg', 5, 35, 2100, 'active', '2025-05-25 07:20:36', '2025-06-13 04:28:46'),
 (14, 'Ba lô nam công sở', 'Ba lô nam công sở, nhiều ngăn tiện dụng', 750000.00, 650000.00, 'uploads/products/pro2.jpg', 5, 39, 12311, 'active', '2025-05-25 07:20:36', '2025-06-13 05:21:31'),
 (15, 'Túi xách tay nam', 'Túi xách tay nam, chất liệu da tổng hợp', 950000.00, 850000.00, 'uploads/products/pro1.jpg', 5, 28, 12002, 'active', '2025-05-25 07:20:36', '2025-06-12 06:08:01'),
-(16, 'Product 10 updated', 'Mô tả', 1000000.00, NULL, 'uploads/products/1750275699_8828bf511eca27c0df0b914cc3780c1b.jpg', 1, 100, 0, 'active', '2025-06-18 19:24:06', '2025-06-18 19:41:39');
+(17, 'Áo trắng nam', 'áo tráng', 250000.00, NULL, 'uploads/products/1750770046_pro14.jpeg', 1, 20, 0, 'active', '2025-06-24 13:00:46', '2025-06-26 11:42:40');
 
 -- --------------------------------------------------------
 
@@ -367,8 +393,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `username`, `password`, `full_name`, `email`, `phone`, `address`, `role`, `status`, `last_login`, `created_at`, `updated_at`) VALUES
 (1, 'admin', 'admin@gmail.com', 'admin', 'admin@gmail.com', '0123456789', 'Hà Nội', 'user', 'active', NULL, '2025-05-25 09:50:48', '2025-06-11 20:10:37'),
-(2, 'admin2', '$2y$10$bYzCh.1R5V9svE8.1RgNYecYw.ivaMk5fPu.hA.GH8ObUu0Uql9cK', '', 'admin2@gmail.com', NULL, NULL, 'admin', 'active', '2025-06-19 12:07:17', '2025-05-25 09:53:03', '2025-06-19 12:07:17'),
-(3, 'admin3', '$2y$10$vqRKoHSsGEaK5wwEzwROm.cUNYs8rN4YeEdq4LYtgalaj9QUg7Bzu', '', 'admin3@gmail.com', '0394879813', 'Hà Nội', 'user', 'active', NULL, '2025-05-27 12:34:06', '2025-06-11 20:32:52'),
+(2, 'admin2', '$2y$10$bYzCh.1R5V9svE8.1RgNYecYw.ivaMk5fPu.hA.GH8ObUu0Uql9cK', '', 'admin2@gmail.com', NULL, NULL, 'admin', 'active', '2025-06-26 11:18:17', '2025-05-25 09:53:03', '2025-06-26 11:18:17'),
+(3, 'admin3', '$2y$10$vqRKoHSsGEaK5wwEzwROm.cUNYs8rN4YeEdq4LYtgalaj9QUg7Bzu', '', 'admin3@gmail.com', '0394879813', 'Hà Nội', 'user', 'active', NULL, '2025-05-27 12:34:06', '2025-06-21 14:30:41'),
 (4, 'user10', '$2y$10$c2sxG/LwMxhzB2XVmq2m8unMErvM4P3zcXzWNYmUcXWn1bJzBjS8m', 'Lê Đức Quân', 'user10@gmail.com', '0945084526', 'hihi', 'user', 'active', NULL, '2025-06-02 08:52:43', '2025-06-02 08:52:43'),
 (5, 'hung123', '$2y$10$vaMhkpPJHIW1tK30ie0LQuOirBeTshY0TKkW3NqZ4oQ/j078wAj8.', 'hung123', 'hung123@gmail.com', '0394879813', 'Hà Nội', 'user', 'active', NULL, '2025-06-05 12:52:56', '2025-06-05 12:52:56');
 
@@ -462,7 +488,7 @@ ALTER TABLE `carts`
 -- AUTO_INCREMENT cho bảng `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
 
 --
 -- AUTO_INCREMENT cho bảng `categories`
@@ -474,25 +500,25 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT cho bảng `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT cho bảng `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT cho bảng `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=90;
 
 --
 -- AUTO_INCREMENT cho bảng `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT cho bảng `users`

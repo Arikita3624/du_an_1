@@ -18,6 +18,11 @@ class ProductControllerClient
         $limit = 6;
         $offset = ($page - 1) * $limit;
 
+        // Nếu có category_id thì huỷ search (chỉ lọc theo danh mục)
+        if ($category_id !== '') {
+            $search = '';
+        }
+
         $products = $productModel->getFiltered($search, $price, $category_id, $limit, $offset);
         $totalProducts = $productModel->countFiltered($search, $price, $category_id);
 
@@ -32,10 +37,6 @@ class ProductControllerClient
 
         $categories = $categoryModel->getAll();
         $totalPages = ceil($totalProducts / $limit);
-
-        if (empty($products)) {
-            error_log("No products found. Total products: $totalProducts, Search: $search, Price: $price, Category: $category_id");
-        }
 
         require_once __DIR__ . '/../views/pages/ProductsList.php';
     }

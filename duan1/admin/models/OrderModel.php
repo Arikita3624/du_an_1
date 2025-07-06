@@ -44,23 +44,19 @@ class OrderModel
             return 0;
         }
     }
-
     public function getOrders($keyword = '', $status = '', $page = 1, $limit = 10)
     {
         $offset = ($page - 1) * $limit;
         $sql = "SELECT o.*,
-                COALESCE(SUM(oi.quantity * oi.price), 0) as total_amount,
-                COALESCE(u.full_name, o.full_name) as customer_name
-                FROM orders o
-                LEFT JOIN order_items oi ON o.id = oi.order_id
-                LEFT JOIN users u ON o.user_id = u.id
-                WHERE 1=1";
+            COALESCE(SUM(oi.quantity * oi.price), 0) as total_amount
+            FROM orders o
+            LEFT JOIN order_items oi ON o.id = oi.order_id
+            WHERE 1=1";
         $params = [];
 
         if (!empty($keyword)) {
-            $sql .= " AND (o.full_name LIKE ? OR o.email LIKE ? OR o.phone LIKE ? OR u.full_name LIKE ?)";
+            $sql .= " AND (o.full_name LIKE ? OR o.email LIKE ? OR o.phone LIKE ?)";
             $keyword = "%$keyword%";
-            $params[] = $keyword;
             $params[] = $keyword;
             $params[] = $keyword;
             $params[] = $keyword;
@@ -84,14 +80,11 @@ class OrderModel
     public function getOrderById($id)
     {
         $sql = "SELECT o.*,
-                COALESCE(SUM(oi.quantity * oi.price), 0) as total_amount,
-                COALESCE(u.full_name, o.full_name) as full_name,
-                COALESCE(u.address, o.address) as address
-                FROM orders o
-                LEFT JOIN order_items oi ON o.id = oi.order_id
-                LEFT JOIN users u ON o.user_id = u.id
-                WHERE o.id = :id
-                GROUP BY o.id";
+            COALESCE(SUM(oi.quantity * oi.price), 0) as total_amount
+            FROM orders o
+            LEFT JOIN order_items oi ON o.id = oi.order_id
+            WHERE o.id = :id
+            GROUP BY o.id";
         return $this->db->queryOne($sql, ['id' => $id]);
     }
 
